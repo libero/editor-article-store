@@ -1,0 +1,258 @@
+# Article Store RESTful API Specification
+#
+# To view, paste the contents of this document into the Swagger Online Editor at 'https://editor.swagger.io/'
+#
+# PLEASE NOTE: This document is STILL a work in progress and is subject to change until the first version of Libero
+#              Editor is released at which point changes will be properly managed. Until then, use with caution!
+#
+openapi: 3.0.1
+info:
+  title: Article Store
+  description: |
+    Libero Editor's Article Store RESTful API specification.
+  version: 1.0.0
+externalDocs:
+  description: |
+    Find out more about Libero Editor and the Libero suite
+  url: https://libero.pub/
+servers:
+  - url: https://editor.libero.pub/api/v1
+tags:
+  - name: articles
+    description: |
+      API paths for interacting with Articles in the store.
+
+paths:
+  /articles:
+    get:
+      tags:
+        - articles
+      summary: Returns a list of articles
+      parameters:
+        - $ref: '#/components/parameters/Filter'
+        - $ref: '#/components/parameters/Version'
+      responses:
+        200:
+          description: |
+            OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Articles'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+
+  /articles/${articleId}:
+    get:
+      tags:
+        - articles
+      summary: Returns the specified Article
+      parameters:
+        - $ref: '#/components/parameters/ArticleId'
+        - $ref: '#/components/parameters/Filter'
+      responses:
+        200:
+          description: |
+            OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Articles'
+            application/xml:
+              schema:
+                type: string
+                format: binary
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+
+  /articles/${articleId}/changes:
+    get:
+      tags:
+        - articles
+      summary: Returns a list of changes for the specified article
+      parameters:
+        - $ref: '#/components/parameters/ArticleId'
+        - $ref: '#/components/parameters/Filter'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Changes'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+
+    post:
+      tags:
+        - articles
+      summary: Creates a new Change for the specified article
+      parameters:
+        - $ref: '#/components/parameters/ArticleId'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Change'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+
+  /articles/${articleId}/changes/${changeId}:
+    delete:
+      tags:
+        - articles
+      summary: Deletes the specified change
+      parameters:
+        - $ref: '#/components/parameters/ArticleId'
+        - $ref: '#/components/parameters/ChangeId'
+      responses:
+        204:
+          $ref: '#/components/responses/NoContent'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+
+components:
+  responses:
+    # Schema for a HTTP 204 No Content response
+    NoContent:
+      description: |
+        No contents
+
+    # Schema for a HTTP 404 Not Found response
+    NotFound:
+      description: |
+        The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    # Schema for a HTTP 401 Unauthorized response
+    Unauthorized:
+      description: |
+        Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  parameters:
+    # Schema for the 'filter' query parameter
+    Filter:
+      in: query
+      name: filter
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+      required: false
+      description: |
+        TODO
+
+    # Schema for the 'version' query parameter
+    Version:
+      in: query
+      name: version
+      content:
+        application/json:
+          schema:
+            type: integer
+            format: int64
+      required: false
+      description: |
+        The specific version number to retrieve
+
+    # Schema for the 'articleId' path parameter
+    ArticleId:
+      in: path
+      name: articleId
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: |
+        The Article's unique Id
+
+    # Schema for the 'changeId' path parameter
+    ChangeId:
+      in: path
+      name: changeId
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: |
+        The Change's unique Id
+
+  schemas:
+    # Schema for the 'Error' response body
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+
+    # Schema for the 'Articles' response body
+    Articles:
+      type: array
+      items:
+        $ref: '#/components/schemas/Article'
+
+    # Schema for the 'Article' response body
+    Article:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The Article's unique id
+          example: '12345'
+      required:
+        - id
+
+    # Schema for the 'Changes' response body
+    Changes:
+      type: array
+      items:
+        $ref: '#/components/schemas/Change'
+
+    # Schema for the 'Change' response body
+    Change:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The Change's unique id
+          example: '5e81568a-4399-41f6-a24a-7db49af399d2'
+      required:
+        - id
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+# Mark all API paths as authenticated
+security:
+  - bearerAuth: []
