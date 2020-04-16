@@ -1,0 +1,50 @@
+{
+  "name": "editor-article-store",
+  "version": "0.0.0",
+  "description": "Libero Editor Article Store",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "tsc",
+    "postbuild": "rollup --config",
+    "debug": "serve ./dist/debug",
+    "lint": "eslint ./src --ext .js,.ts",
+    "test": "echo nothing to do for target 'test'",
+    "release": "standard-version"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/libero/editor-article-store.git"
+  },
+  "author": "NuclearRedeye",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/libero/editor-article-store/issues"
+  },
+  "homepage": "https://github.com/libero/editor-article-store#readme",
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^8.2.0",
+    "@commitlint/config-conventional": "^8.2.0",
+    "eslint": "^6.8.0",
+    "husky": "^3.0.8",
+    "prettier": "^1.19.1",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.1.0",
+    "serve": "^11.3.0",
+    "standard-version": "^7.0.0",
+    "typescript": "^3.8.3"
+  }
+}
