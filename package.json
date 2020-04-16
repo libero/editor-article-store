@@ -23,7 +23,7 @@
   "author": "NuclearRedeye",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/libero/editor-article-store/issues"
+    "url": "https://github.com/libero/editor/issues"
   },
   "homepage": "https://github.com/libero/editor-article-store#readme",
   "commitlint": {
