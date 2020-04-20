@@ -1,5 +1,8 @@
-import { default as express } from 'express';
+import { default as express, Response } from 'express';
 import { logRequest } from '../middlewares/log-request.js';
+import { http415Response } from '../providers/errors.js';
+import { getArticleAsJSON, getArticleAsXML, checkArticleExists } from '../providers/article.js';
+import { getArticlesAsJSON } from '../providers/articles.js';
 
 export const articlesRouter: express.Router = express.Router();
 
@@ -7,11 +10,7 @@ export const articlesRouter: express.Router = express.Router();
 articlesRouter.use(logRequest);
 
 // Get a list of all the available articles.
-articlesRouter.get('/', function(request: express.Request, response: express.Response) {
-  response.sendStatus(501);
-});
+articlesRouter.get('/', [getArticlesAsJSON, http415Response]);
 
 // Gets the specified article.
-articlesRouter.get('/:articleId', function(request: express.Request, response: express.Response) {
-  response.sendStatus(501);
-});
+articlesRouter.get('/:articleId', [checkArticleExists, getArticleAsXML, getArticleAsJSON, http415Response]);

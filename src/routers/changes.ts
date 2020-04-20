@@ -1,5 +1,6 @@
 import { default as express } from 'express';
 import { logRequest } from '../middlewares/log-request.js';
+import { http501Response } from '../providers/errors.js';
 
 export const changesRouter: express.Router = express.Router();
 
@@ -7,21 +8,13 @@ export const changesRouter: express.Router = express.Router();
 changesRouter.use(logRequest);
 
 // Get a list of all the changes.
-changesRouter.get('/', function(request: express.Request, response: express.Response) {
-  response.sendStatus(501);
-});
+changesRouter.get('/', [http501Response]);
 
 // Creates a new Change
-changesRouter.post('/', function(request: express.Request, response: express.Response) {
-  response.sendStatus(501);
-});
+changesRouter.post('/', [http501Response]);
 
 // Get a specific change.
-changesRouter.get('/:changeId', function(request: express.Request, response: express.Response) {
-  response.sendStatus(501);
-});
+changesRouter.get('/:changeId', [http501Response]);
 
 // Deletes the specified Change
-changesRouter.delete('/:changeId', function(request: express.Request, response: express.Response) {
-  response.sendStatus(501);
-});
+changesRouter.delete('/:changeId', [http501Response]);
