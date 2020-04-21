@@ -1,6 +1,7 @@
 import { Article } from '../types/article';
+import { ArticleManager } from '../types/article-manager';
 
-class ArticleManager {
+class ArticleManagerInstance implements ArticleManager {
   private articles: Map<string, Article>;
   constructor() {
     this.articles = new Map();
@@ -29,4 +30,4 @@ class ArticleManager {
   }
 }
 
-export const articleManager = new ArticleManager();
+export const articleManager = new ArticleManagerInstance();

@@ -1,5 +1,7 @@
 import { Config } from '../types/config';
 
-export const config: Config = {
-  articleRoot: './resources/articles'
+// An initial default config
+export const defaultConfig: Config = {
+  articleRoot: './resources/articles',
+  port: 8080
 };

@@ -4,7 +4,7 @@ import { default as copy } from 'rollup-plugin-copy';
 export default [
   {
     input: 'dist/debug/index.js',
-    external: [ 'express', 'fs' ],
+    external: [ 'express', 'fs', 'path' ],
     output: [
       {
         file: 'dist/release/bundle.min.js',

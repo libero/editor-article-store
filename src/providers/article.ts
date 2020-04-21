@@ -1,4 +1,5 @@
 import { default as express } from 'express';
+import { default as path } from 'path';
 import { articleManager } from '../services/article-manager.js';
 import { Article } from '../types/article.js';
 
@@ -23,12 +24,10 @@ export async function getArticleAsXML(
 ) {
   if (request.headers.accept && request.header('Accept') === 'application/xml') {
     const article = articleManager.get(request.params.articleId) as Article;
-    // FIXME: This isn't the best way to construct the file name, but will do for now...
-    const fileName = `${article.root}/elife-${request.params.articleId}.xml`;
     response
       .type('application/json')
       .status(200)
-      .sendFile(fileName, { root: process.cwd() });
+      .sendFile(path.resolve(article.xml));
   } else {
     next();
   }

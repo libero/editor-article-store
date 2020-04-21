@@ -1,3 +1,4 @@
 export type Config = {
-  articleRoot: string;
+  articleRoot?: string;
+  port?: number;
 };
