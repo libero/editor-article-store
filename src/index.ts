@@ -1,6 +1,7 @@
 import { Http2Server } from 'http2';
 
 import { default as express } from 'express';
+import { config } from './config/default.js';
 import { articlesRouter } from './routers/articles.js';
 import { changesRouter } from './routers/changes.js';
 import { http404Response } from './providers/errors.js';
@@ -17,7 +18,7 @@ app.use('/articles/:articleId/changes', changesRouter);
 // Default handler
 app.all('*', http404Response);
 
-loadArticles()
+loadArticles(config.articleRoot)
   .then(() => {
     server = app.listen(port, () => {
       // Make sure the application cleanly shuts down on SIGINT
