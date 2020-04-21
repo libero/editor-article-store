@@ -8,6 +8,7 @@ import { loadArticlesFromPath } from './utils/article-utils.js';
 import { articlesRouter } from './routers/articles.js';
 import { changesRouter } from './routers/changes.js';
 import { http404Response } from './providers/errors.js';
+import { setCORSHeaders } from './middlewares/cors.js';
 
 let server: Http2Server;
 const app: express.Application = express();
@@ -17,6 +18,11 @@ const app: express.Application = express();
 configManager.apply(defaultConfig);
 configManager.apply(createConfigFromEnv(process.env));
 configManager.apply(createConfigFromArgs(process.argv));
+
+// Register middlewares
+// FIXME: Temporary solution during development so that the client can load articles from the backend. This shouldn't be
+//        for too long, but it's possible this might need to persist in which case it should be set as a config option.
+app.use(setCORSHeaders);
 
 // Register routers
 app.use('/articles', articlesRouter);
