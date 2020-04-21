@@ -1,4 +1,4 @@
-import { default as express, Response } from 'express';
+import { default as express } from 'express';
 import { logRequest } from '../middlewares/log-request.js';
 import { http415Response } from '../providers/errors.js';
 import { getArticleAsJSON, getArticleAsXML, checkArticleExists } from '../providers/article.js';
