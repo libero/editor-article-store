@@ -10,12 +10,42 @@ and then start it.
 ```
 npm install
 npm run build
-num start
+npm start
 ```
+
+## Usage
+
+You can interact with the service via your browser...
+
+```
+http://localhost:8080/articles/'
+```
+
+Or using another program such as cURL to fire requests at the API.
+
+```
+curl -i -H "Accept: application/json" 'localhost:8080/articles/12345'
+```
+
+## Configuration
+
+You can configure the application either through environment vars...
+
+```
+ARTICLE_ROOT=/path/to/my/articles npm run start
+```
+
+Or via the command line...
+
+```
+npm run start -- --article-root ./path/to/my/articles
+```
+
+**Note:** That both of the above are eqivilent, but command line arguments take precendence over environment vars!
 
 ## Docker
 
-You can also bundle the service into a container and run that locally if you prefer.
+You can build the service into a container and run that locally if you prefer.
 
 ```
 docker build . -t editor-article-store:local --no-cache
