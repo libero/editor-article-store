@@ -8,7 +8,9 @@ export async function getArticlesAsJSON(
   response: express.Response,
   next: express.NextFunction
 ) {
-  if (request.headers.accept && request.header('Accept') === 'application/json') {
+  console.log(request.headers.accept);
+  const accept = request.headers.accept || '*/*';
+  if (accept.includes('application/json') || accept.includes('*/*')) {
     // FIXME: The object returned here should be reduced first.
     const articles: Array<Article> = [];
     for (const article of articleManager.values()) {

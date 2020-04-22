@@ -22,7 +22,8 @@ export async function getArticleAsXML(
   response: express.Response,
   next: express.NextFunction
 ) {
-  if (request.headers.accept && request.header('Accept') === 'application/xml') {
+  const accept = request.headers.accept || '';
+  if (accept.includes('application/xml')) {
     const article = articleManager.get(request.params.articleId) as Article;
     response
       .type('application/json')
@@ -39,7 +40,8 @@ export async function getArticleAsJSON(
   response: express.Response,
   next: express.NextFunction
 ) {
-  if (request.headers.accept && request.header('Accept') === 'application/json') {
+  const accept = request.headers.accept || '*/*';
+  if (accept.includes('application/json') || accept.includes('*/*')) {
     // FIXME: The object returned here should be reduced first.
     const article = articleManager.get(request.params.articleId) as Article;
     response
