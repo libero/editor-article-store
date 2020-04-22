@@ -1,4 +1,5 @@
 import { Http2Server } from 'http2';
+import { default as cors } from 'cors';
 import { default as express } from 'express';
 import { configManager } from './services/config-manager.js';
 import { defaultConfig } from './config/default.js';
@@ -8,7 +9,6 @@ import { loadArticlesFromPath } from './utils/article-utils.js';
 import { articlesRouter } from './routers/articles.js';
 import { changesRouter } from './routers/changes.js';
 import { http404Response } from './providers/errors.js';
-import { setCORSHeaders } from './middlewares/cors.js';
 
 let server: Http2Server;
 const app: express.Application = express();
@@ -20,15 +20,13 @@ configManager.apply(createConfigFromEnv(process.env));
 configManager.apply(createConfigFromArgs(process.argv));
 
 // Register middlewares
-// FIXME: Temporary solution during development so that the client can load articles from the backend. This shouldn't be
-//        for too long, but it's possible this might need to persist in which case it should be set as a config option.
-app.use(setCORSHeaders);
+app.use(cors());
 
 // Register routers
 app.use('/articles', articlesRouter);
 app.use('/articles/:articleId/changes', changesRouter);
 
-// Default handler
+// Register 'catch all' handler
 app.all('*', http404Response);
 
 loadArticlesFromPath(configManager.get('articleRoot'), articleManager)
