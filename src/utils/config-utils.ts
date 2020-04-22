@@ -5,7 +5,7 @@ import { ProcessEnv } from '../types/node';
 export function createConfigFromArgs(args: string[]): Config {
   const retVal: Config = {};
   for (let i = 0; i < args.length; i++) {
-    if (args[i] === '--articleRoot' || args[i] === '-r') {
+    if (args[i] === '--article-root' || args[i] === '-r') {
       if (++i < args.length) {
         retVal.articleRoot = args[i];
       }
