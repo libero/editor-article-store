@@ -12,11 +12,7 @@ export async function getArticlesAsJSON(
   const accept = request.headers.accept || '*/*';
   if (accept.includes('application/json') || accept.includes('*/*')) {
     // FIXME: The object returned here should be reduced first.
-    const articles: Array<Article> = [];
-    for (const article of articleManager.values()) {
-      articles.push(article);
-    }
-
+    const articles: Array<Article> = [...articleManager.values()];
     response
       .type('application/json')
       .status(200)
