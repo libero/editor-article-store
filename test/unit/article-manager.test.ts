@@ -5,7 +5,7 @@ const article: Article = {
   id: '00001'
 } as Article;
 
-describe('articleManager()', () => {
+describe('articleManager', () => {
   test('Can add an Article', () => {
     expect(articleManager.add(article)).toBe(undefined);
   });
