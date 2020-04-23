@@ -19,7 +19,7 @@ class ConfigManagerInstance implements ConfigManager {
   // Set the value of the specified key in this config object.
   set(key: string, value: string, overwrite: boolean = false): void {
     if (this.config.has(key) && !overwrite) {
-      throw new Error(`Configuration entry '${key} not found!`);
+      throw new Error(`Configuration entry '${key} already exists!`);
     }
     this.config.set(key, value);
   }
@@ -31,6 +31,7 @@ class ConfigManagerInstance implements ConfigManager {
     }
   }
 
+  // istanbul ignore next
   // Dumps the config to the console, used for debugging purposes.
   dump(): void {
     console.log(`Config`);
