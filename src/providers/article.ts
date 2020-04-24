@@ -26,7 +26,7 @@ export async function getArticleAsXML(
   if (accept.includes('application/xml')) {
     const article = articleManager.get(request.params.articleId) as Article;
     response
-      .type('application/json')
+      .type('application/xml')
       .status(200)
       .sendFile(path.resolve(article.xml));
   } else {
