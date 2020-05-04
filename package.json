@@ -1,6 +1,6 @@
 {
   "name": "editor-article-store",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Libero Editor Article Store",
   "main": "index.js",
   "type": "module",
