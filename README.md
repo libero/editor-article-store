@@ -56,3 +56,9 @@ And once built, you can run the container using...
 ```
 docker run editor-article-store:local
 ```
+
+And of course, you can run container with some local files....
+
+```
+docker run --env ARTICLE_ROOT=/articles -v /path/to/articles/:/articles editor-article-store:local
+```
