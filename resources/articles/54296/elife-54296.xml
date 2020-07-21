@@ -139,6 +139,9 @@
       <abstract>
         <p>Worms with increased levels of the epigenetic mark H3K9me2 have a longer lifespan that can be passed down to future generations.</p>
       </abstract>
+      <abstract abstract-type="toc">
+        <p>Worms with increased levels of the epigenetic mark H3K9me2 have a longer lifespan that can be passed down to future generations.</p>
+      </abstract>
       <kwd-group kwd-group-type="author-generated">
         <kwd>transgenerational inheritance</kwd>
         <kwd>epigenetics</kwd>
@@ -152,10 +155,6 @@
         </kwd>
       </kwd-group>
       <custom-meta-group>
-        <custom-meta specific-use="meta-only">
-          <meta-name>Author impact statement</meta-name>
-          <meta-value>Worms with increased levels of the epigenetic mark H3K9me2 have a longer lifespan that can be passed down to future generations.</meta-value>
-        </custom-meta>
         <custom-meta specific-use="meta-only">
           <meta-name>Template</meta-name>
           <meta-value>1</meta-value>
