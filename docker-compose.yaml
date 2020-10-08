@@ -4,6 +4,8 @@ services:
     image: localstack/localstack
     ports:
       - 4566:4566
+    environment:
+      - DATA_DIR=/tmp/localstack/data
     volumes:
       - "./tmp/localstack:/tmp/localstack"
-      - "./localstack:/docker-entrypoint-initaws.d"
+      - "./.localstack:/docker-entrypoint-initaws.d"
