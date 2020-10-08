@@ -1,8 +1,10 @@
-import { default as cors } from 'cors';
-import { default as express } from 'express';
-import { articlesRouter } from './routers/articles.js';
-import { changesRouter } from './routers/changes.js';
-import { http404Response } from './providers/errors.js';
+import { default as cors } from "cors";
+import { default as express } from "express";
+import { articlesRouter } from "./routers/articles.js";
+import { changesRouter } from "./routers/changes.js";
+import { http404Response } from "./providers/errors.js";
+
+import { Consumer } from "sqs-consumer";
 
 export const app: express.Application = express();
 
@@ -10,8 +12,31 @@ export const app: express.Application = express();
 app.use(cors());
 
 // Register routers
-app.use('/articles', articlesRouter);
-app.use('/articles/:articleId/changes', changesRouter);
+app.use("/articles", articlesRouter);
+app.use("/articles/:articleId/changes", changesRouter);
 
 // Register 'catch all' handler
-app.all('*', http404Response);
+app.all("*", http404Response);
+
+// throw away code.
+const sqsApp = Consumer.create({
+  queueUrl: process.env.QUEUE_URL,
+  region: process.env.REGION,
+  batchSize: 1,
+  handleMessage: async (message) => {
+    const id = message.Body;
+    console.log(
+      "SQS - AWS S3 uploaded event been consumed, body id: ",
+      id
+    );
+  },
+});
+sqsApp
+  .on("error", function(err) {
+    console.log(err);
+  })
+  .on("message_received", function(message) {
+    console.log(message);
+  });
+
+sqsApp.start();
