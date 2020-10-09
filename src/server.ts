@@ -7,6 +7,12 @@ import { http404Response } from "./providers/errors.js";
 import { Consumer } from "sqs-consumer";
 import AWS from "aws-sdk";
 
+AWS.config.update({
+  region: 'eu-west-1',
+  accessKeyId: '123',
+  secretAccessKey: 'xyz'
+});
+
 export const app: express.Application = express();
 
 // Register middlewares
@@ -19,10 +25,9 @@ app.use("/articles/:articleId/changes", changesRouter);
 // Register 'catch all' handler
 app.all("*", http404Response);
 
-// throw away code.
 const sqsApp = Consumer.create({
   queueUrl: "http://localhost:4566/000000000000/KryiaUploadQueue",
-  // region: process.env.REGION,
+  region: 'us-west-1',
   batchSize: 1,
   sqs: new AWS.SQS({
     endpoint:'http://localhost:4566'
