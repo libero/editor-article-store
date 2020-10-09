@@ -8,5 +8,5 @@ services:
       - DATA_DIR=/tmp/localstack/data
     volumes:
       - "./tmp/localstack:/tmp/localstack"
-      - "./.localstack:/docker-entrypoint-initaws.d"
-      - "./.localstack/notification.json:/opt/code/localstack/notification.json"
+      - "./.localstack/startup:/docker-entrypoint-initaws.d"
+      - "./.localstack/config:/etc/localstackconf"
