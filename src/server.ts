@@ -5,6 +5,7 @@ import { changesRouter } from "./routers/changes.js";
 import { http404Response } from "./providers/errors.js";
 
 import { Consumer } from "sqs-consumer";
+import AWS from "aws-sdk";
 
 export const app: express.Application = express();
 
@@ -20,15 +21,15 @@ app.all("*", http404Response);
 
 // throw away code.
 const sqsApp = Consumer.create({
-  queueUrl: process.env.QUEUE_URL,
-  region: process.env.REGION,
+  queueUrl: "http://localhost:4566/000000000000/KryiaUploadQueue",
+  // region: process.env.REGION,
   batchSize: 1,
+  sqs: new AWS.SQS({
+    endpoint:'http://localhost:4566'
+  }),
   handleMessage: async (message) => {
     const id = message.Body;
-    console.log(
-      "SQS - AWS S3 uploaded event been consumed, body id: ",
-      id
-    );
+    console.log("SQS - AWS S3 uploaded event been consumed, body id: ", id);
   },
 });
 sqsApp
