@@ -5,8 +5,18 @@ services:
     ports:
       - 4566:4566
     environment:
-      - DATA_DIR=/tmp/localstack/data
+      - SERVICES=s3,sqs
     volumes:
       - "./tmp/localstack:/tmp/localstack"
       - "./.localstack/startup:/docker-entrypoint-initaws.d"
       - "./.localstack/config:/etc/localstackconf"
+  s3-file-watcher:
+    build:
+      context: './file-watcher'
+    image: file-watcher:${IMAGE_TAG:-local}
+    environment: 
+      - S3BUCKET=kryia
+    volumes: 
+      - "./tmp/kryiaBucket:/bucket-to-watch"
+    depends_on:
+      - localstack
