@@ -9,3 +9,4 @@ services:
     volumes:
       - "./tmp/localstack:/tmp/localstack"
       - "./.localstack:/docker-entrypoint-initaws.d"
+      - "./.localstack/notification.json:/opt/code/localstack/notification.json"
