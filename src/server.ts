@@ -1,8 +1,8 @@
 import { default as cors } from "cors";
 import { default as express } from "express";
-import { articlesRouter } from "./routers/articles.js";
-import { changesRouter } from "./routers/changes.js";
-import { http404Response } from "./providers/errors.js";
+import { articlesRouter } from "./routers/articles";
+import { changesRouter } from "./routers/changes";
+import { http404Response } from "./providers/errors";
 
 import { Consumer } from "sqs-consumer";
 import AWS from "aws-sdk";

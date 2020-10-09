@@ -1,8 +1,8 @@
 import { default as express } from 'express';
-import { logRequest } from '../middlewares/log-request.js';
-import { http415Response } from '../providers/errors.js';
-import { getArticleAsJSON, getArticleAsXML, checkArticleExists } from '../providers/article.js';
-import { getArticlesAsJSON } from '../providers/articles.js';
+import { logRequest } from '../middlewares/log-request';
+import { http415Response } from '../providers/errors';
+import { getArticleAsJSON, getArticleAsXML, checkArticleExists } from '../providers/article';
+import { getArticlesAsJSON } from '../providers/articles';
 
 export const articlesRouter: express.Router = express.Router();
 

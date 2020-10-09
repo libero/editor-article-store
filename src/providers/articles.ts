@@ -1,6 +1,6 @@
 import { default as express } from 'express';
-import { articleManager } from '../services/article-manager.js';
-import { Article } from '../types/article.js';
+import { articleManager } from '../services/article-manager';
+import { Article } from '../types/article';
 
 // Returns an array of Articles as JSON
 export async function getArticlesAsJSON(

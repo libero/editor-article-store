@@ -1,6 +1,6 @@
 import * as request from 'supertest';
-import { app } from '../../dist/debug/server.js';
-import { articleManager } from '../../dist/debug/services/article-manager.js';
+import { app } from '../../dist/debug/server';
+import { articleManager } from '../../dist/debug/services/article-manager';
 import { loadArticlesFromPath } from '../../dist/debug/utils/article-utils';
 
 const agent = request.agent(app);
