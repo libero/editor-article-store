@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "description": "Libero Editor Article Store",
   "main": "index.js",
-  "type": "module",
   "directories": {
     "doc": "docs"
   },
@@ -12,7 +11,7 @@
     "prebuild": "rimraf dist",
     "build": "tsc",
     "postbuild": "rollup --config",
-    "start": "node --experimental-modules ./dist/debug/index.js",
+    "start": "node ./dist/debug/index.js",
     "lint": "echo Nothing to do for target 'lint'",
     "pretest": "npm run build",
     "test": "jest --config jestconfig.json",
