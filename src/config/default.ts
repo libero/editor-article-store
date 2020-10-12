@@ -5,8 +5,8 @@ export const defaultConfig: Config = {
   articleRoot: './resources/articles',
   port: 8080,
   awsSqsRegion: 'eu-west-1', 
-  awsSqsAccessKey: '',
-  awsSqsSecretAccessKey: '',
+  awsSqsAccessKey: 'key',
+  awsSqsSecretAccessKey: 'secret',
   sqsKryiaQueueUrl: 'http://localhost:4566/000000000000/KryiaUploadQueue',
   awsEndPoint: 'http://localhost:4566',
 };

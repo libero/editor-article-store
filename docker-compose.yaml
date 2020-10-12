@@ -11,6 +11,7 @@ services:
       interval: 1m
       timeout: 10s
       retries: 3
+    container_name: localstack
     volumes:
       - "./tmp/localstack:/tmp/localstack"
       - "./.localstack/startup:/docker-entrypoint-initaws.d"
