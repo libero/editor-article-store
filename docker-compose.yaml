@@ -21,7 +21,8 @@ services:
       context: './file-watcher'
     image: file-watcher:${IMAGE_TAG:-local}
     environment: 
-      - S3BUCKET=kryia
+      - S3_BUCKET=kryia
+      - AWS_ENDPOINT=http://localstack:4566
     volumes: 
       - "./tmp/kryiaBucket:/bucket-to-watch"
     depends_on:
