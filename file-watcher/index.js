@@ -2,7 +2,6 @@ const chokidar = require('chokidar');
 const AWS = require('aws-sdk');
 const fs = require('fs');
 const nodePath = require('path');
-const { env } = require('process');
 
 const s3 = new AWS.S3({ 
   endpoint: 'http://localstack:4566', 
