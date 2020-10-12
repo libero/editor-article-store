@@ -1,18 +1,27 @@
 import { Consumer } from "sqs-consumer";
 import AWS from "aws-sdk";
+import { configManager } from '../services/config-manager';
+import { createConfigFromArgs, createConfigFromEnv } from '../utils/config-utils';
+import { defaultConfig } from '../config/default';
+
+// Load the configuration for this service with the following precedence...
+//   process args > environment vars > config file.
+configManager.apply(defaultConfig);
+configManager.apply(createConfigFromEnv(process.env));
+configManager.apply(createConfigFromArgs(process.argv));
 
 AWS.config.update({
-  region: process.env.AWS_REGION,
-  accessKeyId: process.env.AWS_ACCESS_KEY,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: configManager.get('awsSqsRegion'),
+  accessKeyId: configManager.get('awsSqsAccessKey'),
+  secretAccessKey: configManager.get('awsSqsSecretAccessKey'),
 });
 
 const sqsApp = Consumer.create({
-  queueUrl: process.env.SQS_QUEUE_URL,
-  region: process.env.AWS_REGION,
+  queueUrl: configManager.get('sqsQueueUrl'),
+  region: configManager.get('awsSqsRegion'),
   batchSize: 1,
   sqs: new AWS.SQS({
-    endpoint: process.env.AWS_END_POINT,
+    endpoint: configManager.get('awsRegion')
   }),
   handleMessage: async (message) => {
     const id = message.Body;
