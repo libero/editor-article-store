@@ -1,5 +1,5 @@
 import * as request from 'supertest';
-import { app } from '../../dist/debug/server.js';
+import { app } from '../../dist/server';
 
 const agent = request.agent(app);
 

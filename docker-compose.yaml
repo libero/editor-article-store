@@ -1,0 +1,29 @@
+version: '3.4'
+services:
+  localstack:
+    image: localstack/localstack
+    ports:
+      - 4566:4566
+    environment:
+      - SERVICES=s3,sqs
+    healthcheck:
+      test: 'echo -e "GET /health\n\n" | nc localhost 4566'
+      interval: 1m
+      timeout: 10s
+      retries: 3
+    container_name: localstack
+    volumes:
+      - "./tmp/localstack:/tmp/localstack"
+      - "./.localstack/startup:/docker-entrypoint-initaws.d"
+      - "./.localstack/config:/etc/localstackconf"
+  s3-file-watcher:
+    build:
+      context: './file-watcher'
+    image: file-watcher:${IMAGE_TAG:-local}
+    environment: 
+      - S3_BUCKET=kryia
+      - AWS_ENDPOINT=http://localstack:4566
+    volumes: 
+      - "./tmp/kryiaBucket:/bucket-to-watch"
+    depends_on:
+      - localstack

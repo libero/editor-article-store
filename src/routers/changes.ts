@@ -1,6 +1,6 @@
 import { default as express } from 'express';
-import { logRequest } from '../middlewares/log-request.js';
-import { http501Response } from '../providers/errors.js';
+import { logRequest } from '../middlewares/log-request';
+import { http501Response } from '../providers/errors';
 
 export const changesRouter: express.Router = express.Router();
 

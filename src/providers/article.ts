@@ -1,7 +1,7 @@
 import { default as express } from 'express';
 import { default as path } from 'path';
-import { articleManager } from '../services/article-manager.js';
-import { Article } from '../types/article.js';
+import { articleManager } from '../services/article-manager';
+import { Article } from '../types/article';
 
 // Route to ensure that the requested Article exists
 export async function checkArticleExists(

@@ -1,10 +1,12 @@
 import { Http2Server } from 'http2';
-import { configManager } from './services/config-manager.js';
-import { defaultConfig } from './config/default.js';
-import { createConfigFromArgs, createConfigFromEnv } from './utils/config-utils.js';
-import { articleManager } from './services/article-manager.js';
-import { loadArticlesFromPath } from './utils/article-utils.js';
-import { app } from './server.js';
+import { configManager } from './services/config-manager';
+import { defaultConfig } from './config/default';
+import { createConfigFromArgs, createConfigFromEnv } from './utils/config-utils';
+import { articleManager } from './services/article-manager';
+import { loadArticlesFromPath } from './utils/article-utils';
+import { app } from './server';
+
+import sqsKryiaListener from './listeners/kryia-listener';
 
 let server: Http2Server;
 
@@ -20,6 +22,8 @@ loadArticlesFromPath(configManager.get('articleRoot'), articleManager)
       // Make sure the application cleanly shuts down on SIGINT
       process.on('SIGINT', terminate);
       process.on('SIGTERM', terminate);
+
+      sqsKryiaListener.start();
 
       console.log(`Server listening at http://localhost:${configManager.get('port')}`);
     });
