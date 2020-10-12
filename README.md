@@ -9,8 +9,7 @@ and then start it.
 
 ```
 npm install
-npm run build
-npm start
+make start_dev
 ```
 
 ## Usage
