@@ -17,11 +17,11 @@ AWS.config.update({
 });
 
 const sqsApp = Consumer.create({
-  queueUrl: configManager.get('sqsQueueUrl'),
+  queueUrl: configManager.get('sqsKryiaQueueUrl'),
   region: configManager.get('awsSqsRegion'),
   batchSize: 1,
   sqs: new AWS.SQS({
-    endpoint: configManager.get('awsRegion')
+    endpoint: configManager.get('awsEndPoint')
   }),
   handleMessage: async (message) => {
     const id = message.Body;
@@ -36,4 +36,4 @@ sqsApp
     console.log(message);
   });
 
-sqsApp.start();
+export default sqsApp;

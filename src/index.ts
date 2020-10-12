@@ -6,6 +6,8 @@ import { articleManager } from './services/article-manager';
 import { loadArticlesFromPath } from './utils/article-utils';
 import { app } from './server';
 
+import sqsKryiaListener from './listeners/kryia-listener';
+
 let server: Http2Server;
 
 // Load the configuration for this service with the following precedence...
@@ -20,6 +22,8 @@ loadArticlesFromPath(configManager.get('articleRoot'), articleManager)
       // Make sure the application cleanly shuts down on SIGINT
       process.on('SIGINT', terminate);
       process.on('SIGTERM', terminate);
+
+      sqsKryiaListener.start();
 
       console.log(`Server listening at http://localhost:${configManager.get('port')}`);
     });

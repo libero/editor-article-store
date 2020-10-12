@@ -28,5 +28,24 @@ export function createConfigFromEnv(env: ProcessEnv): Config {
   if (env['PORT']) {
     retVal.port = parseInt(env['PORT']);
   }
+  if (env['AWS_REGION']) {
+    retVal.awsSqsRegion = env['AWS_REGION'];
+  }
+  if (env['AWS_ACCESS_KEY']) {
+    retVal.awsSqsAccessKey = env['AWS_ACCESS_KEY']; 
+  }
+  if (env['AWS_SECRET_ACCESS_KEY']) {
+    retVal.awsSqsSecretAccessKey = env['AWS_SECRET_ACCESS_KEY'];
+  }
+  if (env['AWS_SECRET_ACCESS_KEY']) {
+    retVal.awsSqsSecretAccessKey = env['AWS_SECRET_ACCESS_KEY']
+  }
+  if (env['SQS_KRYIA_QUEUE_URL']) {
+    retVal.sqsKryiaQueueUrl = env['SQS_KRYIA_QUEUE_URL'];
+  }
+  if (env['AWS_END_POINT']) {
+    retVal.awsEndPoint = env['AWS_END_POINT'];
+  }
+
   return retVal;
 }
