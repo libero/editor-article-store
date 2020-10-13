@@ -40,3 +40,12 @@ services:
       interval: 2s
       timeout: 30s
       retries: 10
+  mongo:
+    image: mongo
+    container_name: editor_mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - 27017:27017
