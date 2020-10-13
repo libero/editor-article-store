@@ -40,8 +40,9 @@ sqsApp
     console.log(err);
   })
   .on("message_received", function(message) {
-    if(JSON.parse(message.Body) && JSON.parse(message.Body).Records.length) {
-      JSON.parse(message.Body).Records.forEach(async (record: any) => {
+    const messageBody = JSON.parse(message.Body);
+    if(messageBody && messageBody.Records.length) {
+      messageBody.Records.forEach(async (record: any) => {
         try {
           const directory = await unzipper.Open.s3(s3,{ Key: record.s3.object.key, Bucket: record.s3.bucket.name });
           const file = directory.files.find((d: any) => d.path.includes('.xml'));
