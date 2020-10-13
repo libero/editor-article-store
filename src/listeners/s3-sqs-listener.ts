@@ -23,8 +23,8 @@ const s3 = new AWS.S3({
   s3ForcePathStyle: true 
 });
 
-const sqsApp = Consumer.create({
-  queueUrl: configManager.get('sqsKryiaQueueUrl'),
+const S3SQSListener = Consumer.create({
+  queueUrl: configManager.get('awsBucketInputEventQueueUrl'),
   region: configManager.get('awsSqsRegion'),
   batchSize: 1,
   sqs: new AWS.SQS({
@@ -35,7 +35,7 @@ const sqsApp = Consumer.create({
     console.log("SQS - AWS S3 uploaded event been consumed, body id: ", id);
   },
 });
-sqsApp
+S3SQSListener
   .on("error", function(err) {
     console.log(err);
   })
@@ -57,4 +57,4 @@ sqsApp
     }
   });
 
-export default sqsApp;
+export default S3SQSListener;
