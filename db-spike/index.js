@@ -1,6 +1,6 @@
 const LoremIpsum = require("lorem-ipsum").LoremIpsum;
-const mongoWrites = require('./mongo-writes');
-const postgresWrites = require('./postgres-writes');
+const { write: mongoWrite, read: mongoRead } = require('./mongo-writes');
+const { write: postgresWrite, read: postgreRead } = require('./postgres-writes');
 
 const maxDocuments = process.env.MAX_DOCS || 1000;
 const maxParagraphs = process.env.MAX_PARA || 150;
@@ -25,16 +25,19 @@ console.log('content length', content.length);
 console.log('size in kbs', Math.floor(Buffer.byteLength(content, 'utf8') / 1024));
 
 async function go() {
-    const mongoResult = await mongoWrites(content, maxDocuments);
-    const postgresResult = await postgresWrites(content, maxDocuments);
-    console.log(mongoResult);
-    console.log(postgresResult);
+    // const mongoWriteResult = await mongoWrite(content, maxDocuments);
+    // const mongoReadResult = await mongoRead(maxDocuments);
+    const postgresWriteResult = await postgresWrite(content, maxDocuments);
+    const postgresReadResult = await postgreRead(maxDocuments);
+    // console.log(mongoWriteResult);
+    console.log(postgresWriteResult);
+    console.log(postgresReadResult);
 }
 
 go().then(() => {
     console.log('all done');
     process.exit(0);
-}).catch(() => {
-    console.log('failed');
+}).catch((e) => {
+    console.log('failed', e);
     process.exit(1);
 })
