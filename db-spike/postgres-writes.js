@@ -1,11 +1,36 @@
 const MongoClient = require('mongodb').MongoClient;
-const { default: PQueue } = require('p-queue');
+const LoremIpsum = require("lorem-ipsum").LoremIpsum;
+const {default: PQueue} = require('p-queue');
 const queue = new PQueue({ concurrency: process.env.CONCURRENCY || 100 });
+const {v4} = require('uuid');
+
 
 // Connection URL
 const url = 'mongodb://root:password@localhost:27017';
 
-async function connectToMongoAndBulkWrite(content, maxDocuments) {
+const maxDocuments = process.env.MAX_DOCS || 1000;
+const maxParagraphs = process.env.MAX_PARA || 150;
+const minParagraphs = process.env.MIN_PARA || 50;
+
+const numberOfParagraphs = Math.floor(Math.random() * (maxParagraphs - minParagraphs) + minParagraphs);
+
+const lorem = new LoremIpsum({
+    sentencesPerParagraph: {
+        max: maxParagraphs,
+        min: minParagraphs
+    },
+    wordsPerSentence: {
+        max: 20,
+        min: 10
+    }
+});
+
+const content = lorem.generateParagraphs(numberOfParagraphs);
+
+console.log('content length', content.length);
+console.log('size in kbs', Math.floor(Buffer.byteLength(content, 'utf8') / 1024));
+
+async function connectToMongoAndBulkWrite() {
     return new Promise(async (resolve, reject) => {
         const times = [];
         // Use connect method to connect to the server
@@ -30,9 +55,9 @@ async function connectToMongoAndBulkWrite(content, maxDocuments) {
     })
 }
 
-module.exports = async function go(content, maxDocuments) {
-    console.time('bulkwrite-mongo');
-    const result = await connectToMongoAndBulkWrite(content, maxDocuments);
-    console.timeEnd('bulkwrite-mongo');
+module.exports = async function go(content) {
+    console.time('bulkwrite');
+    const result = await connectToMongoAndBulkWrite(content);
+    console.timeEnd('bulkwrite');
     return result;
 }
