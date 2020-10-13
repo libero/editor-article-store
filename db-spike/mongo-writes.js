@@ -28,7 +28,7 @@ const lorem = new LoremIpsum({
 const content = lorem.generateParagraphs(numberOfParagraphs);
 console.log('content length', content.length);
 console.log('size', Math.floor(Buffer.byteLength(content, 'utf8') / 1024));
- return;
+
 async function connectToMongoAndBulkWrite() {
     return new Promise(async (resolve, reject) => {
         const times = [];
