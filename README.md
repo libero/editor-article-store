@@ -7,8 +7,15 @@ Service for storing and managing articles.
 Getting up and running is rather straightforward, you just need to install the requried dependencies, compile the code 
 and then start it.
 
+On first run you'll need to initialize and update the git submodule which has some of the required `.sh` scripts used in thee `Makefile` as well as install the required npm packages
 ```
+git submodule init
+git submodule update --recursive
 npm install
+```
+
+Then to build and start the services just run:
+```
 make start_dev
 ```
 
