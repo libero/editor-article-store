@@ -6,7 +6,7 @@ import { articleManager } from './services/article-manager';
 import { loadArticlesFromPath } from './utils/article-utils';
 import { app } from './server';
 
-import sqsKryiaListener from './listeners/kryia-listener';
+import s3SqsListener from './listeners/s3-sqs-listener';
 
 let server: Http2Server;
 
@@ -23,7 +23,7 @@ loadArticlesFromPath(configManager.get('articleRoot'), articleManager)
       process.on('SIGINT', terminate);
       process.on('SIGTERM', terminate);
 
-      sqsKryiaListener.start();
+      s3SqsListener.start();
 
       console.log(`Server listening at http://localhost:${configManager.get('port')}`);
     });

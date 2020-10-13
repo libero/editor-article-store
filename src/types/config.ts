@@ -4,6 +4,6 @@ export type Config = {
   awsSqsRegion?: string;
   awsSqsAccessKey?: string;
   awsSqsSecretAccessKey?: string;
-  sqsKryiaQueueUrl?: string;
+  awsBucketInputEventQueueUrl?: string;
   awsEndPoint?: string;
 };

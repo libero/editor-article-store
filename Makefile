@@ -1,3 +1,5 @@
+.PHONY: start_services start_dev start stop
+
 start_services:
 	docker-compose build
 	docker-compose up -d localstack
