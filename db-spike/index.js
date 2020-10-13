@@ -26,7 +26,9 @@ console.log('size in kbs', Math.floor(Buffer.byteLength(content, 'utf8') / 1024)
 
 async function go() {
     const mongoResult = await mongoWrites(content, maxDocuments);
-    console.log('mongo done', mongoResult);
+    const postgresResult = await postgresWrites(content, maxDocuments);
+    console.log(mongoResult);
+    console.log(postgresResult);
 }
 
 go().then(() => {

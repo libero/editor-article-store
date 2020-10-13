@@ -1,6 +1,6 @@
 const MongoClient = require('mongodb').MongoClient;
 const { default: PQueue } = require('p-queue');
-const queue = new PQueue({ concurrency: process.env.CONCURRENCY || 100 });
+const queue = new PQueue({ concurrency: process.env.CONCURRENCY || 10 });
 
 // Connection URL
 const url = 'mongodb://root:password@localhost:27017';
@@ -9,7 +9,7 @@ async function connectToMongoAndBulkWrite(content, maxDocuments) {
     return new Promise(async (resolve, reject) => {
         const times = [];
         // Use connect method to connect to the server
-        const client = await MongoClient.connect(url);
+        const client = await MongoClient.connect(url, {w: 1});
         const db = client.db('test');
 
         for (let i = 0; i < maxDocuments; i++) {
@@ -26,7 +26,7 @@ async function connectToMongoAndBulkWrite(content, maxDocuments) {
         await queue.onEmpty();
         const sum = times.reduce((acc, current) => acc + current, 0);
         const averageTime = sum / times.length;
-        resolve(`all writes complete, average write time ${averageTime} ms`);
+        resolve(`Mongo average write time ${averageTime} ms`);
     })
 }
 

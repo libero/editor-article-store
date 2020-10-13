@@ -40,6 +40,8 @@ services:
       interval: 2s
       timeout: 30s
       retries: 10
+    ports:
+      - 5432:5432
   mongo:
     image: mongo
     container_name: editor_mongo
