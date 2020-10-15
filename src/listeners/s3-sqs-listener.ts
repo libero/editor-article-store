@@ -4,6 +4,7 @@ import { configManager } from '../services/config-manager';
 import { createConfigFromArgs, createConfigFromEnv } from '../utils/config-utils';
 import { defaultConfig } from '../config/default';
 import unzipper from 'unzipper';
+import { MongoClient } from 'mongodb';
 
 // Load the configuration for this service with the following precedence...
 //   process args > environment vars > config file.
@@ -39,7 +40,14 @@ S3SQSListener
   .on("error", function(err) {
     console.log(err);
   })
-  .on("message_received", function(message) {
+  .on("message_received", async function(message) {
+    // Connection URL
+    const url = 'mongodb://localhost:27017'; // TODO: use env
+    
+    // Database Name
+    const dbName = 'editor';
+    const client = await MongoClient.connect(url);
+    const db = client.db(dbName);
     const messageBody = JSON.parse(message.Body);
     if(messageBody && messageBody.Records.length) {
       messageBody.Records.forEach(async (record: any) => {
@@ -49,6 +57,7 @@ S3SQSListener
           if (file){
             const content = await file.buffer();
             console.log(content.toString());
+            await db.collection('articles').insertOne({ content }); // TODO: move to repository
           }
         } catch(error) {
           console.log("Error when fetching and opening zip: ", error);
