@@ -42,7 +42,7 @@ S3SQSListener
   })
   .on("message_received", async function(message) {
     // Connection URL
-    const url = 'mongodb://localhost:27017'; // TODO: use env
+    const url = process.env.MONGO_URL || 'mongodb://root:password@localhost:27017';
     
     // Database Name
     const dbName = 'editor';
@@ -52,12 +52,17 @@ S3SQSListener
     if(messageBody && messageBody.Records.length) {
       messageBody.Records.forEach(async (record: any) => {
         try {
+          // /articles/some-folder/zip-id-version.zip
+          const paths = record.s3.object.key.split('/');
+          const fileNameParts = paths[paths.length - 1].split('-');
+          const articleId = fileNameParts[1];
+          const version = fileNameParts[fileNameParts.length -1].replace('.zip', '');
           const directory = await unzipper.Open.s3(s3,{ Key: record.s3.object.key, Bucket: record.s3.bucket.name });
           const file = directory.files.find((d: any) => d.path.includes('.xml'));
           if (file){
             const content = await file.buffer();
             console.log(content.toString());
-            await db.collection('articles').insertOne({ content }); // TODO: move to repository
+            await db.collection('articles').insertOne({ content: content.toString(), articleId, version, datatype: 'xml' }); // TODO: move to repository
           }
         } catch(error) {
           console.log("Error when fetching and opening zip: ", error);
