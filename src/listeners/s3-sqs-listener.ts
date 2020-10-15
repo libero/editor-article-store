@@ -92,11 +92,12 @@ S3SQSListener.on("error", function(err) {
           Key: record.s3.object.key,
           Bucket: record.s3.bucket.name,
         });
+        // todo: Move all the unzipped files to another bucket using the file name convention as kryia
+        // todo: listen to this new queue and move to the database
         const file = directory.files.find((d: unzipper.File) =>
           d.path.includes(".xml")
         );
         if (file) {
-
           const { articleId, version, fileName } = extractFileParts(
             record.s3.object.key,
             file.path
