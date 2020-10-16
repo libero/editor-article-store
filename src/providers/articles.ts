@@ -1,5 +1,4 @@
 import { default as express } from 'express';
-import { articleManager } from '../services/article-manager';
 import { Article } from '../types/article';
 
 // Returns an array of Articles as JSON
@@ -12,11 +11,11 @@ export async function getArticlesAsJSON(
   const accept = request.headers.accept || '*/*';
   if (accept.includes('application/json') || accept.includes('*/*')) {
     // FIXME: The object returned here should be reduced first.
-    const articles: Array<Article> = [...articleManager.values()];
-    response
-      .type('application/json')
-      .status(200)
-      .json(articles);
+    // const articles: Array<Article> = [...articleManager.values()];
+    // response
+    //   .type('application/json')
+    //   .status(200)
+    //   .json(articles);
   } else {
     next();
   }

@@ -9,6 +9,7 @@ import { defaultConfig } from "../config/default";
 import unzipper from "unzipper";
 import { Db, MongoClient } from "mongodb";
 import FileType from "file-type";
+import { Article } from "../types/article";
 
 // Load the configuration for this service with the following precedence...
 //   process args > environment vars > config file.
@@ -31,14 +32,6 @@ const s3 = new AWS.S3({
 type FileParts = {
   version: string;
   articleId: string;
-  fileName: string;
-};
-
-type Article = {
-  content: string;
-  articleId: string;
-  version: string;
-  datatype: string;
   fileName: string;
 };
 
@@ -114,7 +107,7 @@ S3SQSListener.on("error", function(err) {
 
             if (file.path.includes(".xml")) {
               const article: Article = {
-                content: content.toString(),
+                xml: content.toString(),
                 articleId,
                 version,
                 datatype: "xml",
