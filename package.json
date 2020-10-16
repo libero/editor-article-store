@@ -64,6 +64,7 @@
     "aws-sdk": "^2.770.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "file-type": "^15.0.1",
     "mongodb": "^3.6.2",
     "sqs-consumer": "^5.4.0",
     "unzipper": "^0.10.11"

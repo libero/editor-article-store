@@ -8,4 +8,5 @@ export type Config = {
   awsEndPoint?: string;
   mongoUrl?: string;
   mongoDbName?: string;
+  editorS3Bucket?: string;
 };

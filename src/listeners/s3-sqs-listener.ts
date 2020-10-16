@@ -8,6 +8,7 @@ import {
 import { defaultConfig } from "../config/default";
 import unzipper from "unzipper";
 import { Db, MongoClient } from "mongodb";
+import FileType from "file-type";
 
 // Load the configuration for this service with the following precedence...
 //   process args > environment vars > config file.
@@ -82,6 +83,7 @@ S3SQSListener.on("error", function(err) {
 
   // Database Name
   const dbName = configManager.get("mongoDbName");
+  const editorBucket = configManager.get("editorS3Bucket");
   const client = await MongoClient.connect(url);
   const db = client.db(dbName);
   const messageBody = JSON.parse(message.Body);
@@ -92,25 +94,35 @@ S3SQSListener.on("error", function(err) {
           Key: record.s3.object.key,
           Bucket: record.s3.bucket.name,
         });
-        // todo: Move all the unzipped files to another bucket using the file name convention as kryia
-        // todo: listen to this new queue and move to the database
-        const file = directory.files.find((d: unzipper.File) =>
-          d.path.includes(".xml")
-        );
-        if (file) {
-          const { articleId, version, fileName } = extractFileParts(
-            record.s3.object.key,
-            file.path
-          );
-          const content = await file.buffer();
-          const article: Article = {
-            content: content.toString(),
-            articleId,
-            version,
-            datatype: "xml",
-            fileName,
-          };
-          await writeArticleToDb(db, article);
+        for await (const file of directory.files) {
+          if (file) {
+            const { articleId, version, fileName } = extractFileParts(
+              record.s3.object.key,
+              file.path
+            );
+            const content = await file.buffer();
+            const contentType = await FileType.fromBuffer(content);
+            const params = {
+              Body: content,
+              Bucket: editorBucket,
+              Key: `${articleId}/${fileName}`,
+              ACL: "private",
+              ContentType: contentType?.mime,
+            };
+
+            await s3.putObject(params).promise();
+
+            if (file.path.includes(".xml")) {
+              const article: Article = {
+                content: content.toString(),
+                articleId,
+                version,
+                datatype: "xml",
+                fileName,
+              };
+              await writeArticleToDb(db, article);
+            }
+          }
         }
       } catch (error) {
         console.log("Error when fetching and opening zip: ", error);
