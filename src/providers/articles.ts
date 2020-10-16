@@ -1,5 +1,6 @@
 import { default as express } from 'express';
 import { Article } from '../types/article';
+import initialiseDb from '../db';
 
 // Returns an array of Articles as JSON
 export async function getArticlesAsJSON(
@@ -10,12 +11,13 @@ export async function getArticlesAsJSON(
   console.log(request.headers.accept);
   const accept = request.headers.accept || '*/*';
   if (accept.includes('application/json') || accept.includes('*/*')) {
-    // FIXME: The object returned here should be reduced first.
-    // const articles: Array<Article> = [...articleManager.values()];
-    // response
-    //   .type('application/json')
-    //   .status(200)
-    //   .json(articles);
+    // todo: use some service -> repo
+    const db = await initialiseDb('mongodb://root:password@localhost:27017', 'editor');
+    const articles = db.collection('articles').find();
+      response
+      .type('application/json')
+      .status(200)
+      .json(articles);
   } else {
     next();
   }
