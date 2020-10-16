@@ -56,21 +56,7 @@ const writeArticleToDb = async (db: Db, article: Article) => {
   });
 };
 
-const S3SQSListener = Consumer.create({
-  queueUrl: configManager.get("awsBucketInputEventQueueUrl"),
-  region: configManager.get("awsSqsRegion"),
-  batchSize: 1,
-  sqs: new AWS.SQS({
-    endpoint: configManager.get("awsEndPoint"),
-  }),
-  handleMessage: async (message) => {
-    const id = message.Body;
-    console.log("SQS - AWS S3 uploaded event been consumed, body id: ", id);
-  },
-});
-S3SQSListener.on("error", function(err) {
-  console.log(err);
-}).on("message_received", async function(message) {
+export default async function start() {
   // Connection URL
   const url = configManager.get("mongoUrl");
 
@@ -79,49 +65,65 @@ S3SQSListener.on("error", function(err) {
   const editorBucket = configManager.get("editorS3Bucket");
   const client = await MongoClient.connect(url);
   const db = client.db(dbName);
-  const messageBody = JSON.parse(message.Body);
-  if (messageBody && messageBody.Records.length) {
-    messageBody.Records.forEach(async (record: any) => {
-      try {
-        const directory = await unzipper.Open.s3(s3, {
-          Key: record.s3.object.key,
-          Bucket: record.s3.bucket.name,
-        });
-        for await (const file of directory.files) {
-          if (file) {
-            const { articleId, version, fileName } = extractFileParts(
-              record.s3.object.key,
-              file.path
-            );
-            const content = await file.buffer();
-            const contentType = await FileType.fromBuffer(content);
-            const params = {
-              Body: content,
-              Bucket: editorBucket,
-              Key: `${articleId}/${fileName}`,
-              ACL: "private",
-              ContentType: contentType?.mime,
-            };
-
-            await s3.putObject(params).promise();
-
-            if (file.path.includes(".xml")) {
-              const article: Article = {
-                xml: content.toString(),
-                articleId,
-                version,
-                datatype: "xml",
-                fileName,
+  const S3SQSListener = Consumer.create({
+    queueUrl: configManager.get("awsBucketInputEventQueueUrl"),
+    region: configManager.get("awsSqsRegion"),
+    batchSize: 1,
+    sqs: new AWS.SQS({
+      endpoint: configManager.get("awsEndPoint"),
+    }),
+    handleMessage: async (message) => {
+      const id = message.Body;
+      console.log("SQS - AWS S3 uploaded event been consumed, body id: ", id);
+    },
+  });
+  S3SQSListener.on("error", function(err) {
+    console.log(err);
+  }).on("message_received", async function(message) {
+    const messageBody = JSON.parse(message.Body);
+    if (messageBody && messageBody.Records.length) {
+      messageBody.Records.forEach(async (record: any) => {
+        try {
+          const directory = await unzipper.Open.s3(s3, {
+            Key: record.s3.object.key,
+            Bucket: record.s3.bucket.name,
+          });
+          for await (const file of directory.files) {
+            if (file) {
+              const { articleId, version, fileName } = extractFileParts(
+                record.s3.object.key,
+                file.path
+              );
+              const content = await file.buffer();
+              const contentType = await FileType.fromBuffer(content);
+              const params = {
+                Body: content,
+                Bucket: editorBucket,
+                Key: `${articleId}/${fileName}`,
+                ACL: "private",
+                ContentType: contentType?.mime,
               };
-              await writeArticleToDb(db, article);
+
+              await s3.putObject(params).promise();
+
+              if (file.path.includes(".xml")) {
+                const article: Article = {
+                  xml: content.toString(),
+                  articleId,
+                  version,
+                  datatype: "xml",
+                  fileName,
+                };
+                await writeArticleToDb(db, article);
+              }
             }
           }
+        } catch (error) {
+          console.log("Error when fetching and opening zip: ", error);
         }
-      } catch (error) {
-        console.log("Error when fetching and opening zip: ", error);
-      }
-    });
-  }
-});
+      });
+    }
+  });
 
-export default S3SQSListener;
+  S3SQSListener.start();
+}
