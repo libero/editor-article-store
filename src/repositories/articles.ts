@@ -16,7 +16,7 @@ export default function articleRepository(db: Db) {
       return article; // TODO: add type
     },
     get: async() => {
-      const articles = await db.collection('articles').find();
+      const articles = await db.collection('articles').find().toArray(); // todo - page
       return articles;
     }
   };
