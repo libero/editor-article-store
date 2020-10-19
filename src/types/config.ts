@@ -6,4 +6,7 @@ export type Config = {
   awsSqsSecretAccessKey?: string;
   awsBucketInputEventQueueUrl?: string;
   awsEndPoint?: string;
+  mongoUrl?: string;
+  mongoDbName?: string;
+  editorS3Bucket?: string;
 };

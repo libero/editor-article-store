@@ -1,6 +1,6 @@
-import { default as express } from 'express';
-import { articleManager } from '../services/article-manager';
-import { Article } from '../types/article';
+import { default as express } from "express";
+import initialiseDb from "../db";
+import articleRepository from "../repositories/articles";
 
 // Returns an array of Articles as JSON
 export async function getArticlesAsJSON(
@@ -9,14 +9,20 @@ export async function getArticlesAsJSON(
   next: express.NextFunction
 ) {
   console.log(request.headers.accept);
-  const accept = request.headers.accept || '*/*';
-  if (accept.includes('application/json') || accept.includes('*/*')) {
-    // FIXME: The object returned here should be reduced first.
-    const articles: Array<Article> = [...articleManager.values()];
+  const accept = request.headers.accept || "*/*";
+  if (accept.includes("application/json") || accept.includes("*/*")) {
+    // todo: address as part of the depedency injection work
+    // todo: add paging and limits
+    const db = await initialiseDb(
+      "mongodb://root:password@localhost:27017",
+      "editor"
+    );
+    const repo = articleRepository(db);
+    const articles = await repo.get();
     response
-      .type('application/json')
+      .type("application/json")
       .status(200)
-      .json(articles);
+      .json({ articles });
   } else {
     next();
   }
