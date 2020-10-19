@@ -15,5 +15,9 @@ export default function articleRepository(db: Db) {
         .findOne({ _id: new ObjectID(id) });
       return article; // TODO: add type
     },
+    get: async() => {
+      const articles = await db.collection('articles').find();
+      return articles;
+    }
   };
 }

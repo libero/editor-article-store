@@ -2,6 +2,7 @@ import { default as express } from "express";
 import { ObjectID } from "mongodb";
 import { default as path } from "path";
 import initialiseDb from "../db";
+import articleRepository from "../repositories/articles";
 import { Article } from "../types/article";
 
 // Route to ensure that the requested Article exists
@@ -28,13 +29,9 @@ export async function getArticleAsXML(
   const accept = request.headers.accept || "";
   if (accept.includes("application/xml")) {
     // todo: use some service -> repo
-    const db = await initialiseDb(
-      "mongodb://root:password@localhost:27017",
-      "editor"
-    );
-    const { content } = await db
-      .collection("articles")
-      .findOne({ _id: new ObjectID(request.params.id) });
+    const db = await initialiseDb('mongodb://root:password@localhost:27017', 'editor');
+    const repo = articleRepository(db);
+    const { content } = await repo.getById(request.params.id);
     response
       .type("application/xml")
       .status(200)
@@ -53,7 +50,8 @@ export async function getArticleAsJSON(
   const accept = request.headers.accept || "*/*";
   if (accept.includes("application/json") || accept.includes("*/*")) {
     const db = await initialiseDb('mongodb://root:password@localhost:27017', 'editor');
-    const article = db.collection('articles').findOne({_id: new ObjectID(request.params.id)});
+    const repo = articleRepository(db);
+    const article = await repo.getById(request.params.id);
     response
       .type("application/json")
       .status(200)
