@@ -7,7 +7,9 @@ start_services:
 	docker-compose up -d s3-file-watcher mongo
 	./.scripts/docker/wait-healthy.sh editor_mongo 60
 start_dev: start_services
-	npm run dev
+	npm run dev &
+	sleep 30
+	cp ./resources/articles/elife-54296-vor-r1.zip ./tmp/kryiaBucket
 start: start_services
 	npm run build
 	npm start
