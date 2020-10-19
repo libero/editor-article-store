@@ -10,7 +10,6 @@ import unzipper from "unzipper";
 import { Db, MongoClient } from "mongodb";
 import FileType from "file-type";
 import { Article } from "../types/article";
-import { UpdateFunctionDefinitionRequest } from "aws-sdk/clients/greengrass";
 
 // Load the configuration for this service with the following precedence...
 //   process args > environment vars > config file.

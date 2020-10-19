@@ -1,6 +1,8 @@
 import { Db, ObjectID } from "mongodb";
 import { Article } from "../types/article";
 
+const MAX_PAGE_SIZE = 100;
+
 export default function articleRepository(db: Db) {
   return {
     insert: async (article: Article) => {
@@ -15,8 +17,9 @@ export default function articleRepository(db: Db) {
         .findOne({ articleId }); // TODO: use index on articleId
       return article; // TODO: add type
     },
-    get: async() => {
-      const articles = await db.collection('articles').find().toArray(); // todo - page
+    get: async(page = 0) => {
+      const skip = page * MAX_PAGE_SIZE;
+      const articles = await db.collection('articles').find().skip(skip).limit(MAX_PAGE_SIZE).toArray();
       return articles;
     }
   };
