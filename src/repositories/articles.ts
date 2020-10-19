@@ -9,10 +9,10 @@ export default function articleRepository(db: Db) {
       });
       return insertedId;
     },
-    getById: async (id: string) => {
+    getByArticleId: async (articleId: string) => {
       const article = await db
         .collection("articles")
-        .findOne({ _id: new ObjectID(id) });
+        .findOne({ articleId }); // TODO: use index on articleId
       return article; // TODO: add type
     },
     get: async() => {
