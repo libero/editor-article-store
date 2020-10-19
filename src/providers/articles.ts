@@ -12,7 +12,7 @@ export async function getArticlesAsJSON(
   console.log(request.headers.accept);
   const accept = request.headers.accept || '*/*';
   if (accept.includes('application/json') || accept.includes('*/*')) {
-    // todo: use some service -> repo
+    // todo: address as part of the depedency injection work
     const db = await initialiseDb('mongodb://root:password@localhost:27017', 'editor');
     const repo = articleRepository(db);
     const articles = await repo.get();

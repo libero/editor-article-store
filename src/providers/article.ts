@@ -9,6 +9,7 @@ export async function checkArticleExists(
   response: express.Response,
   next: express.NextFunction
 ) {
+  // todo: address as part of the depedency injection work
   const db = await initialiseDb('mongodb://root:password@localhost:27017', 'editor');
   const repo = articleRepository(db);
   const article = await repo.getById(request.params.id);
@@ -26,7 +27,7 @@ export async function getArticleAsXML(
 ) {
   const accept = request.headers.accept || "";
   if (accept.includes("application/xml")) {
-    // todo: use some service -> repo
+    // todo: address as part of the depedency injection work
     const db = await initialiseDb('mongodb://root:password@localhost:27017', 'editor');
     const repo = articleRepository(db);
     const { content } = await repo.getById(request.params.id);
@@ -47,6 +48,7 @@ export async function getArticleAsJSON(
 ) {
   const accept = request.headers.accept || "*/*";
   if (accept.includes("application/json") || accept.includes("*/*")) {
+    // todo: address as part of the depedency injection work
     const db = await initialiseDb('mongodb://root:password@localhost:27017', 'editor');
     const repo = articleRepository(db);
     const article = await repo.getById(request.params.id);
