@@ -1,9 +1,7 @@
 import { default as express } from "express";
-import { ObjectID } from "mongodb";
 import { default as path } from "path";
 import initialiseDb from "../db";
 import articleRepository from "../repositories/articles";
-import { Article } from "../types/article";
 
 // Route to ensure that the requested Article exists
 export async function checkArticleExists(
@@ -11,12 +9,13 @@ export async function checkArticleExists(
   response: express.Response,
   next: express.NextFunction
 ) {
-  // // TODO: fix this later
-  // if (!articleManager.has(request.params.articleId)) {
-  //   response.sendStatus(404);
-  // } else {
-  //   next();
-  // }
+  // todo: address as part of the depedency injection work
+  const db = await initialiseDb('mongodb://root:password@localhost:27017', 'editor');
+  const repo = articleRepository(db);
+  const article = await repo.getByArticleId(request.params.articleId);
+  if (!article) {
+    response.sendStatus(404);
+  }
   next();
 }
 
@@ -28,14 +27,14 @@ export async function getArticleAsXML(
 ) {
   const accept = request.headers.accept || "";
   if (accept.includes("application/xml")) {
-    // todo: use some service -> repo
+    // todo: address as part of the depedency injection work
     const db = await initialiseDb('mongodb://root:password@localhost:27017', 'editor');
     const repo = articleRepository(db);
-    const { content } = await repo.getById(request.params.id);
+    const {xml} = await repo.getByArticleId(request.params.articleId);
     response
       .type("application/xml")
       .status(200)
-      .sendFile(path.resolve(content));
+      .sendFile(path.resolve(xml));
   } else {
     next();
   }
@@ -49,9 +48,10 @@ export async function getArticleAsJSON(
 ) {
   const accept = request.headers.accept || "*/*";
   if (accept.includes("application/json") || accept.includes("*/*")) {
+    // todo: address as part of the depedency injection work
     const db = await initialiseDb('mongodb://root:password@localhost:27017', 'editor');
     const repo = articleRepository(db);
-    const article = await repo.getById(request.params.id);
+    const article = await repo.getByArticleId(request.params.articleId);
     response
       .type("application/json")
       .status(200)
