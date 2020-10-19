@@ -1,9 +1,7 @@
 import { default as express } from "express";
-import { ObjectID } from "mongodb";
 import { default as path } from "path";
 import initialiseDb from "../db";
 import articleRepository from "../repositories/articles";
-import { Article } from "../types/article";
 
 // Route to ensure that the requested Article exists
 export async function checkArticleExists(
@@ -11,12 +9,12 @@ export async function checkArticleExists(
   response: express.Response,
   next: express.NextFunction
 ) {
-  // // TODO: fix this later
-  // if (!articleManager.has(request.params.articleId)) {
-  //   response.sendStatus(404);
-  // } else {
-  //   next();
-  // }
+  const db = await initialiseDb('mongodb://root:password@localhost:27017', 'editor');
+  const repo = articleRepository(db);
+  const article = await repo.getById(request.params.id);
+  if (!article) {
+    response.sendStatus(404);
+  }
   next();
 }
 
