@@ -7,6 +7,9 @@
 
 // const agent = request.agent(app);
 
+describe("TODO: fix later", () => {
+    test('placeholder', () => {});
+});
 // describe('Get /article/00000', () => {
 //   beforeAll(async () => {
 //     await loadArticlesFromPath('./resources/articles', articleManager);

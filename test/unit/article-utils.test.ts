@@ -1,5 +1,9 @@
 // TODO: This needs to be replaced with unit tests for fetching article from DB
 
+describe("TODO: fix later", () => {
+    test('placeholder', () => {});
+});
+
 // import { articleManager } from '../../src/services/article-manager';
 // import { loadArticlesFromPath } from '../../src/utils/article-utils';
 
