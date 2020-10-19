@@ -134,14 +134,14 @@ export default async function start() {
         }
 
         if (!articleToStore) {
-          throw new Error(`Error finding article xml file in object: { Key: ${record.s3.object.key}, Bucket: ${record.s3.bucket.name} }`);
+          throw new Error(`Error finding article XML file in object: { Key: ${record.s3.object.key}, Bucket: ${record.s3.bucket.name} }`);
         }
 
         try {
           await writeArticleToDb(db, articleToStore);
-          console.log(`Article xml for ArticleID: ${articleId}, Version: ${version} stored`);
+          console.log(`Article XML stored: { ArticleID: ${articleId}, Version: ${version} }`);
         } catch (error) {
-          throw new Error(`Error when storing article xml, ArticleID: ${articleId}, Version: ${version}` + error);
+          throw new Error(`Error storing article XML: { ArticleID: ${articleId}, Version: ${version} }` + error);
         }
       });
     }
