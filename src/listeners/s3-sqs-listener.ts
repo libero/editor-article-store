@@ -10,6 +10,7 @@ import unzipper from "unzipper";
 import { Db, MongoClient } from "mongodb";
 import FileType from "file-type";
 import { Article } from "../types/article";
+import { UpdateFunctionDefinitionRequest } from "aws-sdk/clients/greengrass";
 
 // Load the configuration for this service with the following precedence...
 //   process args > environment vars > config file.
@@ -32,23 +33,24 @@ const s3 = new AWS.S3({
 type FileParts = {
   version: string;
   articleId: string;
-  fileName: string;
 };
 
 // S3 has the following format /folder/zip-id-version.zip
-const extractFileParts = (s3Key: string, filePath: string): FileParts => {
-  const filePaths = filePath.split("/");
+const extractS3Path = (s3Key: string): FileParts => {
   const s3Paths = s3Key.split("/");
   const fileNameParts = s3Paths[s3Paths.length - 1].split("-");
   const articleId = fileNameParts[1];
   const version = fileNameParts[fileNameParts.length - 1].replace(".zip", "");
-
   return {
     articleId,
     version,
-    fileName: filePaths[filePaths.length - 1],
   };
 };
+
+const getFilenameFromPath = (filePath: string) => {
+  const filePaths = filePath.split("/");
+  return filePaths[filePaths.length - 1]
+}
 
 const writeArticleToDb = async (db: Db, article: Article) => {
   await db.collection("articles").insertOne({
@@ -73,8 +75,12 @@ export default async function start() {
       endpoint: configManager.get("awsEndPoint"),
     }),
     handleMessage: async (message) => {
-      const id = message.Body;
-      console.log("SQS - AWS S3 uploaded event been consumed, body id: ", id);
+      const messageBody = JSON.parse(message.Body || '');
+      if (messageBody.Records?.length) {
+        messageBody.Records.forEach((record: any) => {
+          console.log(`SQS - AWS S3 uploaded event been consumed - { Key: ${record.s3.object.key}, Bucket: ${record.s3.bucket.name} }`);
+        });
+      }
     },
   });
   S3SQSListener.on("error", function(err) {
@@ -83,43 +89,59 @@ export default async function start() {
     const messageBody = JSON.parse(message.Body);
     if (messageBody && messageBody.Records.length) {
       messageBody.Records.forEach(async (record: any) => {
+        let zipContentsDirectory;
+        let articleToStore: Article | undefined;
+        const { articleId, version } = extractS3Path(
+          record.s3.object.key
+        );
         try {
-          const directory = await unzipper.Open.s3(s3, {
+          zipContentsDirectory = await unzipper.Open.s3(s3, {
             Key: record.s3.object.key,
             Bucket: record.s3.bucket.name,
           });
-          for await (const file of directory.files) {
-            if (file) {
-              const { articleId, version, fileName } = extractFileParts(
-                record.s3.object.key,
-                file.path
-              );
-              const content = await file.buffer();
-              const contentType = await FileType.fromBuffer(content);
-              const params = {
-                Body: content,
-                Bucket: editorBucket,
-                Key: `${articleId}/${fileName}`,
-                ACL: "private",
-                ContentType: contentType?.mime,
-              };
-
+        } catch (error) {
+          throw new Error(`Error when fetching and unzipping object: { Key: ${record.s3.object.key}, Bucket: ${record.s3.bucket.name} } - ${error}`);
+        }
+        for (const file of zipContentsDirectory.files) {
+          if (file) {
+            const fileName = getFilenameFromPath(file.path);
+            const content = await file.buffer();
+            const contentType = await FileType.fromBuffer(content);
+            const params = {
+              Body: content,
+              Bucket: editorBucket,
+              Key: `${articleId}/${fileName}`,
+              ACL: "private",
+              ContentType: contentType?.mime,
+            };
+            try {
               await s3.putObject(params).promise();
+              console.log(`Object stored: { Key: ${articleId}/${fileName}, Bucket: ${editorBucket} }`);
+            } catch(error) {
+              throw new Error(`Error when storing object: { Key: ${articleId}/${fileName}, Bucket: ${editorBucket} } - ${error}`);
+            }
 
-              if (file.path.includes(".xml")) {
-                const article: Article = {
-                  xml: content.toString(),
-                  articleId,
-                  version,
-                  datatype: "xml",
-                  fileName,
-                };
-                await writeArticleToDb(db, article);
-              }
+            if (file.path.includes(".xml")) {
+              articleToStore = {
+                xml: content.toString(),
+                articleId,
+                version,
+                datatype: "xml",
+                fileName,
+              };
             }
           }
+        }
+
+        if (!articleToStore) {
+          throw new Error(`Error finding article xml file in object: { Key: ${record.s3.object.key}, Bucket: ${record.s3.bucket.name} }`);
+        }
+
+        try {
+          await writeArticleToDb(db, articleToStore);
+          console.log(`Article xml for ArticleID: ${articleId}, Version: ${version} stored`);
         } catch (error) {
-          console.log("Error when fetching and opening zip: ", error);
+          throw new Error(`Error when storing article xml, ArticleID: ${articleId}, Version: ${version}` + error);
         }
       });
     }
