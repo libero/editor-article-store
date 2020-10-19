@@ -1,5 +1,4 @@
 import { default as express } from 'express';
-import { Article } from '../types/article';
 import initialiseDb from '../db';
 import articleRepository from '../repositories/articles';
 
@@ -13,6 +12,7 @@ export async function getArticlesAsJSON(
   const accept = request.headers.accept || '*/*';
   if (accept.includes('application/json') || accept.includes('*/*')) {
     // todo: address as part of the depedency injection work
+    // todo: add paging and limits
     const db = await initialiseDb('mongodb://root:password@localhost:27017', 'editor');
     const repo = articleRepository(db);
     const articles = await repo.get();
