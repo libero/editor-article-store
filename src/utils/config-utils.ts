@@ -5,11 +5,6 @@ import { ProcessEnv } from '../types/node';
 export function createConfigFromArgs(args: string[]): Config {
   const retVal: Config = {};
   for (let i = 0; i < args.length; i++) {
-    if (args[i] === '--article-root' || args[i] === '-r') {
-      if (++i < args.length) {
-        retVal.articleRoot = args[i];
-      }
-    }
     if (args[i] === '--port' || args[i] === '-p') {
       if (++i < args.length) {
         retVal.port = parseInt(args[i]);
@@ -22,11 +17,14 @@ export function createConfigFromArgs(args: string[]): Config {
 // Creates a new Config from the process' enviroment vars.
 export function createConfigFromEnv(env: ProcessEnv): Config {
   const retVal: Config = {};
-  if (env['ARTICLE_ROOT']) {
-    retVal.articleRoot = env['ARTICLE_ROOT'];
-  }
   if (env['PORT']) {
     retVal.port = parseInt(env['PORT']);
+  }
+  if (env['MONGO_URL']) {
+    retVal.mongoUrl = env['MONGO_URL'];
+  }
+  if (env['MONGO_DB_NAME']) {
+    retVal.mongoDbName = env['MONGO_DB_NAME'];
   }
   if (env['AWS_REGION']) {
     retVal.awsSqsRegion = env['AWS_REGION'];
