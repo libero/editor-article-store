@@ -30,11 +30,11 @@ export async function getArticleAsXML(
     // todo: address as part of the depedency injection work
     const db = await initialiseDb('mongodb://root:password@localhost:27017', 'editor');
     const repo = articleRepository(db);
-    const { content } = await repo.getByArticleId(request.params.articleId);
+    const {xml} = await repo.getByArticleId(request.params.articleId);
     response
       .type("application/xml")
       .status(200)
-      .sendFile(path.resolve(content));
+      .sendFile(path.resolve(xml));
   } else {
     next();
   }
