@@ -1,6 +1,6 @@
 export type Article = {
   _id?: string;
-  root?: string,
+  root?: string;
   xml: string;
   articleId: string;
   version: string;
