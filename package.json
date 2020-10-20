@@ -14,7 +14,7 @@
     "dev": "tsc -w & nodemon ./dist/index.js",
     "lint": "echo Nothing to do for target 'lint'",
     "pretest": "npm run build",
-    "test": "jest --config jestconfig.json",
+    "test": "jest",
     "release": "standard-version",
     "migrate": "migrate up"
   },
@@ -62,6 +62,7 @@
     "typescript": "^3.8.3"
   },
   "dependencies": {
+    "@shelf/jest-mongodb": "^1.2.3",
     "aws-sdk": "^2.770.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",

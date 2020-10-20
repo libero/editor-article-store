@@ -3,3 +3,4 @@ dist
 test/report
 tmp
 .DS_Store
+globalConfig.json
