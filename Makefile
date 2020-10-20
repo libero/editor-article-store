@@ -13,6 +13,8 @@ start_dev: start_services
 start: start_services
 	npm run build
 	npm start
+test_ci: start
+	npm run test
 test: start_dev
 	npm run test
 stop:
