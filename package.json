@@ -2,7 +2,7 @@
   "name": "editor-article-store",
   "version": "0.0.1",
   "description": "Libero Editor Article Store",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "directories": {
     "doc": "docs"
   },

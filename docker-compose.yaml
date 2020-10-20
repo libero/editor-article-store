@@ -1,5 +1,14 @@
 version: '3.4'
 services:
+  editor-article-store:
+    build:
+      context: './'
+      target: ${RUN_ENV:-prod}
+    image: editor-article-store:${IMAGE_TAG:-local}
+    ports:
+      - 8080:8080
+    volumes:
+      - ./src/:/app/src
   localstack:
     image: localstack/localstack
     ports:

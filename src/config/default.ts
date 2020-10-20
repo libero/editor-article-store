@@ -8,9 +8,9 @@ export const defaultConfig: Config = {
   awsSqsAccessKey: "key",
   awsSqsSecretAccessKey: "secret",
   awsBucketInputEventQueueUrl:
-    "http://localhost:4566/000000000000/KryiaUploadQueue",
-  awsEndPoint: "http://localhost:4566",
-  mongoUrl: "mongodb://root:password@localhost:27017",
+    "http://localstack:4566/000000000000/KryiaUploadQueue",
+  awsEndPoint: "http://localstack:4566",
+  mongoUrl: "mongodb://root:password@mongo:27017",
   mongoDbName: "editor",
   editorS3Bucket: "editor",
 };
