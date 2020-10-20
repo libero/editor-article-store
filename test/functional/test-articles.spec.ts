@@ -1,7 +1,8 @@
 import * as request from 'supertest';
-import startServer from '../../src/server';
 
-const agent = request.agent(startServer());
+// move to enviroment;
+const API_URL = 'localhost:8080';
+const agent = request.agent(API_URL);
 
 describe('Get /articles', () => {
   test('Returns 200 for a valid mimetype', async () => {

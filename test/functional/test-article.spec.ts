@@ -1,7 +1,8 @@
 import * as request from 'supertest';
-import startServer from '../../src/server';
 
-const agent = request.agent(startServer());
+// move to enviroment;
+const API_URL = 'localhost:8080';
+const agent = request.agent(API_URL);
 
 describe('Get /article/00000', () => {
   test('Returns 404 for an invalid article', async () => {
