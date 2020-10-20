@@ -42,6 +42,7 @@ export default async function start() {
   // Register routers
   app.use("/articles", articlesRouter(articleService));
   app.use("/articles/:articleId/changes", changesRouter);
+  app.get("/health", (req, res, next) => res.sendStatus(200))
 
   // Register 'catch all' handler
   app.all("*", http404Response);
