@@ -10,6 +10,10 @@ describe("articleService", () => {
     db = await connection.db();
   });
 
+  beforeEach(async () => {
+    await db.dropDatabase();
+  })
+
   afterAll(async () => {
     await connection.close();
   });
@@ -36,4 +40,9 @@ describe("articleService", () => {
     expect(result).toBeDefined();
     expect(result).toEqual({ _id: insertedId, ...data });
   });
+
+  test("Returns empty array if no articles", async () => {
+    const articles = await articleService(db).getArticles(0);
+    expect(articles.length).toBe(0);
+  })
 });
