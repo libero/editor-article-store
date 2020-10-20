@@ -6,7 +6,7 @@ import {
   createConfigFromEnv,
 } from "../utils/config-utils";
 import { defaultConfig } from "../config/default";
-import unzipper from "unzipper";
+import decompress from 'decompress';
 import { Db, MongoClient } from "mongodb";
 import FileType from "file-type";
 import { Article } from "../types/article";
@@ -94,17 +94,19 @@ export default async function start() {
           record.s3.object.key
         );
         try {
-          zipContentsDirectory = await unzipper.Open.s3(s3, {
+        const { Body } = await s3
+          .getObject({
             Key: record.s3.object.key,
             Bucket: record.s3.bucket.name,
-          });
+          }).promise();
+          zipContentsDirectory = await decompress(Body as Buffer);
         } catch (error) {
           throw new Error(`Error when fetching and unzipping object: { Key: ${record.s3.object.key}, Bucket: ${record.s3.bucket.name} } - ${error}`);
         }
-        for (const file of zipContentsDirectory.files) {
+        for (const file of zipContentsDirectory) {
           if (file) {
             const fileName = getFilenameFromPath(file.path);
-            const content = await file.buffer();
+            const content = await file.data;
             const contentType = await FileType.fromBuffer(content);
             const params = {
               Body: content,

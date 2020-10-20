@@ -11,10 +11,10 @@ On first run you'll need to initialize and update the git submodule which has so
 ```
 git submodule init
 git submodule update --recursive
-npm install
 ```
 
 Then to build and start the services just run:
+
 ```
 make start_dev
 ```

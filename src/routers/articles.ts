@@ -40,7 +40,6 @@ export default (articleService: any): express.Router => {
     }
 
     if (accept.includes("application/xml")) {
-      console.log("Hit", accept);
       res
         .type("text/xml")
         .status(200)
