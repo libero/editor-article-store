@@ -20,8 +20,13 @@ start: start_services
 	docker-compose up -d editor-article-store
 
 test_ci: start
+	npm install
+	cp ./resources/articles/elife-54296-vor-r1.zip ./tmp/kryiaBucket
 	npm run test
+
 test: start_dev
+	npm install
+	cp ./resources/articles/elife-54296-vor-r1.zip ./tmp/kryiaBucket
 	npm run test
 
 stop:
