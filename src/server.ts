@@ -56,6 +56,7 @@ export default async function start() {
     );
   });
 
+
   // Cleanly shuts down the application
   function terminate(): void {
     console.log(`Shutting down...`);
@@ -67,4 +68,6 @@ export default async function start() {
       process.exit(0);
     }
   }
+
+  return app;
 }
