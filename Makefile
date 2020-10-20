@@ -19,7 +19,9 @@ start: start_services
 	RUN_ENV=prod ${MAKE} build
 	docker-compose up -d editor-article-store
 
-test: start
+test_ci: start
+	npm run test
+test: start_dev
 	npm run test
 
 stop:

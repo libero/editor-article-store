@@ -23,7 +23,7 @@ jobs:
           npm run lint
       - name: Test
         run: |
-          npm run test
+          make test_ci
       - name: Publish as 'unstable'
         if: github.ref == 'refs/heads/master'
         run: |
