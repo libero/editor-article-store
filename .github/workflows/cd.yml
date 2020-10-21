@@ -24,18 +24,18 @@ jobs:
       - name: Unit Test
         run: |
           npm run test
-    build:
-      runs-on: ubuntu-18.04
-      steps:
-      - name: Build Container Images
-        run: |
-          RUN_ENV=prod make build
-          mkdir -p docker-image
-          docker save -o docker-image/editor-article-store.tar editor-article-store:${IMAGE_TAG}
-      - uses: actions/upload-artifact@v1
-        with:
-          name: docker-image
-          path: docker-image
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+    - name: Build Container Images
+      run: |
+        RUN_ENV=prod make build
+        mkdir -p docker-image
+        docker save -o docker-image/editor-article-store.tar editor-article-store:${IMAGE_TAG}
+    - uses: actions/upload-artifact@v1
+      with:
+        name: docker-image
+        path: docker-image
   functional-tests-and-push:
     needs: [test & lint, build]
     runs-on: ubuntu-18.04
