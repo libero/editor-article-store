@@ -125,7 +125,18 @@ export default async function start() {
                 `Object stored: { Key: ${articleId}/${fileName}, Bucket: ${editorBucket} }`
               );
               if (file.path.includes(".tiff")) {
-                sharp(content).toFormat('jpg');
+                const jpgBuffer = await sharp(content)
+                  .toFormat("jpg")
+                  .toBuffer();
+                const jpgCcontentType = await FileType.fromBuffer(jpgBuffer);
+                const jpgParams = {
+                  Body: jpgBuffer,
+                  Bucket: editorBucket,
+                  Key: `${articleId}/${fileName.replace(".tiff", ".jpg")}`,
+                  ACL: "private",
+                  ContentType: jpgCcontentType?.mime,
+                };
+                await s3.putObject(jpgParams).promise();
               }
             } catch (error) {
               throw new Error(
