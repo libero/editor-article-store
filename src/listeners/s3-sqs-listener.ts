@@ -1,12 +1,13 @@
 import { Consumer } from "sqs-consumer";
 import AWS from "aws-sdk";
 import { configManager } from "../services/config-manager";
+import sharp from "sharp";
 import {
   createConfigFromArgs,
   createConfigFromEnv,
 } from "../utils/config-utils";
 import { defaultConfig } from "../config/default";
-import decompress from 'decompress';
+import decompress from "decompress";
 import { Db, MongoClient } from "mongodb";
 import FileType from "file-type";
 import { Article } from "../types/article";
@@ -48,8 +49,8 @@ const extractS3Path = (s3Key: string): FileParts => {
 
 const getFilenameFromPath = (filePath: string) => {
   const filePaths = filePath.split("/");
-  return filePaths[filePaths.length - 1]
-}
+  return filePaths[filePaths.length - 1];
+};
 
 const writeArticleToDb = async (db: Db, article: Article) => {
   await db.collection("articles").insertOne({
@@ -74,10 +75,12 @@ export default async function start() {
       endpoint: configManager.get("awsEndPoint"),
     }),
     handleMessage: async (message) => {
-      const messageBody = JSON.parse(message.Body || '');
+      const messageBody = JSON.parse(message.Body || "");
       if (messageBody.Records?.length) {
         messageBody.Records.forEach((record: any) => {
-          console.log(`SQS - AWS S3 uploaded event been consumed - { Key: ${record.s3.object.key}, Bucket: ${record.s3.bucket.name} }`);
+          console.log(
+            `SQS - AWS S3 uploaded event been consumed - { Key: ${record.s3.object.key}, Bucket: ${record.s3.bucket.name} }`
+          );
         });
       }
     },
@@ -90,18 +93,19 @@ export default async function start() {
       messageBody.Records.forEach(async (record: any) => {
         let zipContentsDirectory;
         let articleToStore: Article | undefined;
-        const { articleId, version } = extractS3Path(
-          record.s3.object.key
-        );
+        const { articleId, version } = extractS3Path(record.s3.object.key);
         try {
-        const { Body } = await s3
-          .getObject({
-            Key: record.s3.object.key,
-            Bucket: record.s3.bucket.name,
-          }).promise();
+          const { Body } = await s3
+            .getObject({
+              Key: record.s3.object.key,
+              Bucket: record.s3.bucket.name,
+            })
+            .promise();
           zipContentsDirectory = await decompress(Body as Buffer);
         } catch (error) {
-          throw new Error(`Error when fetching and unzipping object: { Key: ${record.s3.object.key}, Bucket: ${record.s3.bucket.name} } - ${error}`);
+          throw new Error(
+            `Error when fetching and unzipping object: { Key: ${record.s3.object.key}, Bucket: ${record.s3.bucket.name} } - ${error}`
+          );
         }
         for (const file of zipContentsDirectory) {
           if (file) {
@@ -117,9 +121,16 @@ export default async function start() {
             };
             try {
               await s3.putObject(params).promise();
-              console.log(`Object stored: { Key: ${articleId}/${fileName}, Bucket: ${editorBucket} }`);
-            } catch(error) {
-              throw new Error(`Error when storing object: { Key: ${articleId}/${fileName}, Bucket: ${editorBucket} } - ${error}`);
+              console.log(
+                `Object stored: { Key: ${articleId}/${fileName}, Bucket: ${editorBucket} }`
+              );
+              if (file.path.includes(".tiff")) {
+                sharp(content).toFormat('jpg');
+              }
+            } catch (error) {
+              throw new Error(
+                `Error when storing object: { Key: ${articleId}/${fileName}, Bucket: ${editorBucket} } - ${error}`
+              );
             }
 
             if (file.path.includes(".xml")) {
@@ -135,14 +146,21 @@ export default async function start() {
         }
 
         if (!articleToStore) {
-          throw new Error(`Error finding article XML file in object: { Key: ${record.s3.object.key}, Bucket: ${record.s3.bucket.name} }`);
+          throw new Error(
+            `Error finding article XML file in object: { Key: ${record.s3.object.key}, Bucket: ${record.s3.bucket.name} }`
+          );
         }
 
         try {
           await writeArticleToDb(db, articleToStore);
-          console.log(`Article XML stored: { ArticleID: ${articleId}, Version: ${version} }`);
+          console.log(
+            `Article XML stored: { ArticleID: ${articleId}, Version: ${version} }`
+          );
         } catch (error) {
-          throw new Error(`Error storing article XML: { ArticleID: ${articleId}, Version: ${version} }` + error);
+          throw new Error(
+            `Error storing article XML: { ArticleID: ${articleId}, Version: ${version} }` +
+              error
+          );
         }
       });
     }
