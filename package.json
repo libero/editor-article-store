@@ -14,6 +14,7 @@
     "dev": "tsc -w & nodemon ./dist/index.js",
     "lint": "echo Nothing to do for target 'lint'",
     "test": "jest ./test/unit",
+    "test:functional": "jest ./test/functional",
     "release": "standard-version",
     "migrate": "migrate up"
   },

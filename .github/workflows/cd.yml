@@ -47,13 +47,16 @@ jobs:
       - uses: actions/download-artifact@v1
         with:
           name: docker-image
-      - name: Load Images, Setup Services, Run Functional Tests
+      - name: Load Images & Setup Services
         run: |
           docker load -i docker-image/editor-article-store.tar
           make start_services
           IMAGE_TAG=${IMAGE_TAG} docker-compose up -d editor-article-store
           docker exec localstack awslocal s3 cp /resources/articles/elife-54296-vor-r1.zip s3://kryia/
-
+      - name: Run functional tests
+        run: |
+          npm install
+          npm run test:functional
       - name: Publish as 'unstable'
         if: github.ref == 'refs/heads/master'
         run: |
