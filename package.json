@@ -13,8 +13,8 @@
     "start": "node ./dist/index.js",
     "dev": "tsc -w & nodemon ./dist/index.js",
     "lint": "echo Nothing to do for target 'lint'",
-    "pretest": "npm run build",
-    "test": "jest",
+    "test": "jest ./test/unit",
+    "test:functional": "jest ./test/functional",
     "release": "standard-version",
     "migrate": "migrate up"
   },
