@@ -14,7 +14,7 @@ export default function articleRepository(db: Db) {
     getByArticleId: async (articleId: string) => {
       const article = await db
         .collection("articles")
-        .findOne({ articleId }); // TODO: use index on articleId
+        .findOne({ articleId });
       return article; // TODO: add type
     },
     get: async(page = 0) => {
