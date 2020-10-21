@@ -28,15 +28,15 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
-      - uses: actions/upload-artifact@v1
-        with:
-          name: docker-image
-          path: docker-image
       - name: Build Container Images
         run: |
           RUN_ENV=prod make build
           mkdir -p docker-image
           docker save -o docker-image/editor-article-store.tar editor-article-store:${IMAGE_TAG}
+      - uses: actions/upload-artifact@v1
+        with:
+          name: docker-image
+          path: docker-image
   functional-tests-and-push:
     needs: [test-and-lint, build]
     runs-on: ubuntu-18.04
