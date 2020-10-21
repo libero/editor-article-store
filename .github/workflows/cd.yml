@@ -24,11 +24,12 @@ jobs:
       - name: Unit Test
         run: |
           npm run test
+      
       - name: Build Container Images
         run: |
           RUN_ENV=prod make build
           mkdir -p docker-image
-          docker save -o docker-image/editor-article-store.tar libero/editor-article-store:${IMAGE_TAG}
+          docker save -o docker-image/editor-article-store.tar editor-article-store:${IMAGE_TAG}
         - uses: actions/upload-artifact@v1
             with:
               name: docker-image
