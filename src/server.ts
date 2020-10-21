@@ -2,10 +2,11 @@ import { default as cors } from "cors";
 import { default as express } from "express";
 import { Http2Server } from "http2";
 
-import { articlesRouter } from "./routers/articles";
+import articlesRouter from "./routers/articles";
 import { changesRouter } from "./routers/changes";
 import { http404Response } from "./providers/errors";
 import { configManager } from "./services/config-manager";
+import ArticleService from './services/article';
 import { defaultConfig } from "./config/default";
 import {
   createConfigFromArgs,
@@ -30,14 +31,18 @@ export default async function start() {
   let server: Http2Server;
   const app: express.Application = express();
 
-  await initialiseDb(mongoUrl, dbName);
+  const db = await initialiseDb(mongoUrl, dbName);
+
+  // Initialize services
+  const articleService = ArticleService(db);
 
   // Register middlewares
   app.use(cors());
 
   // Register routers
-  app.use("/articles", articlesRouter);
+  app.use("/articles", articlesRouter(articleService));
   app.use("/articles/:articleId/changes", changesRouter);
+  app.get("/health", (req, res, next) => res.sendStatus(200))
 
   // Register 'catch all' handler
   app.all("*", http404Response);
@@ -52,6 +57,7 @@ export default async function start() {
     );
   });
 
+
   // Cleanly shuts down the application
   function terminate(): void {
     console.log(`Shutting down...`);
@@ -63,4 +69,6 @@ export default async function start() {
       process.exit(0);
     }
   }
+
+  return app;
 }

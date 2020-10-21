@@ -1,16 +1,56 @@
-import { default as express } from 'express';
-import { logRequest } from '../middlewares/log-request';
-import { http415Response } from '../providers/errors';
-import { getArticleAsJSON, getArticleAsXML, checkArticleExists } from '../providers/article';
-import { getArticlesAsJSON } from '../providers/articles';
+import { default as express } from "express";
+import { http415Response } from "../providers/errors";
 
-export const articlesRouter: express.Router = express.Router();
+import { logRequest } from "../middlewares/log-request";
 
-// Log all requests on this route.
-articlesRouter.use(logRequest);
+export default (articleService: any): express.Router => {
+  const router = express.Router();
 
-// Get a list of all the available articles.
-articlesRouter.get('/', [getArticlesAsJSON, http415Response]);
+  // Log all requests on this route.
+  router.use(logRequest);
 
-// Gets the specified article.
-articlesRouter.get('/:articleId', [checkArticleExists, getArticleAsXML, getArticleAsJSON, http415Response]);
+  // Get a list of all the available articles.
+  router.get(
+    "/",
+    async (req, res, next) => {
+      const accept = req.headers.accept || "*/*";
+      if (accept.includes("application/json") || accept.includes("*/*")) {
+        // todo: address as part of the depedency injection work
+        const articles = await articleService.getArticles(req.query.page || 0);
+        res
+          .type("application/json")
+          .status(200)
+          .json({ articles });
+      } else {
+        next();
+      }
+    },
+    http415Response
+  );
+
+  // Gets the specified article.
+  router.get("/:articleId", async (req, res) => {
+    const accept = req.headers.accept || "";
+    const articleId = req.params.articleId;
+
+    const article = await articleService.findByArticleId(articleId);
+
+    if (!article) {
+      res.sendStatus(404);
+    }
+
+    if (accept.includes("application/xml")) {
+      res
+        .type("text/xml")
+        .status(200)
+        .send(article.xml);
+    } else {
+      res
+        .type("application/json")
+        .status(200)
+        .json(article);
+    }
+  });
+
+  return router;
+};
