@@ -52,7 +52,8 @@ jobs:
           docker load -i docker-image/editor-article-store.tar
           make start_services
           IMAGE_TAG=${IMAGE_TAG} docker-compose up -d editor-article-store
-          cp ./resources/articles/elife-54296-vor-r1.zip ./tmp/kryiaBucket
+          docker exec -it localstack awslocal s3 cp /resources/articles/elife-54296-vor-r1.zip s3://kryia/
+          
       - name: Publish as 'unstable'
         if: github.ref == 'refs/heads/master'
         run: |
