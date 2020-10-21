@@ -1,61 +1,66 @@
-import { Db, MongoClient } from "mongodb";
+import { Db } from "mongodb";
 import articleService from "../../src/services/article";
 
-describe("articleService", () => {
-  let connection: MongoClient;
-  let db: Db;
+let getByArticleIdMock = jest.fn().mockReturnValue(null);
+let getArticlesMock = jest.fn().mockReturnValue(null);
+jest.mock('../../src/repositories/articles', () => {
+  return jest.fn().mockImplementation(() => ({
+    getByArticleId: getByArticleIdMock,
+    get: getArticlesMock
+}))});
 
-  beforeAll(async () => {
-    connection = await MongoClient.connect(process.env.MONGO_URL || "");
-    db = await connection.db();
-  });
+describe("articleService", () => {
+  const db = {} as unknown as Db;
 
   beforeEach(async () => {
-    await db.dropDatabase();
-  })
-
-  afterAll(async () => {
-    await connection.close();
+    jest.restoreAllMocks();
   });
+
   test("should not throw", () => {
     expect(() => {
-      articleService(db);
+      articleService({} as unknown as Db);
     }).not.toThrow();
   });
 
   test("Returns null if article is not found", async () => {
+    getByArticleIdMock = jest.fn().mockReturnValue(null);
     const result = await articleService(db).findByArticleId("123");
     expect(result).toBe(null);
   });
 
   test("Returns article if found", async () => {
     const data = {
+      _id: 123,
       xml: "<xml></xml",
       datatype: "xml",
       articleId: "12345",
       fileName: "main.xml",
+      version: "v1"
     };
-    const { insertedId } = await db.collection("articles").insertOne(data);
+    getByArticleIdMock = jest.fn().mockReturnValue(data);
     const result = await articleService(db).findByArticleId("12345");
     expect(result).toBeDefined();
-    expect(result).toEqual({ _id: insertedId, ...data });
+    expect(result).toEqual({...data });
   });
 
   test("Returns empty array if no articles", async () => {
+    getArticlesMock = jest.fn().mockReturnValue([]);
     const articles = await articleService(db).getArticles(0);
     expect(articles.length).toBe(0);
-  })
+    expect(getArticlesMock).toBeCalledWith(0);
+  });
 
-  test("Returns empty array if no articles", async () => {
+  test("Returns  array if there articles", async () => {
     const data = {
       xml: "<xml></xml",
       datatype: "xml",
       articleId: "12345",
       fileName: "main.xml",
     };
-    const { insertedId } = await db.collection("articles").insertOne(data);
+    getArticlesMock = jest.fn().mockReturnValue([data]);
     const articles = await articleService(db).getArticles(0);
     expect(articles.length).toBe(1);
-    expect(articles[0]).toEqual({ _id: insertedId, ...data });
-  })
+    expect(articles[0]).toEqual({ ...data });
+    expect(getArticlesMock).toBeCalledWith(0);
+  });
 });

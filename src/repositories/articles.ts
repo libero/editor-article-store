@@ -15,7 +15,7 @@ export default function articleRepository(db: Db) {
       const article = await db
         .collection("articles")
         .findOne({ articleId });
-      return article; // TODO: add type
+      return article;
     },
     get: async(page = 0) => {
       const skip = page * MAX_PAGE_SIZE;
