@@ -23,19 +23,9 @@ services:
     container_name: localstack
     volumes:
       - "./tmp/localstack:/tmp/localstack"
+      - "./resources:/resources"
       - "./.localstack/startup:/docker-entrypoint-initaws.d"
       - "./.localstack/config:/etc/localstackconf"
-  s3-file-watcher:
-    build:
-      context: './file-watcher'
-    image: file-watcher:${IMAGE_TAG:-local}
-    environment: 
-      - S3_BUCKET=kryia
-      - AWS_ENDPOINT=http://localstack:4566
-    volumes: 
-      - "./tmp/kryiaBucket:/bucket-to-watch"
-    depends_on:
-      - localstack
   mongo:
     image: mongo
     container_name: editor_mongo
@@ -51,3 +41,16 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: password
     ports:
       - 27017:27017
+
+# Development Services
+  s3-file-watcher:
+    build:
+      context: './file-watcher'
+    image: file-watcher:${IMAGE_TAG:-local}
+    environment: 
+      - S3_BUCKET=kryia
+      - AWS_ENDPOINT=http://localstack:4566
+    volumes: 
+      - "./tmp/kryiaBucket:/bucket-to-watch"
+    depends_on:
+      - localstack
