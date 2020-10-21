@@ -9,10 +9,6 @@ export default (db: Db) => {
     },
     findByArticleId: async (articleId: string) => {
       return articleRepo.getByArticleId(articleId);
-    },
-    getArticleXml: async (articleId: string) => {
-      const { xml } = await articleRepo.getByArticleId(articleId);
-      return xml;
     }
   }
 };
