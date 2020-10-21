@@ -6,7 +6,7 @@ env:
   IMAGE_TAG: ${{ github.sha }}
 
 jobs:
-  test & lint:
+  test-and-lint:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
@@ -37,7 +37,7 @@ jobs:
         name: docker-image
         path: docker-image
   functional-tests-and-push:
-    needs: [test & lint, build]
+    needs: [test-and-lint, build]
     runs-on: ubuntu-18.04
     steps:
       - name: Load Images, Setup Services, Run Functional Tests
