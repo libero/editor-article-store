@@ -1,4 +1,4 @@
-import { Db, ObjectID } from "mongodb";
+import { Db } from "mongodb";
 import { Article } from "../types/article";
 
 const MAX_PAGE_SIZE = 100;
