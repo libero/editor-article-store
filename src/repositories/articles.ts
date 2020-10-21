@@ -1,4 +1,4 @@
-import { Db, ObjectID } from "mongodb";
+import { Db } from "mongodb";
 import { Article } from "../types/article";
 
 const MAX_PAGE_SIZE = 100;
@@ -14,8 +14,8 @@ export default function articleRepository(db: Db) {
     getByArticleId: async (articleId: string) => {
       const article = await db
         .collection("articles")
-        .findOne({ articleId }); // TODO: use index on articleId
-      return article; // TODO: add type
+        .findOne({ articleId });
+      return article;
     },
     get: async(page = 0) => {
       const skip = page * MAX_PAGE_SIZE;

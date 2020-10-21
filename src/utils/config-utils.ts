@@ -35,9 +35,6 @@ export function createConfigFromEnv(env: ProcessEnv): Config {
   if (env['AWS_SECRET_ACCESS_KEY']) {
     retVal.awsSqsSecretAccessKey = env['AWS_SECRET_ACCESS_KEY'];
   }
-  if (env['AWS_SECRET_ACCESS_KEY']) {
-    retVal.awsSqsSecretAccessKey = env['AWS_SECRET_ACCESS_KEY']
-  }
   if (env['AWS_BUCKET_INPUT_EVENT_QUEUE_URL']) {
     retVal.awsBucketInputEventQueueUrl = env['AWS_BUCKET_INPUT_EVENT_QUEUE_URL'];
   }
