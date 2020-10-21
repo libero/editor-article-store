@@ -49,6 +49,30 @@ describe('createConfigFromEnv()', () => {
     expect(createConfigFromEnv(input)).toEqual(output);
   });
 
+  test('Cope with full input', () => {
+    const input = {
+      PORT: '8080',
+      MONGO_URL: 'mongo',
+      MONGO_DB_NAME: 'dbname',
+      AWS_REGION: 'AWS_REGION',
+      AWS_ACCESS_KEY: 'AWS_ACCESS_KEY',
+      AWS_SECRET_ACCESS_KEY: 'AWS_SECRET_ACCESS_KEY',
+      AWS_BUCKET_INPUT_EVENT_QUEUE_URL: 'AWS_BUCKET_INPUT_EVENT_QUEUE_URL',
+      AWS_END_POINT: 'AWS_END_POINT'
+    };
+    const output = {
+      port: 8080,
+      mongoUrl: 'mongo',
+      mongoDbName: 'dbname',
+      awsSqsRegion: 'AWS_REGION',
+      awsSqsAccessKey: 'AWS_ACCESS_KEY',
+      awsSqsSecretAccessKey: 'AWS_SECRET_ACCESS_KEY',
+      awsBucketInputEventQueueUrl: 'AWS_BUCKET_INPUT_EVENT_QUEUE_URL',
+      awsEndPoint: 'AWS_END_POINT'
+    };
+    expect(createConfigFromEnv(input)).toEqual(output);
+  });
+
   test('Cope with unsupported args', () => {
     const input = {
       INVALID_ARG: 'invalid'
