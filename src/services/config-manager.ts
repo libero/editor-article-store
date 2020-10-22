@@ -2,7 +2,7 @@ import { Config } from '../types/config';
 import { ConfigManager } from '../types/config-manager';
 
 // Encapsulates a Configuration
-class ConfigManagerInstance implements ConfigManager {
+export class ConfigManagerInstance implements ConfigManager {
   private config: Map<string, string>;
   constructor() {
     this.config = new Map();
