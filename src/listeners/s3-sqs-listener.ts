@@ -125,13 +125,13 @@ export default async function start() {
               console.log(
                 `Object stored: { Key: ${articleId}/${fileName}, Bucket: ${editorBucket} }`
               );
-              if (file.path.includes(".tiff")) {
-                console.log(`Tiff detected - converting`);
+              if (file.path.includes(".tif")) {
+                console.log(`Tif detected - converting`);
                 const { buffer: jpgBuffer, contentType: jpgCcontentType } = await convert(
                   content
                 );
                 const jpgKey = `${articleId}/${fileName.replace(
-                  ".tiff",
+                  ".tif",
                   ".jpg"
                 )}`;
                 console.log(`Tiff - converted`);

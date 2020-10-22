@@ -5,14 +5,15 @@ services:
       context: './'
       target: ${RUN_ENV:-prod}
     image: editor-article-store:${IMAGE_TAG:-local}
-    ports:
-      - 8080:8080
     volumes:
       - ./src/:/app/src
+    network_mode: "service:localstack"
   localstack:
     image: localstack/localstack
     ports:
       - 4566:4566
+      # this is exposing the editor-article-store which is making use of localstacks network for host resolving reasons
+      - 8080:8080
     environment:
       - SERVICES=s3,sqs
     healthcheck:
