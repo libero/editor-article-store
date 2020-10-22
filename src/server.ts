@@ -39,6 +39,10 @@ export default async function start() {
   // Register middlewares
   app.use(cors());
 
+  app.get('/test-asset.jpg', (req, res, next) => {
+    res.redirect('https://elifesciences.org/assets/patterns/img/patterns/organisms/elife-logo-xs@1x.24c98c55.png');
+  });
+
   // Register routers
   app.use("/articles", articlesRouter(articleService));
   app.use("/articles/:articleId/changes", changesRouter);
