@@ -1,16 +1,17 @@
 import { Consumer } from "sqs-consumer";
 import AWS from "aws-sdk";
 import { configManager } from "../services/config-manager";
-import sharp from "sharp";
+import decompress from "decompress";
+import { Db, MongoClient } from "mongodb";
+import FileType from "file-type";
+
 import {
   createConfigFromArgs,
   createConfigFromEnv,
 } from "../utils/config-utils";
 import { defaultConfig } from "../config/default";
-import decompress from "decompress";
-import { Db, MongoClient } from "mongodb";
-import FileType from "file-type";
 import { Article } from "../types/article";
+import convert from "./convert-image";
 
 // Load the configuration for this service with the following precedence...
 //   process args > environment vars > config file.
@@ -126,15 +127,14 @@ export default async function start() {
               );
               if (file.path.includes(".tiff")) {
                 console.log(`Tiff detected - converting`);
-                const jpgBuffer = await sharp(content)
-                  .toFormat("jpg")
-                  .toBuffer();
-                console.log(`Tiff converted - uploading`); 
-                const jpgCcontentType = await FileType.fromBuffer(jpgBuffer);
+                const { buffer: jpgBuffer, contentType: jpgCcontentType } = await convert(
+                  content
+                );
                 const jpgKey = `${articleId}/${fileName.replace(
                   ".tiff",
                   ".jpg"
                 )}`;
+                console.log(`Tiff - converted`);
                 const jpgParams = {
                   Body: jpgBuffer,
                   Bucket: editorBucket,
@@ -142,7 +142,9 @@ export default async function start() {
                   ACL: "private",
                   ContentType: jpgCcontentType?.mime,
                 };
-                console.log(`Object stored: { Key: ${jpgKey}, Bucket: ${editorBucket} }`)
+                console.log(
+                  `Object stored: { Key: ${jpgKey}, Bucket: ${editorBucket} }`
+                );
                 await s3.putObject(jpgParams).promise();
               }
             } catch (error) {
