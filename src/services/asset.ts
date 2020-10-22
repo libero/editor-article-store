@@ -6,6 +6,7 @@ export default (s3: S3, config: typeof configManager) => ({
     return s3.getSignedUrl('getObject', {
       Bucket: config.get('editorS3Bucket'),
       Key: `${articleId}/${fileKey}`,
+      Expires: 3600
   })
   }
 });
