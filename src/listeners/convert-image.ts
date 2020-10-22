@@ -1,16 +1,16 @@
 import sharp from "sharp";
 import FileType from "file-type";
 
-const supportedMimeTypes = ['image/tif']; // extend as needed
+const supportedMimeTypes = ['image/tiff']; // extend as needed
 
 export default async function convert(buffer: Buffer) {
   const mimeType = await FileType.fromBuffer(buffer);
-  if (supportedMimeTypes.includes(mimeType?.mime as string)) {
+  if (!supportedMimeTypes.includes(mimeType?.mime as string)) {
       return {
-        buffer: null,
-        contentType: null,
+        contentType: null
       }
   }
+  console.log('carry on');
   const jpgBuffer = await sharp(buffer)
     .toFormat("jpg")
     .toBuffer();
