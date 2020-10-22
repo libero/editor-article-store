@@ -48,6 +48,7 @@
     "@types/jest": "^25.2.1",
     "@types/mongodb": "^3.5.27",
     "@types/node": "^13.11.1",
+    "@types/sharp": "^0.26.0",
     "@types/supertest": "^2.0.8",
     "@types/unzipper": "^0.10.3",
     "eslint": "^6.8.0",
@@ -71,6 +72,7 @@
     "file-type": "^15.0.1",
     "migrate": "^1.7.0",
     "mongodb": "^3.6.2",
+    "sharp": "^0.26.2",
     "sqs-consumer": "^5.4.0"
   }
 }
