@@ -136,7 +136,7 @@ export default async function start() {
                 )}`;
                 console.log(`Tiff - converted`);
                 const jpgParams = {
-                  Body: jpgBuffer,
+                  Body: jpgBuffer || '', // todo: check if buffer is null
                   Bucket: editorBucket,
                   Key: jpgKey,
                   ACL: "private",
