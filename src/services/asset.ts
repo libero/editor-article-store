@@ -8,7 +8,5 @@ export default (s3: S3, config: typeof configManager) => ({
         Key: `${articleId}/${fileKey}`,
         Expires: 3600
     })
-    //TODO: remove this. Used for local dev and should be replaced with some kind of proxy.
-    .replace('localstack', 'localhost');
   }
 });
