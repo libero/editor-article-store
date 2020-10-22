@@ -1,12 +1,15 @@
 import { default as cors } from "cors";
 import { default as express } from "express";
 import { Http2Server } from "http2";
+import AWS from 'aws-sdk';
 
 import articlesRouter from "./routers/articles";
+import assetRouter from "./routers/assets";
 import { changesRouter } from "./routers/changes";
 import { http404Response } from "./providers/errors";
 import { configManager } from "./services/config-manager";
 import ArticleService from './services/article';
+import AssetService from './services/asset';
 import { defaultConfig } from "./config/default";
 import {
   createConfigFromArgs,
@@ -32,15 +35,27 @@ export default async function start() {
   const app: express.Application = express();
 
   const db = await initialiseDb(mongoUrl, dbName);
+  AWS.config.update({
+    region: configManager.get("awsSqsRegion"),
+    accessKeyId: configManager.get("awsSqsAccessKey"),
+    secretAccessKey: configManager.get("awsSqsSecretAccessKey"),
+  });
+  const s3 = new AWS.S3({
+    endpoint: configManager.get("awsEndPoint"),
+    apiVersion: "2006-03-01",
+    s3ForcePathStyle: true,
+  });
 
   // Initialize services
   const articleService = ArticleService(db);
+  const assetService = AssetService(s3, configManager);
 
   // Register middlewares
   app.use(cors());
 
   // Register routers
   app.use("/articles", articlesRouter(articleService));
+  app.use("/articles/:articleId/assets", assetRouter(assetService));
   app.use("/articles/:articleId/changes", changesRouter);
   app.get("/health", (req, res, next) => res.sendStatus(200))
 
