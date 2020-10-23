@@ -1,4 +1,3 @@
-import waitForExpect from "wait-for-expect";
 import AWS from "aws-sdk";
 import fs from "fs";
 import path from "path";
@@ -9,6 +8,8 @@ import {
   createConfigFromArgs,
   createConfigFromEnv,
 } from "../../src/utils/config-utils";
+
+jest.setTimeout(60000);
 
 // Load the configuration for this service with the following precedence...
 //   process args > environment vars > config file.
@@ -45,13 +46,13 @@ async function checkFileExists(key: string, bucket: string) {
   }
 }
 
-async function waitForConditionOrTimeout(check) {
-  return await new Promise((resolve) => {
+async function waitForConditionOrTimeout(check: Function, limit: number) {
+  return new Promise((resolve) => {
     const startTime = new Date().getTime();
     const interval = setInterval(async () => {
       const timeLapsed = new Date().getTime() - startTime;
       const result = await check();
-      if (result || timeLapsed >= 50000) {
+      if (result || timeLapsed >= limit) {
         resolve();
         clearInterval(interval);
       }
@@ -62,31 +63,30 @@ async function waitForConditionOrTimeout(check) {
 describe("SQS bucket listener", () => {
   test("should upload assets to s3", async () => {
     const kryiaBucket = configManager.get("inputS3Bucket");
+    const editorBucket = configManager.get("editorS3Bucket");
     const folderName = new Date()
       .getTime()
       .toString()
-      .slice(0, 5);
-    let xmlExists = await checkFileExists(
-      `${folderName}/elife-00006.xml`,
-      configManager.get("editorS3Bucket")
-    );
-    let jpgExists = await checkFileExists(
-      `${folderName}/elife-00006-fig1.jpg`,
-      configManager.get("editorS3Bucket")
-    );
-    let tiffExists = await checkFileExists(
-      `${folderName}/elife-00006-fig1.tif`,
-      configManager.get("editorS3Bucket")
-    );
-    let pdfExists = await checkFileExists(
-      `${folderName}/elife-00006.pdf`,
-      configManager.get("editorS3Bucket")
-    );
+      .slice(-5);
 
-    expect(xmlExists).toBe(false);
-    expect(jpgExists).toBe(false);
-    expect(tiffExists).toBe(false);
-    expect(pdfExists).toBe(false);
+    const xmlExists = async () =>
+      checkFileExists(`${folderName}/elife-00006.xml`, editorBucket);
+    const jpgExists = async () =>
+      checkFileExists(`${folderName}/elife-00006-fig1.jpg`, editorBucket);
+    const tiffExists = async () =>
+      checkFileExists(`${folderName}/elife-00006-fig1.tif`, editorBucket);
+    const pdfExists = async () =>
+      checkFileExists(`${folderName}/elife-00006.pdf`, editorBucket);
+
+    let xml = await xmlExists();
+    let jpg = await jpgExists();
+    let tiff = await tiffExists();
+    let pdf = await pdfExists();
+
+    expect(xml).toBe(false);
+    expect(jpg).toBe(false);
+    expect(tiff).toBe(false);
+    expect(pdf).toBe(false);
 
     const zipBuffer = fs.readFileSync(
       path.join(__dirname, "..", "test-files", "elife-00006-vor-r1.zip")
@@ -96,38 +96,21 @@ describe("SQS bucket listener", () => {
       .putObject({
         Body: zipBuffer,
         Bucket: kryiaBucket,
-        Key: "elife-00006-vor-r1.zip",
+        Key: `elife-${folderName}-vor-r1.zip`,
         ACL: "private",
       })
       .promise();
 
-    await waitForConditionOrTimeout(
-      checkFileExists(
-        `${folderName}/elife-00006.xml`,
-        configManager.get("editorS3Bucket")
-      )
-    );
+    await waitForConditionOrTimeout(xmlExists, 50000);
 
-    xmlExists = await checkFileExists(
-      `${folderName}/elife-00006.xml`,
-      configManager.get("editorS3Bucket")
-    );
-    jpgExists = await checkFileExists(
-      `${folderName}/elife-00006-fig1.jpg`,
-      configManager.get("editorS3Bucket")
-    );
-    tiffExists = await checkFileExists(
-      `${folderName}/elife-00006-fig1.tif`,
-      configManager.get("editorS3Bucket")
-    );
-    pdfExists = await checkFileExists(
-      `${folderName}/elife-00006.pdf`,
-      configManager.get("editorS3Bucket")
-    );
+    xml = await xmlExists();
+    jpg = await jpgExists();
+    tiff = await tiffExists();
+    pdf = await pdfExists();
 
-    expect(xmlExists).toBe(true);
-    expect(jpgExists).toBe(true);
-    expect(tiffExists).toBe(true);
-    expect(pdfExists).toBe(true);
+    expect(xml).toBe(true);
+    expect(jpg).toBe(true);
+    expect(tiff).toBe(true);
+    expect(pdf).toBe(true);
   });
 });
