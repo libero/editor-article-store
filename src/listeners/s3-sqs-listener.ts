@@ -62,7 +62,6 @@ const writeArticleToDb = async (db: Db, article: Article) => {
 export default async function start() {
   // Connection URL
   const url = configManager.get("mongoUrl");
-
   // Database Name
   const dbName = configManager.get("mongoDbName");
   const editorBucket = configManager.get("editorS3Bucket");
@@ -86,11 +85,9 @@ export default async function start() {
       }
     },
   });
-  S3SQSListener.on("error", function(err) {
-    console.log(err);
-  }).on("message_received", async function(message) {
+  S3SQSListener.on("message_received", async function(message) {
     const messageBody = JSON.parse(message.Body);
-    if (messageBody && messageBody.Records.length) {
+    if (messageBody && messageBody.Records && messageBody.Records.length) {
       messageBody.Records.forEach(async (record: any) => {
         let zipContentsDirectory;
         let articleToStore: Article | undefined;
@@ -104,9 +101,10 @@ export default async function start() {
             .promise();
           zipContentsDirectory = await decompress(Body as Buffer);
         } catch (error) {
-          throw new Error(
+          S3SQSListener.emit('error', new Error(
             `Error when fetching and unzipping object: { Key: ${record.s3.object.key}, Bucket: ${record.s3.bucket.name} } - ${error}`
-          );
+          ));
+          return;
         }
         for (const file of zipContentsDirectory) {
           if (file) {
@@ -148,9 +146,10 @@ export default async function start() {
                 await s3.putObject(jpgParams).promise();
               }
             } catch (error) {
-              throw new Error(
+              S3SQSListener.emit('error', new Error(
                 `Error when storing object: { Key: ${articleId}/${fileName}, Bucket: ${editorBucket} } - ${error}`
-              );
+              ));
+              return;
             }
 
             if (file.path.includes(".xml")) {
@@ -166,9 +165,10 @@ export default async function start() {
         }
 
         if (!articleToStore) {
-          throw new Error(
+          S3SQSListener.emit('error', new Error(
             `Error finding article XML file in object: { Key: ${record.s3.object.key}, Bucket: ${record.s3.bucket.name} }`
-          );
+          ));
+          return;
         }
 
         try {
@@ -177,13 +177,16 @@ export default async function start() {
             `Article XML stored: { ArticleID: ${articleId}, Version: ${version} }`
           );
         } catch (error) {
-          throw new Error(
+          S3SQSListener.emit('error', new Error(
             `Error storing article XML: { ArticleID: ${articleId}, Version: ${version} }` +
               error
-          );
+          ));
+          return;
         }
       });
     }
+  }).on("error", function(err) {
+    console.log(err);
   });
 
   S3SQSListener.start();
