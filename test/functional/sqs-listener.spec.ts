@@ -48,17 +48,20 @@ async function checkFileExists(key: string, bucket: string) {
 describe("SQS bucket listener", () => {
   test("should upload assets to s3", async () => {
     const kryiaBucket = configManager.get("inputS3Bucket");
-    const folderName = new Date().getTime().toString().slice(0,5);
+    const folderName = new Date()
+      .getTime()
+      .toString()
+      .slice(0, 5);
     let xmlExists = await checkFileExists(
       `${folderName}/elife-00006.xml`,
       configManager.get("editorS3Bucket")
     );
     let jpgExists = await checkFileExists(
-      `${folderName}/elife-00006.jpg`,
+      `${folderName}/elife-00006-fig1.jpg`,
       configManager.get("editorS3Bucket")
     );
     let tiffExists = await checkFileExists(
-      `${folderName}/elife-00006.tif`,
+      `${folderName}/elife-00006-fig1.tif`,
       configManager.get("editorS3Bucket")
     );
     let pdfExists = await checkFileExists(
@@ -84,40 +87,33 @@ describe("SQS bucket listener", () => {
       })
       .promise();
 
-    await waitForExpect(async () => {
-      try {
-        xmlExists = await checkFileExists(
+    setTimeout(async () => {
+      xmlExists = await checkFileExists(
+        `${folderName}/elife-00006.xml`,
+        configManager.get("editorS3Bucket")
+      );
+      jpgExists = await checkFileExists(
+        `${folderName}/elife-00006-fig1.jpg`,
+        configManager.get("editorS3Bucket")
+      );
+      tiffExists = await checkFileExists(
+        `${folderName}/elife-00006-fig1.tif`,
+        configManager.get("editorS3Bucket")
+      );
+      pdfExists = await checkFileExists(
+        `${folderName}/elife-00006.pdf`,
+        configManager.get("editorS3Bucket")
+      );
+
+      expect(
+        await checkFileExists(
           `${folderName}/elife-00006.xml`,
           configManager.get("editorS3Bucket")
-        );
-        jpgExists = await checkFileExists(
-          `${folderName}/elife-00006.jpg`,
-          configManager.get("editorS3Bucket")
-        );
-        tiffExists = await checkFileExists(
-          `${folderName}/elife-00006.tif`,
-          configManager.get("editorS3Bucket")
-        );
-        pdfExists = await checkFileExists(
-          `${folderName}/elife-00006.pdf`,
-          configManager.get("editorS3Bucket")
-        );
-
-        expect(
-          await checkFileExists(
-            `${folderName}/elife-00006.xml`,
-            configManager.get("editorS3Bucket")
-          )
-        ).toBe(true);
-        if (jpgExists) {
-            expect(jpgExists).toBe(true);
-            expect(tiffExists).toBe(true);
-            expect(pdfExists).toBe(true);
-        }
-
-      } catch (e) {
-        console.log("eeor", e);
-      }
+        )
+      ).toBe(true);
+      expect(jpgExists).toBe(true);
+      expect(tiffExists).toBe(true);
+      expect(pdfExists).toBe(true);
     }, 50000);
   });
 });
