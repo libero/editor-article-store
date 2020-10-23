@@ -69,14 +69,14 @@ describe("SQS bucket listener", () => {
       configManager.get("editorS3Bucket")
     );
 
-    const zipBuffer = fs.readFileSync(
-      path.join(__dirname, "..", "test-files", "elife-00006-vor-r1.zip")
-    );
-
     expect(xmlExists).toBe(false);
     expect(jpgExists).toBe(false);
     expect(tiffExists).toBe(false);
     expect(pdfExists).toBe(false);
+
+    const zipBuffer = fs.readFileSync(
+      path.join(__dirname, "..", "test-files", "elife-00006-vor-r1.zip")
+    );
 
     await s3
       .putObject({
@@ -105,12 +105,7 @@ describe("SQS bucket listener", () => {
         configManager.get("editorS3Bucket")
       );
 
-      expect(
-        await checkFileExists(
-          `${folderName}/elife-00006.xml`,
-          configManager.get("editorS3Bucket")
-        )
-      ).toBe(true);
+      expect(xmlExists).toBe(true);
       expect(jpgExists).toBe(true);
       expect(tiffExists).toBe(true);
       expect(pdfExists).toBe(true);
