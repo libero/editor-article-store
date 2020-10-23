@@ -109,6 +109,7 @@ describe("SQS bucket listener", () => {
       expect(jpgExists).toBe(true);
       expect(tiffExists).toBe(true);
       expect(pdfExists).toBe(true);
+
     }, 50000);
   });
 });
