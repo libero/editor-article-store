@@ -45,6 +45,20 @@ async function checkFileExists(key: string, bucket: string) {
   }
 }
 
+async function waitForConditionOrTimeout(check) {
+  return await new Promise((resolve) => {
+    const startTime = new Date().getTime();
+    const interval = setInterval(async () => {
+      const timeLapsed = new Date().getTime() - startTime;
+      const result = await check();
+      if (result || timeLapsed >= 50000) {
+        resolve();
+        clearInterval(interval);
+      }
+    }, 1000);
+  });
+}
+
 describe("SQS bucket listener", () => {
   test("should upload assets to s3", async () => {
     const kryiaBucket = configManager.get("inputS3Bucket");
@@ -87,29 +101,33 @@ describe("SQS bucket listener", () => {
       })
       .promise();
 
-    setTimeout(async () => {
-      xmlExists = await checkFileExists(
+    await waitForConditionOrTimeout(
+      checkFileExists(
         `${folderName}/elife-00006.xml`,
         configManager.get("editorS3Bucket")
-      );
-      jpgExists = await checkFileExists(
-        `${folderName}/elife-00006-fig1.jpg`,
-        configManager.get("editorS3Bucket")
-      );
-      tiffExists = await checkFileExists(
-        `${folderName}/elife-00006-fig1.tif`,
-        configManager.get("editorS3Bucket")
-      );
-      pdfExists = await checkFileExists(
-        `${folderName}/elife-00006.pdf`,
-        configManager.get("editorS3Bucket")
-      );
+      )
+    );
 
-      expect(xmlExists).toBe(true);
-      expect(jpgExists).toBe(true);
-      expect(tiffExists).toBe(true);
-      expect(pdfExists).toBe(true);
+    xmlExists = await checkFileExists(
+      `${folderName}/elife-00006.xml`,
+      configManager.get("editorS3Bucket")
+    );
+    jpgExists = await checkFileExists(
+      `${folderName}/elife-00006-fig1.jpg`,
+      configManager.get("editorS3Bucket")
+    );
+    tiffExists = await checkFileExists(
+      `${folderName}/elife-00006-fig1.tif`,
+      configManager.get("editorS3Bucket")
+    );
+    pdfExists = await checkFileExists(
+      `${folderName}/elife-00006.pdf`,
+      configManager.get("editorS3Bucket")
+    );
 
-    }, 50000);
+    expect(xmlExists).toBe(true);
+    expect(jpgExists).toBe(true);
+    expect(tiffExists).toBe(true);
+    expect(pdfExists).toBe(true);
   });
 });
