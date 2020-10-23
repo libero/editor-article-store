@@ -13,4 +13,5 @@ export const defaultConfig: Config = {
   mongoUrl: "mongodb://root:password@mongo:27017",
   mongoDbName: "editor",
   editorS3Bucket: "editor",
+  inputS3Bucket: "kryia"
 };

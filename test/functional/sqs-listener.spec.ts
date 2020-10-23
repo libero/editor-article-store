@@ -1,4 +1,6 @@
 import AWS from "aws-sdk";
+import fs from "fs";
+import path from "path";
 
 import { configManager } from "../../src/services/config-manager";
 import { defaultConfig } from "../../src/config/default";
@@ -44,13 +46,62 @@ async function checkFileExists(key, bucket) {
 
 describe("SQS bucket listener", () => {
   test("should upload assets to s3", async () => {
-    const xmlExists = checkFileExists(`elife-00005-vor-r1/elife-00005.xml`, configManager.get('editorS3Bucket'));
-    const jpgExists = checkFileExists(`elife-00005-vor-r1/elife-00005.jpg`, configManager.get('editorS3Bucket'));
-    const tiffExists = checkFileExists(`elife-00005-vor-r1/elife-00005.tif`, configManager.get('editorS3Bucket'));
-    const pdfExists = checkFileExists(`elife-00005-vor-r1/elife-00005.pdf`, configManager.get('editorS3Bucket'));
+    const kryiaBucket = configManager.get("inputS3Bucket");
+    let xmlExists = await checkFileExists(
+      `elife-00005-vor-r1/elife-00006.xml`,
+      configManager.get("editorS3Bucket")
+    );
+    let jpgExists = await checkFileExists(
+      `elife-00005-vor-r1/elife-00006.jpg`,
+      configManager.get("editorS3Bucket")
+    );
+    let tiffExists = await checkFileExists(
+      `elife-00005-vor-r1/elife-00006.tif`,
+      configManager.get("editorS3Bucket")
+    );
+    let pdfExists = await checkFileExists(
+      `elife-00005-vor-r1/elife-00006.pdf`,
+      configManager.get("editorS3Bucket")
+    );
+
+    const zipBuffer = fs.readFileSync(
+      path.join(__dirname, "..", "test-files", "elife-00006-vor-r1.zip")
+    );
+
     expect(xmlExists).toBe(false);
     expect(jpgExists).toBe(false);
     expect(tiffExists).toBe(false);
     expect(pdfExists).toBe(false);
+
+    await s3
+      .putObject({
+        Body: zipBuffer,
+        Bucket: kryiaBucket,
+        Key: "elife-00006-vor-r1.zip",
+        ACL: "private",
+      })
+      .promise();
+
+    xmlExists = await checkFileExists(
+      `elife-00005-vor-r1/elife-00006.xml`,
+      configManager.get("editorS3Bucket")
+    );
+    jpgExists = await checkFileExists(
+      `elife-00005-vor-r1/elife-00006.jpg`,
+      configManager.get("editorS3Bucket")
+    );
+    tiffExists = await checkFileExists(
+      `elife-00005-vor-r1/elife-00006.tif`,
+      configManager.get("editorS3Bucket")
+    );
+    pdfExists = await checkFileExists(
+      `elife-00005-vor-r1/elife-00006.pdf`,
+      configManager.get("editorS3Bucket")
+    );
+
+    expect(xmlExists).toBe(true);
+    expect(jpgExists).toBe(true);
+    expect(tiffExists).toBe(true);
+    expect(pdfExists).toBe(true);
   });
 });
