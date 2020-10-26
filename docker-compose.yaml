@@ -25,6 +25,7 @@ services:
     volumes:
       - "./tmp/localstack:/tmp/localstack"
       - "./resources:/resources"
+      - "./test/test-files:/test/test-files"
       - "./.localstack/startup:/docker-entrypoint-initaws.d"
       - "./.localstack/config:/etc/localstackconf"
   mongo:

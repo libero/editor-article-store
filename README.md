@@ -47,6 +47,14 @@ Or via the command line...
 npm run start -- --article-root ./path/to/my/articles
 ```
 
+## Running tests
+
+The unit tests can be run locally via `npm run test`
+
+To run the whole suite, the following command is all that is required - `make test_ci`
+
+To run the functional tests locally - `make start_dev` to launch the services + API, followed by `docker exec localstack awslocal s3 cp /resources/articles/elife-54296-vor-r1.zip s3://kryia/` to seed the required data. Then simply run `npm run test:functional`
+
 **Note:** That both of the above are eqivilent, but command line arguments take precendence over environment vars!
 
 ## Docker

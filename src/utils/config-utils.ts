@@ -42,5 +42,7 @@ export function createConfigFromEnv(env: ProcessEnv): Config {
     retVal.awsEndPoint = env['AWS_END_POINT'];
   }
 
+  // todo: add buckets to env
+
   return retVal;
 }

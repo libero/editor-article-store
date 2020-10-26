@@ -7,10 +7,14 @@ export default (assetService: any): express.Router => {
   // Log all requests on this route.
   router.use(logRequest);
 
-  router.get("/:fileKey", (req, res) => {
+  router.get("/:fileKey", async (req, res) => {
     const { articleId, fileKey } = req.params;
-    const assetUrl = assetService.getAssetUrl(articleId, fileKey)
-    res.redirect(301, assetUrl);
+    const assetUrl = await assetService.getAssetUrl(articleId, fileKey);
+    if (assetUrl === null) {
+      res.sendStatus(404);
+    } else {
+      res.redirect(301, assetUrl);
+    }
   });
 
   return router;
