@@ -1,7 +1,7 @@
 import { S3 } from "aws-sdk";
 import { configManager } from "./config-manager";
 
-async function checkFileExists(s3: S3, key: string, bucket: string) {
+async function checkFileExists(s3: S3, key: string, bucket: string): Promise<boolean> {
   try {
     await s3
       .headObject({

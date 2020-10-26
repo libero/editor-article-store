@@ -29,7 +29,7 @@ const s3 = new AWS.S3({
   s3ForcePathStyle: true,
 });
 
-async function checkFileExists(key: string, bucket: string) {
+async function checkFileExists(key: string, bucket: string): Promise<boolean> {
   try {
     await s3
       .headObject({
