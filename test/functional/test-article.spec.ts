@@ -4,7 +4,7 @@ import * as request from 'supertest';
 const API_URL = 'localhost:8080';
 const agent = request.agent(API_URL);
 
-describe('Get /article/00000', () => {
+describe('Get /article/id', () => {
   test('Returns 404 for an invalid article', async () => {
     return agent
       .get('/article/00000')
