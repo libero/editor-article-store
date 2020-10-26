@@ -78,15 +78,10 @@ describe("SQS bucket listener", () => {
     const pdfExists = async () =>
       checkFileExists(`${folderName}/elife-00006.pdf`, editorBucket);
 
-    let xml = await xmlExists();
-    let jpg = await jpgExists();
-    let tiff = await tiffExists();
-    let pdf = await pdfExists();
-
-    expect(xml).toBe(false);
-    expect(jpg).toBe(false);
-    expect(tiff).toBe(false);
-    expect(pdf).toBe(false);
+    expect(xmlExists()).resolves.toBe(false);
+    expect(jpgExists()).resolves.toBe(false);
+    expect(tiffExists()).resolves.toBe(false);
+    expect(pdfExists()).resolves.toBe(false);
 
     const zipBuffer = fs.readFileSync(
       path.join(__dirname, "..", "test-files", "elife-00006-vor-r1.zip")
@@ -103,14 +98,9 @@ describe("SQS bucket listener", () => {
 
     await waitForConditionOrTimeout(xmlExists, 50000);
 
-    xml = await xmlExists();
-    jpg = await jpgExists();
-    tiff = await tiffExists();
-    pdf = await pdfExists();
-
-    expect(xml).toBe(true);
-    expect(jpg).toBe(true);
-    expect(tiff).toBe(true);
-    expect(pdf).toBe(true);
+    expect(xmlExists()).resolves.toBe(true);
+    expect(jpgExists()).resolves.toBe(true);
+    expect(tiffExists()).resolves.toBe(true);
+    expect(pdfExists()).resolves.toBe(true);
   });
 });
