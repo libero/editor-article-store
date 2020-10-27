@@ -50,7 +50,7 @@ export default async function start() {
     }),
     handleMessage: async (message) => {
       const messageBody = JSON.parse(message.Body || "");
-      if (messageBody.Records?.length) {
+      if (messageBody?.Records?.length) {
         messageBody.Records.forEach((record: any) => {
           console.log(
             `SQS - AWS S3 uploaded event been consumed - { Key: ${record.s3.object.key}, Bucket: ${record.s3.bucket.name} }`
@@ -61,7 +61,7 @@ export default async function start() {
   });
   S3SQSListener.on("message_received", async function(message) {
     const messageBody = JSON.parse(message.Body);
-    if (messageBody && messageBody.Records && messageBody.Records.length) {
+    if (messageBody?.Records?.length) {
       messageBody.Records.forEach(async (record: any) => {
         try {
           await handler.import(record.s3.object.key, record.s3.bucket.name);
