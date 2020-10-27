@@ -10,7 +10,6 @@ export default async function convert(buffer: Buffer) {
         contentType: null
       }
   }
-  console.log('carry on');
   const jpgBuffer = await sharp(buffer)
     .toFormat("jpg")
     .toBuffer();

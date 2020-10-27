@@ -138,7 +138,7 @@ describe('importHandler', () => {
       data: 'somecontent'
     }]))
     s3PutObjectMock.mockImplementation((params) => {
-      console.log(params);
+      console.log('XXXXX',params)
       if (params.ContentType === 'image/jpeg') {
        return  { promise: () => { throw new Error('Something went wrong uploading')}}
       }

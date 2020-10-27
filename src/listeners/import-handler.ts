@@ -8,52 +8,72 @@ import FileType from "file-type";
 
 export default (s3:S3, db: Db, targetBucket:stringType) => {
   // S3 has the following format /folder/zip-id-version.zip
-const extractS3Path = (s3Key: string): {
-  version: string;
-  articleId: string;
-} => {
-  const s3Paths = s3Key.split("/");
-  const fileNameParts = s3Paths[s3Paths.length - 1].split("-");
-  const articleId = fileNameParts[1];
-  const version = fileNameParts[fileNameParts.length - 1].replace(".zip", "");
-  return {
-    articleId,
-    version,
+  const extractS3Path = (s3Key: string): {
+    version: string;
+    articleId: string;
+  } => {
+    const s3Paths = s3Key.split("/");
+    const fileNameParts = s3Paths[s3Paths.length - 1].split("-");
+    const articleId = fileNameParts[1];
+    const version = fileNameParts[fileNameParts.length - 1].replace(".zip", "");
+    return {
+      articleId,
+      version,
+    };
   };
-};
 
-const getFilenameFromPath = (filePath: string) => {
-  const filePaths = filePath.split("/");
-  return filePaths[filePaths.length - 1];
-};
+  const getFilenameFromPath = (filePath: string) => {
+    const filePaths = filePath.split("/");
+    return filePaths[filePaths.length - 1];
+  };
 
-const writeArticleToDb = async (article: Article) => {
-  await db.collection("articles").insertOne({
-    ...article,
-  });
-};
+  const writeArticleToDb = async (article: Article) => {
+    await db.collection("articles").insertOne({
+      ...article,
+    });
+  };
 
-const directoryHasXmlArticle = (directory: decompress.File[]) => {
-  for (const file of directory) {
-    if (file.path.includes(".xml")) {
-      return true;
+  const directoryHasXmlArticle = (directory: decompress.File[]) => {
+    for (const file of directory) {
+      if (file.path.includes(".xml")) {
+        return true;
+      }
     }
+    return false;
   }
-  return false;
-}
 
+  const fetchAndUnzip = async (Key: string, Bucket: string) => {
+    const { Body } = await s3
+    .getObject({
+      Key,
+      Bucket,
+    })
+    .promise();
+    return decompress(Body as Buffer);
+  }
+
+  const getFileDetails = async (file: decompress.File) => {
+    const fileName = getFilenameFromPath(file.path);
+    const content = await file.data;
+    const contentType = await FileType.fromBuffer(content);
+    return { fileName, content, contentType}
+  }
+  const storeFileToTargetS3 = async (Body: Buffer | string = '', Key: string, ContentType: string|undefined) => {
+    const params = {
+      Body,
+      Bucket: targetBucket,
+      Key,
+      ACL: "private",
+      ContentType,
+    };
+    await s3.putObject(params).promise();
+  }
   return {
     import: async (key:string, srcBucket:string) => {
       let zipContentsDirectory;
       const { articleId, version } = extractS3Path(key);
       try {
-        const { Body } = await s3
-          .getObject({
-            Key: key,
-            Bucket: srcBucket,
-          })
-          .promise();
-        zipContentsDirectory = await decompress(Body as Buffer);
+        zipContentsDirectory = await fetchAndUnzip(key, srcBucket);
       } catch (error) {
         throw new Error(
           `Error when fetching and unzipping object: { Key: ${key}, Bucket: ${srcBucket} } - ${error}`
@@ -68,18 +88,9 @@ const directoryHasXmlArticle = (directory: decompress.File[]) => {
 
       for (const file of zipContentsDirectory) {
         if (file) {
-          const fileName = getFilenameFromPath(file.path);
-          const content = await file.data;
-          const contentType = await FileType.fromBuffer(content);
-          const params = {
-            Body: content,
-            Bucket: targetBucket,
-            Key: `${articleId}/${fileName}`,
-            ACL: "private",
-            ContentType: contentType?.mime,
-          };
+          const { fileName, content, contentType } = await getFileDetails(file);
           try {
-            await s3.putObject(params).promise();
+            await storeFileToTargetS3(content, `${articleId}/${fileName}`, contentType?.mime);
             console.log(
               `Object stored: { Key: ${articleId}/${fileName}, Bucket: ${targetBucket} }`
             );
@@ -106,14 +117,7 @@ const directoryHasXmlArticle = (directory: decompress.File[]) => {
 
             try {
               const { buffer: jpgBuffer, contentType: jpgCcontentType } = convertedTif;
-              const jpgParams = {
-                Body: jpgBuffer || '', // todo: check if buffer is null
-                Bucket: targetBucket,
-                Key: jpgKey,
-                ACL: "private",
-                ContentType: jpgCcontentType?.mime,
-              };
-              await s3.putObject(jpgParams).promise();
+              await storeFileToTargetS3(jpgBuffer, jpgKey, jpgCcontentType?.mime as unknown as string);
               console.log(
                 `Object stored: { Key: ${jpgKey}, Bucket: ${targetBucket} }`
               );
