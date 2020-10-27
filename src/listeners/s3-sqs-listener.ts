@@ -45,6 +45,16 @@ export default async function start() {
     queueUrl: configManager.get("awsBucketInputEventQueueUrl"),
     region: configManager.get("awsSqsRegion"),
     batchSize: 1,
+    handleMessage: async (message) => {
+      /* istanbul ignore next */
+      const messageBody = JSON.parse(message.Body || "");
+      /* istanbul ignore next */
+      messageBody?.Records?.forEach((record: any) => {
+        console.log(
+          `SQS - AWS S3 uploaded event been consumed - { Key: ${record.s3.object.key}, Bucket: ${record.s3.bucket.name} }`
+        );
+      });
+    },
     sqs: new AWS.SQS({
       endpoint: configManager.get("awsEndPoint"),
     })
