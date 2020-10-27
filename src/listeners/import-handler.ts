@@ -32,10 +32,19 @@ const writeArticleToDb = async (article: Article) => {
     ...article,
   });
 };
+
+const directoryHasXmlArticle = (directory: decompress.File[]) => {
+  for (const file of directory) {
+    if (file.path.includes(".xml")) {
+      return true;
+    }
+  }
+  return false;
+}
+
   return {
     import: async (key:string, srcBucket:string) => {
       let zipContentsDirectory;
-      let articleToStore: Article | undefined;
       const { articleId, version } = extractS3Path(key);
       try {
         const { Body } = await s3
@@ -50,6 +59,13 @@ const writeArticleToDb = async (article: Article) => {
           `Error when fetching and unzipping object: { Key: ${key}, Bucket: ${srcBucket} } - ${error}`
         );
       }
+      
+      if(!directoryHasXmlArticle(zipContentsDirectory)) {
+        throw new Error(
+          `Error finding article XML file in object: { Key: ${key}, Bucket: ${srcBucket} }`
+        );
+      }
+
       for (const file of zipContentsDirectory) {
         if (file) {
           const fileName = getFilenameFromPath(file.path);
@@ -67,16 +83,29 @@ const writeArticleToDb = async (article: Article) => {
             console.log(
               `Object stored: { Key: ${articleId}/${fileName}, Bucket: ${targetBucket} }`
             );
-            if (file.path.includes(".tif")) {
-              console.log(`Tif detected - converting`);
-              const { buffer: jpgBuffer, contentType: jpgCcontentType } = await convert(
+          } catch (error) {
+            throw new Error(
+              `Error when storing object: { Key: ${articleId}/${fileName}, Bucket: ${targetBucket} } - ${error}`
+            );
+          }
+
+          if (file.path.includes(".tif")) {
+            let convertedTif;
+            try {
+              convertedTif = await convert(
                 content
               );
-              const jpgKey = `${articleId}/${fileName.replace(
-                ".tif",
-                ".jpg"
-              )}`;
-              console.log(`Tiff - converted`);
+            } catch(error) {
+              throw new Error(`Error when converting .tif file: { Key: ${articleId}/${fileName}, Bucket: ${targetBucket} } - ${error}`)
+            }
+
+            const jpgKey = `${articleId}/${fileName.replace(
+              ".tif",
+              ".jpg"
+            )}`;
+
+            try {
+              const { buffer: jpgBuffer, contentType: jpgCcontentType } = convertedTif;
               const jpgParams = {
                 Body: jpgBuffer || '', // todo: check if buffer is null
                 Bucket: targetBucket,
@@ -84,45 +113,36 @@ const writeArticleToDb = async (article: Article) => {
                 ACL: "private",
                 ContentType: jpgCcontentType?.mime,
               };
+              await s3.putObject(jpgParams).promise();
               console.log(
                 `Object stored: { Key: ${jpgKey}, Bucket: ${targetBucket} }`
               );
-              await s3.putObject(jpgParams).promise();
+            } catch(error) {
+              throw new Error(
+                `Error when storing object: { Key: ${jpgKey}, Bucket: ${targetBucket} } converted from .tif file: { Key: ${articleId}/${fileName}, Bucket: ${targetBucket} } - ${error}`
+              );
             }
-          } catch (error) {
-            throw new Error(
-              `Error when storing object: { Key: ${articleId}/${fileName}, Bucket: ${targetBucket} } - ${error}`
-            );
           }
   
           if (file.path.includes(".xml")) {
-            articleToStore = {
-              xml: content.toString(),
-              articleId,
-              version,
-              datatype: "xml",
-              fileName,
-            };
+            try {
+              const articleToStore = {
+                xml: content.toString(),
+                articleId,
+                version,
+                datatype: "xml",
+                fileName,
+              };
+              await writeArticleToDb(articleToStore as Article);
+              console.log(
+                `Article XML stored: { ArticleID: ${articleId}, Version: ${version} }`
+              );
+            } catch (error) {
+              throw new Error(
+                `Error storing article XML: { ArticleID: ${articleId}, Version: ${version} } - ${error}`);
+            }
           }
         }
-      }
-  
-      if (!articleToStore) {
-        throw new Error(
-          `Error finding article XML file in object: { Key: ${key}, Bucket: ${srcBucket} }`
-        );
-      }
-  
-      try {
-        await writeArticleToDb(articleToStore);
-        console.log(
-          `Article XML stored: { ArticleID: ${articleId}, Version: ${version} }`
-        );
-      } catch (error) {
-        throw new Error(
-          `Error storing article XML: { ArticleID: ${articleId}, Version: ${version} }` +
-            error
-        );
       }
     }
   }
