@@ -47,22 +47,15 @@ export default async function start() {
     batchSize: 1,
     sqs: new AWS.SQS({
       endpoint: configManager.get("awsEndPoint"),
-    }),
-    handleMessage: async (message) => {
-      const messageBody = JSON.parse(message.Body || "");
-      if (messageBody?.Records?.length) {
-        messageBody.Records.forEach((record: any) => {
-          console.log(
-            `SQS - AWS S3 uploaded event been consumed - { Key: ${record.s3.object.key}, Bucket: ${record.s3.bucket.name} }`
-          );
-        });
-      }
-    },
+    })
   });
   S3SQSListener.on("message_received", async function(message) {
     const messageBody = JSON.parse(message.Body);
     if (messageBody?.Records?.length) {
       messageBody.Records.forEach(async (record: any) => {
+        console.log(
+          `SQS - AWS S3 uploaded event been consumed - { Key: ${record.s3.object.key}, Bucket: ${record.s3.bucket.name} }`
+        );
         try {
           await handler.import(record.s3.object.key, record.s3.bucket.name);
         } catch(error) {
