@@ -6,7 +6,7 @@ import { stringType } from "aws-sdk/clients/iam";
 import convert from "./convert-image";
 import FileType from "file-type";
 
-export default (s3:S3, db: Db, targetBucket:stringType) => {
+export default function importHandler(s3:S3, db: Db, targetBucket:stringType) {
   // S3 has the following format /folder/zip-id-version.zip
   const extractS3Path = (s3Key: string): {
     version: string;
@@ -142,4 +142,3 @@ export default (s3:S3, db: Db, targetBucket:stringType) => {
     }
   }
 }
-       
