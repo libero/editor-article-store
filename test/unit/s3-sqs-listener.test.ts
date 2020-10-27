@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 const flushPromise = () => new Promise(resolve => setImmediate(resolve));
-class mockSqsEventEmmitter extends  EventEmitter {
+class mockSqsEventEmmitter extends EventEmitter {
   start(){}
 }
 
