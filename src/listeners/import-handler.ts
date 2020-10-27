@@ -33,15 +33,6 @@ export default (s3:S3, db: Db, targetBucket:stringType) => {
     });
   };
 
-  const directoryHasXmlArticle = (directory: decompress.File[]) => {
-    for (const file of directory) {
-      if (file.path.includes(".xml")) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   const fetchAndUnzip = async (Key: string, Bucket: string) => {
     const { Body } = await s3
     .getObject({
@@ -80,7 +71,7 @@ export default (s3:S3, db: Db, targetBucket:stringType) => {
         );
       }
       
-      if(!directoryHasXmlArticle(zipContentsDirectory)) {
+      if(!zipContentsDirectory.find(file => file.path.includes(".xml"))) {
         throw new Error(
           `Error finding article XML file in object: { Key: ${key}, Bucket: ${srcBucket} }`
         );
