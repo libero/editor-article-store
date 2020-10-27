@@ -9,4 +9,5 @@ export type Config = {
   mongoUrl?: string;
   mongoDbName?: string;
   editorS3Bucket?: string;
+  inputS3Bucket?: string;
 };
