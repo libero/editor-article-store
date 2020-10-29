@@ -45,7 +45,7 @@ export function createConfigFromEnv(env: ProcessEnv): Config {
     retVal.srcS3Bucket = env['SRC_BUCKET'];
   }
   if (env['AWS_EDITOR_BUCKET']) {
-    retVal.editorS3Bucket = env['SRC_BUCKET'];
+    retVal.editorS3Bucket = env['AWS_EDITOR_BUCKET'];
   }
 
   // todo: add buckets to env
