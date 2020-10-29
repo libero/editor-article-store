@@ -62,7 +62,7 @@ async function waitForConditionOrTimeout(check: Function, limit: number) {
 
 describe("SQS bucket listener", () => {
   test("should upload assets to s3", async () => {
-    const kryiaBucket = configManager.get("inputS3Bucket");
+    const kryiaBucket = configManager.get("srcS3Bucket");
     const editorBucket = configManager.get("editorS3Bucket");
     const folderName = new Date()
       .getTime()

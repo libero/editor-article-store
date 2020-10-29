@@ -27,19 +27,25 @@ export function createConfigFromEnv(env: ProcessEnv): Config {
     retVal.mongoDbName = env['MONGO_DB_NAME'];
   }
   if (env['AWS_REGION']) {
-    retVal.awsSqsRegion = env['AWS_REGION'];
+    retVal.awsRegion = env['AWS_REGION'];
   }
   if (env['AWS_ACCESS_KEY']) {
-    retVal.awsSqsAccessKey = env['AWS_ACCESS_KEY']; 
+    retVal.awsAccessKey = env['AWS_ACCESS_KEY']; 
   }
   if (env['AWS_SECRET_ACCESS_KEY']) {
-    retVal.awsSqsSecretAccessKey = env['AWS_SECRET_ACCESS_KEY'];
+    retVal.awsSecretAccessKey = env['AWS_SECRET_ACCESS_KEY'];
   }
   if (env['AWS_BUCKET_INPUT_EVENT_QUEUE_URL']) {
     retVal.awsBucketInputEventQueueUrl = env['AWS_BUCKET_INPUT_EVENT_QUEUE_URL'];
   }
   if (env['AWS_END_POINT']) {
     retVal.awsEndPoint = env['AWS_END_POINT'];
+  }
+  if (env['AWS_SRC_BUCKET']) {
+    retVal.srcS3Bucket = env['SRC_BUCKET'];
+  }
+  if (env['AWS_EDITOR_BUCKET']) {
+    retVal.editorS3Bucket = env['SRC_BUCKET'];
   }
 
   // todo: add buckets to env
