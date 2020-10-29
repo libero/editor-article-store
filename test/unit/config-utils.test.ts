@@ -64,9 +64,9 @@ describe('createConfigFromEnv()', () => {
       port: 8080,
       mongoUrl: 'mongo',
       mongoDbName: 'dbname',
-      awsSqsRegion: 'AWS_REGION',
-      awsSqsAccessKey: 'AWS_ACCESS_KEY',
-      awsSqsSecretAccessKey: 'AWS_SECRET_ACCESS_KEY',
+      awsRegion: 'AWS_REGION',
+      awsAccessKey: 'AWS_ACCESS_KEY',
+      awsSecretAccessKey: 'AWS_SECRET_ACCESS_KEY',
       awsBucketInputEventQueueUrl: 'AWS_BUCKET_INPUT_EVENT_QUEUE_URL',
       awsEndPoint: 'AWS_END_POINT'
     };
