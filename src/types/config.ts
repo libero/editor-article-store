@@ -1,13 +1,12 @@
 export type Config = {
-  articleRoot?: string;
   port?: number;
-  awsSqsRegion?: string;
-  awsSqsAccessKey?: string;
-  awsSqsSecretAccessKey?: string;
+  awsRegion?: string;
+  awsAccessKey?: string;
+  awsSecretAccessKey?: string;
   awsBucketInputEventQueueUrl?: string;
   awsEndPoint?: string;
   mongoUrl?: string;
   mongoDbName?: string;
   editorS3Bucket?: string;
-  inputS3Bucket?: string;
+  srcS3Bucket?: string;
 };

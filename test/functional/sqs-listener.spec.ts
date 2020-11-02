@@ -18,9 +18,9 @@ configManager.apply(createConfigFromEnv(process.env));
 configManager.apply(createConfigFromArgs(process.argv));
 
 AWS.config.update({
-  region: configManager.get("awsSqsRegion"),
-  accessKeyId: configManager.get("awsSqsAccessKey"),
-  secretAccessKey: configManager.get("awsSqsSecretAccessKey"),
+  region: configManager.get("awsRegion"),
+  accessKeyId: configManager.get("awsAccessKey"),
+  secretAccessKey: configManager.get("awsSecretAccessKey"),
 });
 const s3 = new AWS.S3({
   endpoint: configManager.get("awsEndPoint"),
@@ -62,7 +62,7 @@ async function waitForConditionOrTimeout(check: Function, limit: number) {
 
 describe("SQS bucket listener", () => {
   test("should upload assets to s3", async () => {
-    const kryiaBucket = configManager.get("inputS3Bucket");
+    const kryiaBucket = configManager.get("srcS3Bucket");
     const editorBucket = configManager.get("editorS3Bucket");
     const folderName = new Date()
       .getTime()

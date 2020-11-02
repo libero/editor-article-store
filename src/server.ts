@@ -36,9 +36,9 @@ export default async function start() {
 
   const db = await initialiseDb(mongoUrl, dbName);
   AWS.config.update({
-    region: configManager.get("awsSqsRegion"),
-    accessKeyId: configManager.get("awsSqsAccessKey"),
-    secretAccessKey: configManager.get("awsSqsSecretAccessKey"),
+    region: configManager.get("awsRegion"),
+    accessKeyId: configManager.get("awsAccessKey"),
+    secretAccessKey: configManager.get("awsSecretAccessKey"),
   });
   const s3 = new AWS.S3({
     endpoint: configManager.get("awsEndPoint"),

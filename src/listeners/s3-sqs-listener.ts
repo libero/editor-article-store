@@ -17,9 +17,9 @@ configManager.apply(createConfigFromEnv(process.env));
 configManager.apply(createConfigFromArgs(process.argv));
 
 AWS.config.update({
-  region: configManager.get("awsSqsRegion"),
-  accessKeyId: configManager.get("awsSqsAccessKey"),
-  secretAccessKey: configManager.get("awsSqsSecretAccessKey"),
+  region: configManager.get("awsRegion"),
+  accessKeyId: configManager.get("awsAccessKey"),
+  secretAccessKey: configManager.get("awsSecretAccessKey"),
 });
 
 const s3 = new AWS.S3({
@@ -43,7 +43,7 @@ export default async function start() {
 
   const S3SQSListener = Consumer.create({
     queueUrl: configManager.get("awsBucketInputEventQueueUrl"),
-    region: configManager.get("awsSqsRegion"),
+    region: configManager.get("awsRegion"),
     batchSize: 1,
     handleMessage: async (message) => {
       /* istanbul ignore next */
