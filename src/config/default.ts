@@ -6,8 +6,7 @@ export const defaultConfig: Config = {
   awsRegion: "eu-west-1",
   awsAccessKey: "key",
   awsSecretAccessKey: "secret",
-  awsBucketInputEventQueueUrl:
-    "http://localhost:4566/000000000000/KryiaUploadQueue",
+  awsBucketInputEventQueueUrl: "http://localhost:4566/000000000000/KryiaUploadQueue",
   awsEndPoint: "http://localhost:4566",
   mongoUrl: "mongodb://root:password@mongo:27017",
   mongoDbName: "editor",
