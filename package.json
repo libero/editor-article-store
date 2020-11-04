@@ -72,6 +72,9 @@
     "file-type": "^15.0.1",
     "migrate": "^1.7.0",
     "mongodb": "^3.6.2",
+    "prosemirror-model": "^1.12.0",
+    "prosemirror-state": "^1.3.3",
+    "prosemirror-transform": "^1.2.8",
     "sharp": "^0.26.2",
     "sqs-consumer": "^5.4.0"
   }
