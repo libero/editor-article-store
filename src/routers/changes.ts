@@ -1,6 +1,10 @@
 import { default as express } from 'express';
 import { logRequest } from '../middlewares/log-request';
 import { http501Response } from '../providers/errors';
+import {Schema} from "prosemirror-model";
+
+import {schema as base} from "prosemirror-schema-basic";
+import {addListNodes} from "prosemirror-schema-list";
 
 export const changesRouter: express.Router = express.Router();
 
