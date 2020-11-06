@@ -5,10 +5,11 @@ import AWS from 'aws-sdk';
 
 import articlesRouter from "./routers/articles";
 import assetRouter from "./routers/assets";
-import { changesRouter } from "./routers/changes";
+import changesRouter from "./routers/changes";
 import { http404Response } from "./providers/errors";
 import { configManager } from "./services/config-manager";
 import ArticleService from './services/article';
+import ChangesService from './services/changes';
 import AssetService from './services/asset';
 import { defaultConfig } from "./config/default";
 import {
@@ -49,6 +50,7 @@ export default async function start() {
 
   // Initialize services
   const articleService = ArticleService(db);
+  const changesService = ChangesService(db);
   const assetService = AssetService(s3, configManager);
 
   // Register middlewares
@@ -57,7 +59,7 @@ export default async function start() {
   // Register routers
   app.use("/articles", articlesRouter(articleService));
   app.use("/articles/:articleId/assets", assetRouter(assetService));
-  app.use("/articles/:articleId/changes", changesRouter);
+  app.use("/articles/:articleId/changes", changesRouter(changesService));
   app.get("/health", (req, res, next) => res.sendStatus(200))
 
   // Register 'catch all' handler
