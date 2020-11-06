@@ -1,5 +1,6 @@
 import { Db } from 'mongodb';
 import changeRepository from '../repositories/changes';
+import { Change } from '../types/change';
 
 export default (db: Db) => {
   const changeRepo = changeRepository(db);
@@ -8,7 +9,7 @@ export default (db: Db) => {
     getChangesforArticle: async (articleId: string, page = 0) => {
       return changeRepo.get(articleId, page);
     },
-    registerChange: async (change: any) => {
+    registerChange: async (change: Change) => {
       return changeRepo.insert(change);
     }
   }
