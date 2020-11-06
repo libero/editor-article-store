@@ -1,11 +1,12 @@
 import { Db } from "mongodb";
-import { Change } from "../types/change";
+// import { Change } from "../types/change";
 
 const MAX_PAGE_SIZE = 100;
 
 export default function changeRepository(db: Db) {
   return {
-    insert: async (change: Change) => {
+    // TODO: type change
+    insert: async (change: any) => {
       const { insertedId } = await db.collection("changes").insertOne({
         ...change,
       });
