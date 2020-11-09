@@ -14,7 +14,6 @@ export default function changeRepository(db: Db) {
     get: async(articleId: string, page = 0) => {
       const skip = page * MAX_PAGE_SIZE;
       const changes = await db.collection('changes').find({ articleId }).skip(skip).limit(MAX_PAGE_SIZE).toArray();
-      console.log('changes', changes);
       return changes;
     }
   };
