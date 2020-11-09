@@ -44,4 +44,29 @@ describe("Get /article/id/changes", () => {
           })
       );
   });
+
+  test("Can get post a change for an article", async () => {
+    const change = {
+      articleId: "54296",
+      steps: [
+        {
+          stepType: "replace",
+          from: 121,
+          to: 121,
+          slice: {
+            content: [
+              {
+                type: "text",
+                text: "a",
+              },
+            ],
+          },
+        },
+      ],
+    };
+    return agent
+      .post("/articles/54296/changes")
+      .send(change)
+      .expect(200)
+  });
 });
