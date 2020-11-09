@@ -18,6 +18,7 @@ export default function articleRepository(db: Db) {
       return article;
     },
     get: async(page = 0) => {
+      console.log('here we are');
       const skip = page * MAX_PAGE_SIZE;
       const articles = await db.collection('articles').find().skip(skip).limit(MAX_PAGE_SIZE).toArray();
       return articles;

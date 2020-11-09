@@ -3,7 +3,7 @@ import { logRequest } from "../middlewares/log-request";
 import { http501Response } from "../providers/errors";
 
 export default (changesService: any, articleService: any): express.Router => {
-  const changesRouter: express.Router = express.Router();
+  const changesRouter: express.Router = express.Router({ mergeParams: true });
 
   // Log all requests on this route.
   changesRouter.use(logRequest);
