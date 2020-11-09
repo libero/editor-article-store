@@ -2,7 +2,7 @@ import { default as express } from "express";
 import { logRequest } from "../middlewares/log-request";
 import { http501Response } from "../providers/errors";
 
-export default (changesService: any): express.Router => {
+export default (changesService: any, articleService: any): express.Router => {
   const changesRouter: express.Router = express.Router();
 
   // Log all requests on this route.
@@ -13,6 +13,10 @@ export default (changesService: any): express.Router => {
     "/",
     async (req, res) => {
       const articleId = req.params.articleId;
+      const article = await articleService.findByArticleId(articleId);
+      if (article === null) {
+        return res.sendStatus(404);
+      }
       const changes = await changesService.getChangesforArticle(articleId);
       return res.json({ changes });
     },
@@ -24,7 +28,11 @@ export default (changesService: any): express.Router => {
     "/",
     async (req, res) => {
       const articleId = req.params.articleId;
-      // TODO: add validation;
+      // check article exists
+      const article = await articleService.findByArticleId(articleId);
+      if (article === null) {
+        return res.sendStatus(404);
+      }
       const change = req.body;
       await changesService.registerChange({
         ...change,

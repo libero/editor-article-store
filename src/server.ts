@@ -59,7 +59,7 @@ export default async function start() {
   // Register routers
   app.use("/articles", articlesRouter(articleService));
   app.use("/articles/:articleId/assets", assetRouter(assetService));
-  app.use("/articles/:articleId/changes", changesRouter(changesService));
+  app.use("/articles/:articleId/changes", changesRouter(changesService, articleService));
   app.get("/health", (req, res, next) => res.sendStatus(200))
 
   // Register 'catch all' handler
