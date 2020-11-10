@@ -17,4 +17,6 @@ export type Change = {
   _id?: string;
   articleId: string;
   steps: Array<Step>;
+  applied: boolean,
+  user: string,
 };

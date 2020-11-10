@@ -27,6 +27,8 @@ describe("articleService", () => {
     insertMock = jest.fn().mockReturnValue("507f1f77bcf86cd799439011");
     const insertedId = await changeService(db).registerChange({
       articleId: "123",
+      applied: false,
+      user: 'static-for-now',
       steps: [],
     });
     expect(insertedId).toBe("507f1f77bcf86cd799439011");
@@ -35,6 +37,8 @@ describe("articleService", () => {
   test("Returns list of changes", async () => {
     const change = {
       articleId: "1234",
+      applied: false,
+      user: 'static-for-now',
       steps: [
         {
           stepType: "replace",

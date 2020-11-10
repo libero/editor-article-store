@@ -12,6 +12,8 @@ describe("Get /article/id/changes", () => {
   test("Can get changes for an article", async () => {
     const change = {
       articleId: "54296",
+      applied: false,
+      user: 'static-for-now',
       steps: [
         {
           stepType: "replace",
@@ -48,6 +50,8 @@ describe("Get /article/id/changes", () => {
   test("Can get post a change for an article", async () => {
     const change = {
       articleId: "54296",
+      applied: false,
+      user: 'static-for-now',
       steps: [
         {
           stepType: "replace",
