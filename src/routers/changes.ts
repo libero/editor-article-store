@@ -36,6 +36,8 @@ export default (changesService: any, articleService: any): express.Router => {
       const change = req.body;
       await changesService.registerChange({
         ...change,
+        user: 'static-for-now',
+        applied: false,
         articleId,
       });
       return res.sendStatus(200);
