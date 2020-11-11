@@ -36,6 +36,8 @@ export default (changesService: any, articleService: any): express.Router => {
       const change = req.body;
       await changesService.registerChange({
         ...change,
+        user: 'static-for-now',
+        applied: false,
         articleId,
       });
       return res.sendStatus(200);
@@ -45,6 +47,10 @@ export default (changesService: any, articleService: any): express.Router => {
 
   // Get a specific change.
   changesRouter.get("/:changeId", [http501Response]);
+
+  // applies or declines a change. Transform XML and update version number.
+  // use prose-mirror transform to apply transcation
+  changesRouter.put("/:changeId", [http501Response]);
 
   // Deletes the specified Change
   changesRouter.delete("/:changeId", [http501Response]);

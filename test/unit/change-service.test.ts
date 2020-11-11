@@ -27,7 +27,10 @@ describe("articleService", () => {
     insertMock = jest.fn().mockReturnValue("507f1f77bcf86cd799439011");
     const insertedId = await changeService(db).registerChange({
       articleId: "123",
+      applied: false,
+      user: 'static-for-now',
       steps: [],
+      path: 'abstract'
     });
     expect(insertedId).toBe("507f1f77bcf86cd799439011");
   });
@@ -35,6 +38,9 @@ describe("articleService", () => {
   test("Returns list of changes", async () => {
     const change = {
       articleId: "1234",
+      applied: false,
+      user: 'static-for-now',
+      path: 'abstract',
       steps: [
         {
           stepType: "replace",
@@ -52,7 +58,7 @@ describe("articleService", () => {
       ],
     };
     getMock = jest.fn().mockReturnValue([change]);
-    const changes = await changeService(db).getChangesforArticle("123");
+    const changes = await changeService(db).getChangesforArticle("1234");
     expect(changes).toEqual([change]);
   });
 });

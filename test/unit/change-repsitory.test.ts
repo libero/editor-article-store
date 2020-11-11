@@ -29,6 +29,9 @@ describe("changeRepository", () => {
     const repo = changeRepository(db);
     const change = {
       articleId: "1234",
+      applied: false,
+      user: 'static-for-now',
+      path: 'abstract',
       steps: [
         {
           stepType: "replace",
@@ -57,6 +60,9 @@ describe("changeRepository", () => {
     const repo = changeRepository(db);
     const change = {
       articleId: "1234",
+      applied: false,
+      path: 'abstract',
+      user: 'static-for-now',
       steps: [
         {
           stepType: "replace",

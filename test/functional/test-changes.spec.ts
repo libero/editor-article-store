@@ -11,7 +11,8 @@ describe("Get /article/id/changes", () => {
 
   test("Can get changes for an article", async () => {
     const change = {
-      articleId: "54296",
+      applied: false,
+      path: "abstract",
       steps: [
         {
           stepType: "replace",
@@ -40,14 +41,19 @@ describe("Get /article/id/changes", () => {
             const changes = response.body.changes;
             const { _id, ...rest } = changes[0];
             expect(changes.length).toBe(1);
-            expect(rest).toEqual(change);
+            expect(rest).toEqual({
+              ...change,
+              articleId: "54296",
+              user: "static-for-now",
+            });
           })
       );
   });
 
   test("Can get post a change for an article", async () => {
     const change = {
-      articleId: "54296",
+      applied: false,
+      path: "abstract",
       steps: [
         {
           stepType: "replace",
@@ -67,6 +73,6 @@ describe("Get /article/id/changes", () => {
     return agent
       .post("/articles/54296/changes")
       .send(change)
-      .expect(200)
+      .expect(200);
   });
 });
