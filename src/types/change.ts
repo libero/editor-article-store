@@ -13,6 +13,7 @@ type Step = {
   to: number;
   slice: Slice;
 };
+
 export type Change = {
   _id?: string;
   articleId: string;
