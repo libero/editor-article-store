@@ -48,7 +48,7 @@ export default (changesService: any, articleService: any): express.Router => {
   // Get a specific change.
   changesRouter.get("/:changeId", [http501Response]);
 
-  // applies or declines a change. Transform XML and update verion.
+  // applies or declines a change. Transform XML and update version number.
   // use prose-mirror transform to apply transcation
   changesRouter.put("/:changeId", [http501Response]);
 
