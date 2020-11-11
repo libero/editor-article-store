@@ -30,6 +30,7 @@ describe("articleService", () => {
       applied: false,
       user: 'static-for-now',
       steps: [],
+      path: 'abstract'
     });
     expect(insertedId).toBe("507f1f77bcf86cd799439011");
   });
@@ -39,6 +40,7 @@ describe("articleService", () => {
       articleId: "1234",
       applied: false,
       user: 'static-for-now',
+      path: 'abstract',
       steps: [
         {
           stepType: "replace",
