@@ -11,10 +11,16 @@ export default function changeRepository(db: Db) {
       });
       return insertedId;
     },
-    get: async(articleId: string, page = 0) => {
+    get: async (articleId: string, page = 0) => {
       const skip = page * MAX_PAGE_SIZE;
-      const changes = await db.collection('changes').find({ articleId }).skip(skip).limit(MAX_PAGE_SIZE).toArray();
+      const changes = await db
+        .collection("changes")
+        .find({ articleId })
+        .sort({ timestamp: 1 })
+        .skip(skip)
+        .limit(MAX_PAGE_SIZE)
+        .toArray();
       return changes;
-    }
+    },
   };
 }
