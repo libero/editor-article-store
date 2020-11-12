@@ -13,6 +13,7 @@ describe("Get /article/id/changes", () => {
     const change = {
       applied: false,
       path: "abstract",
+      timestamp: 1605198300275,
       steps: [
         {
           stepType: "replace",
@@ -54,6 +55,7 @@ describe("Get /article/id/changes", () => {
     const change = {
       applied: false,
       path: "abstract",
+      timestamp: 1605198300275,
       steps: [
         {
           stepType: "replace",

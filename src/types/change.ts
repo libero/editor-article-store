@@ -22,5 +22,6 @@ export type Change = {
   applied: boolean; 
   user: string;
   // path in document e.g. abstract or body.p1
-  path: string; 
+  path: string;
+  timestamp: number; 
 };

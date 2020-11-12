@@ -32,6 +32,7 @@ describe("changeRepository", () => {
       applied: false,
       user: 'static-for-now',
       path: 'abstract',
+      timestamp: 1605198300275,
       steps: [
         {
           stepType: "replace",
@@ -63,6 +64,7 @@ describe("changeRepository", () => {
       applied: false,
       path: 'abstract',
       user: 'static-for-now',
+      timestamp: 1605198300275,
       steps: [
         {
           stepType: "replace",
