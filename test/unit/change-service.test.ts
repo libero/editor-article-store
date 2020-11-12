@@ -30,7 +30,8 @@ describe("articleService", () => {
       applied: false,
       user: 'static-for-now',
       steps: [],
-      path: 'abstract'
+      path: 'abstract',
+      timestamp: 1605198300275,
     });
     expect(insertedId).toBe("507f1f77bcf86cd799439011");
   });
@@ -41,6 +42,7 @@ describe("articleService", () => {
       applied: false,
       user: 'static-for-now',
       path: 'abstract',
+      timestamp: 1605198300275,
       steps: [
         {
           stepType: "replace",
