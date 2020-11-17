@@ -9,7 +9,7 @@ describe("Get /article/id/changes", () => {
     return agent.get("/articles/00000/changes").expect(404);
   });
 
-  test("Returns 500 if post bodydoesnot have changes", () => {
+  test("Returns 500 if post body does not have changes", () => {
     return agent
     .post("/articles/54296/changes")
     .send({})
