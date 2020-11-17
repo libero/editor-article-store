@@ -33,13 +33,19 @@ export default (changesService: any, articleService: any): express.Router => {
       if (article === null) {
         return res.sendStatus(404);
       }
-      const change = req.body;
-      await changesService.registerChange({
-        ...change,
-        user: 'static-for-now',
-        applied: false,
-        articleId,
-      });
+
+      if(!req.body?.changes?.length) {
+        return res.sendStatus(500);
+      }
+
+      for(let change of req.body.changes) {
+        await changesService.registerChange({
+          ...change,
+          user: 'static-for-now',
+          applied: false,
+          articleId,
+        });
+      }
       return res.sendStatus(200);
     },
     http501Response
