@@ -9,6 +9,13 @@ describe("Get /article/id/changes", () => {
     return agent.get("/articles/00000/changes").expect(404);
   });
 
+  test("Returns 500 if post body does not have changes", () => {
+    return agent
+    .post("/articles/54296/changes")
+    .send({})
+    .expect(500)
+  });
+
   test("Can get changes for an article", async () => {
     const change = {
       applied: false,
@@ -32,7 +39,7 @@ describe("Get /article/id/changes", () => {
     };
     return agent
       .post("/articles/54296/changes")
-      .send(change)
+      .send({ changes: [change] })
       .expect(200)
       .then(() =>
         agent
@@ -74,7 +81,7 @@ describe("Get /article/id/changes", () => {
     };
     return agent
       .post("/articles/54296/changes")
-      .send(change)
+      .send({ changes: [change] })
       .expect(200);
   });
 });
