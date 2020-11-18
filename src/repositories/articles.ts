@@ -9,7 +9,7 @@ export default function articleRepository(db: Db) {
       const { insertedId } = await db.collection("articles").insertOne({
         ...article,
       });
-      return insertedId;
+      return insertedId as string;
     },
     getByArticleId: async (articleId: string) => {
       const article = await db
