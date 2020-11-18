@@ -1,7 +1,8 @@
 import { default as express } from "express";
 import { logRequest } from "../middlewares/log-request";
+import { AssetService } from "../services/asset"
 
-export default (assetService: any): express.Router => {
+export default (assetService: AssetService): express.Router => {
   const router = express.Router({mergeParams: true});
 
   // Log all requests on this route.
