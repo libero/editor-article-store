@@ -16,7 +16,8 @@ export default (articleService: ArticleService): express.Router => {
       const accept = req.headers.accept || "*/*";
       if (accept.includes("application/json") || accept.includes("*/*")) {
         // todo: address as part of the depedency injection work
-        const articles = await articleService.getArticles(req.query.page || 0);
+        const page  = req.query.page ? parseInt(req.query.page.toString(), 10) : 0;
+        const articles = await articleService.getArticles(page);
         res
           .type("application/json")
           .status(200)
