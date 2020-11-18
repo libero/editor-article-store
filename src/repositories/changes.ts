@@ -3,7 +3,12 @@ import { Change } from "../types/change";
 
 const MAX_PAGE_SIZE = 100;
 
-export default function changeRepository(db: Db) {
+export type ChangeRepository = {
+  insert: (change: Change) => Promise<string>;
+  get: (articleId: string, page?: number) => Promise<Array<Change>>;
+}
+
+export default function changeRepository(db: Db): ChangeRepository {
   return {
     insert: async (change: Change) => {
       const { insertedId } = await db.collection("changes").insertOne({
