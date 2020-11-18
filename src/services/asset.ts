@@ -22,7 +22,11 @@ async function checkFileExists(
   }
 }
 
-export default function assetService(s3: S3, config: typeof configManager) {
+export type AssetService = {
+  getAssetUrl: (articleId: string, fileKey: string) => Promise<string | null>;
+}
+
+export default function assetService(s3: S3, config: typeof configManager): AssetService {
   return {
     getAssetUrl: async (
       articleId: string,

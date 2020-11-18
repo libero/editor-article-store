@@ -2,7 +2,12 @@ import { Db } from 'mongodb';
 import changeRepository from '../repositories/changes';
 import { Change } from '../types/change';
 
-export default (db: Db) => {
+export type ChangeService = {
+  getChangesforArticle: (articleId: string, page?: number) => Promise<Array<Change>>;
+  registerChange: (change: Change) => Promise<string>;
+}
+
+export default (db: Db): ChangeService => {
   const changeRepo = changeRepository(db);
   return {
     // todo: do we need an optional filter for version number?
