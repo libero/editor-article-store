@@ -3,7 +3,13 @@ import { Article } from "../types/article";
 
 const MAX_PAGE_SIZE = 100;
 
-export default function articleRepository(db: Db) {
+export type ArticleRepository = {
+  insert: (article: Article) => Promise<string>;
+  getByArticleId: (articleId: string) => Promise<Article>;
+  get: (page?: number) => Promise<Array<Article>>
+}
+
+export default function articleRepository(db: Db): ArticleRepository {
   return {
     insert: async (article: Article) => {
       const { insertedId } = await db.collection("articles").insertOne({
