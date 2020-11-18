@@ -1,8 +1,10 @@
 import { default as express } from "express";
 import { logRequest } from "../middlewares/log-request";
 import { http501Response } from "../providers/errors";
+import { ArticleService } from "../services/article";
+import { ChangeService } from "../services/changes";
 
-export default (changesService: any, articleService: any): express.Router => {
+export default (changesService: ChangeService, articleService: ArticleService): express.Router => {
   const changesRouter: express.Router = express.Router({ mergeParams: true });
 
   // Log all requests on this route.

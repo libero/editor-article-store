@@ -9,7 +9,7 @@ export default function changeRepository(db: Db) {
       const { insertedId } = await db.collection("changes").insertOne({
         ...change,
       });
-      return insertedId;
+      return insertedId as string;
     },
     get: async (articleId: string, page = 0) => {
       const skip = page * MAX_PAGE_SIZE;
@@ -20,7 +20,7 @@ export default function changeRepository(db: Db) {
         .skip(skip)
         .limit(MAX_PAGE_SIZE)
         .toArray();
-      return changes;
+      return changes as Array<Change>;
     },
   };
 }
