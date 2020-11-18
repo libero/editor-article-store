@@ -111,8 +111,7 @@ describe("articleRepository", () => {
       fileName: "main.xml",
       version: 'v1',
     };
-    const { insertedId } = await articleRepository(db).insert(data);
-    const articles = await articleRepository(db).get(0);
-    expect(insertedId).toBeDefined;
+    const insertedId = await articleRepository(db).insert(data);
+    expect(insertedId).toBeDefined();
   });
 });
