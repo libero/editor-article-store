@@ -34,8 +34,8 @@ export default (changesService: any, articleService: any): express.Router => {
         return res.sendStatus(404);
       }
 
-      if(!req.body?.changes?.length) {
-        return res.sendStatus(500);
+      if(!req.body?.changes) {
+        return res.sendStatus(400);
       }
 
       for(let change of req.body.changes) {
