@@ -15,12 +15,12 @@ export default function articleRepository(db: Db) {
       const article = await db
         .collection("articles")
         .findOne({ articleId });
-      return article;
+      return article as Article;
     },
     get: async(page = 0) => {
       const skip = page * MAX_PAGE_SIZE;
       const articles = await db.collection('articles').find().skip(skip).limit(MAX_PAGE_SIZE).toArray();
-      return articles;
+      return articles as Array<Article>;
     }
   };
 }

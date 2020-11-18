@@ -1,9 +1,9 @@
 import { default as express } from "express";
 import { http415Response } from "../providers/errors";
-
 import { logRequest } from "../middlewares/log-request";
+import { ArticleService } from '../services/article';
 
-export default (articleService: any): express.Router => {
+export default (articleService: ArticleService): express.Router => {
   const router = express.Router();
 
   // Log all requests on this route.
