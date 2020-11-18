@@ -17,7 +17,7 @@ export default (articleService: any): express.Router => {
       if (accept.includes("application/json") || accept.includes("*/*")) {
         // todo: address as part of the depedency injection work
         const articles = await articleService.getArticles(req.query.page || 0);
-        res
+        return res
           .type("application/json")
           .status(200)
           .json({ articles });
@@ -36,16 +36,16 @@ export default (articleService: any): express.Router => {
     const article = await articleService.findByArticleId(articleId);
 
     if (!article) {
-      res.sendStatus(404);
+      return res.sendStatus(404);
     }
 
     if (accept.includes("application/xml")) {
-      res
+      return res
         .type("text/xml")
         .status(200)
         .send(article.xml);
     } else {
-      res
+      return res
         .type("application/json")
         .status(200)
         .json(article);
