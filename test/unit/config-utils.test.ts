@@ -65,6 +65,7 @@ describe('createConfigFromEnv()', () => {
       port: 8080,
       dbUrl: 'mongo',
       dbName: 'dbname',
+      dbSSLValidate: true,
       awsRegion: 'AWS_REGION',
       awsAccessKey: 'AWS_ACCESS_KEY',
       awsSecretAccessKey: 'AWS_SECRET_ACCESS_KEY',
