@@ -52,8 +52,9 @@ describe('createConfigFromEnv()', () => {
   test('Cope with full input', () => {
     const input = {
       PORT: '8080',
-      MONGO_URL: 'mongo',
-      MONGO_DB_NAME: 'dbname',
+      DB_URL: 'mongo',
+      DB_SSL_VALIDATE: 'true',
+      DB_NAME: 'dbname',
       AWS_REGION: 'AWS_REGION',
       AWS_ACCESS_KEY: 'AWS_ACCESS_KEY',
       AWS_SECRET_ACCESS_KEY: 'AWS_SECRET_ACCESS_KEY',
@@ -62,8 +63,8 @@ describe('createConfigFromEnv()', () => {
     };
     const output = {
       port: 8080,
-      mongoUrl: 'mongo',
-      mongoDbName: 'dbname',
+      dbUrl: 'mongo',
+      dbName: 'dbname',
       awsRegion: 'AWS_REGION',
       awsAccessKey: 'AWS_ACCESS_KEY',
       awsSecretAccessKey: 'AWS_SECRET_ACCESS_KEY',

@@ -5,8 +5,9 @@ export type Config = {
   awsSecretAccessKey?: string;
   awsBucketInputEventQueueUrl?: string;
   awsEndPoint?: string;
-  mongoUrl?: string;
-  mongoDbName?: string;
+  dbUrl?: string;
+  dbSSLValidate?: boolean;
+  dbName?: string;
   editorS3Bucket?: string;
   srcS3Bucket?: string;
 };

@@ -1,4 +1,5 @@
 import { default as cors } from "cors";
+import { default as fs } from 'fs';
 import { default as express } from "express";
 import { Http2Server } from "http2";
 import AWS from "aws-sdk";
@@ -27,16 +28,26 @@ configManager.apply(createConfigFromEnv(process.env));
 configManager.apply(createConfigFromArgs(process.argv));
 
 // Connection URL
-const mongoUrl = configManager.get("mongoUrl");
+const dbUrl = configManager.get("dbUrl");
 
 // Database Name
-const dbName = configManager.get("mongoDbName");
+const dbName = configManager.get("dbName");
+
+// connect to cluester with TSL enabled 
+const dbSSLValidate = configManager.get("dbSSLValidate");
 
 export default async function start() {
   let server: Http2Server;
+  let dbSSLCert: (string | Buffer)[] | undefined;
   const app: express.Application = express();
 
-  const db = await initialiseDb(mongoUrl, dbName);
+  if(dbSSLValidate) {
+    //TODO: make cert file name configurable
+    dbSSLCert = [fs.readFileSync("rds-combined-ca-bundle.pem")]
+  }
+
+  const db = await initialiseDb(dbUrl, dbName, dbSSLCert);
+
   AWS.config.update({
     region: configManager.get("awsRegion"),
     accessKeyId: configManager.get("awsAccessKey"),
