@@ -27,6 +27,11 @@
   "bugs": {
     "url": "https://github.com/libero/editor/issues"
   },
+  "config": {
+    "mongodbMemoryServer": {
+      "version": "latest"
+    }
+  },
   "homepage": "https://github.com/libero/editor-article-store#readme",
   "commitlint": {
     "extends": [

@@ -3,6 +3,7 @@ import { logRequest } from "../middlewares/log-request";
 import { http501Response } from "../providers/errors";
 import { ArticleService } from "../services/article";
 import { ChangeService } from "../services/changes";
+import {Change, SerializedChangePayload} from "../types/change";
 
 export default (changesService: ChangeService, articleService: ArticleService): express.Router => {
   const changesRouter: express.Router = express.Router({ mergeParams: true });
@@ -40,13 +41,13 @@ export default (changesService: ChangeService, articleService: ArticleService): 
         return res.sendStatus(400);
       }
 
-      for(let change of req.body.changes) {
+      for(let change of Object.values(req.body.changes as SerializedChangePayload[])) {
         await changesService.registerChange({
           ...change,
           user: 'static-for-now',
           applied: false,
-          articleId,
-        });
+          articleId
+        } as Change);
       }
       return res.sendStatus(200);
     },
