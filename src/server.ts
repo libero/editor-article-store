@@ -33,7 +33,7 @@ const dbUrl = configManager.get("dbUrl");
 // Database Name
 const dbName = configManager.get("dbName");
 
-// connect to cluester with TSL enabled 
+// connect to cluster with TSL enabled 
 const dbSSLValidate = configManager.get("dbSSLValidate");
 
 export default async function start() {

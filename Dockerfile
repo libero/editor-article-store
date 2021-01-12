@@ -31,7 +31,7 @@ RUN npm run build
 FROM node:lts-alpine as prod
 COPY --from=dev /app/node_modules node_modules
 COPY --from=build-prod /app/dist /
-RUN wget https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem
+COPY ./rds-combined-ca-bundle.pem /
 EXPOSE 8080/tcp
 
 CMD ["node", "index.js"]
