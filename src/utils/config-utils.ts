@@ -20,11 +20,14 @@ export function createConfigFromEnv(env: ProcessEnv): Config {
   if (env['PORT']) {
     retVal.port = parseInt(env['PORT']);
   }
-  if (env['MONGO_URL']) {
-    retVal.mongoUrl = env['MONGO_URL'];
+  if (env['DB_URL']) {
+    retVal.dbUrl = env['DB_URL'];
   }
-  if (env['MONGO_DB_NAME']) {
-    retVal.mongoDbName = env['MONGO_DB_NAME'];
+  if (env['DB_SSL_VALIDATE']) {
+    retVal.dbSSLValidate = env['DB_SSL_VALIDATE'] === 'true';
+  }
+  if (env['DB_NAME']) {
+    retVal.dbName = env['DB_NAME'];
   }
   if (env['AWS_REGION']) {
     retVal.awsRegion = env['AWS_REGION'];

@@ -31,11 +31,11 @@ const s3 = new AWS.S3({
 
 export default async function start() {
   // Connection URL
-  const url = configManager.get("mongoUrl");
+  const url = configManager.get("dbUrl");
   // Target bucket
   const editorBucket = configManager.get("editorS3Bucket");
   // Database Name
-  const dbName = configManager.get("mongoDbName");
+  const dbName = configManager.get("dbName");
   const client = await MongoClient.connect(url);
   const db = client.db(dbName);
 
