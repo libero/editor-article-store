@@ -1,6 +1,7 @@
 import { default as cors } from "cors";
 import { default as fs } from 'fs';
 import { default as express } from "express";
+import { default as path } from "path";
 import { Http2Server } from "http2";
 import AWS from "aws-sdk";
 import bodyParser from "body-parser";
@@ -36,14 +37,17 @@ const dbName = configManager.get("dbName");
 // connect to cluster with TSL enabled 
 const dbSSLValidate = configManager.get("dbSSLValidate");
 
+//TODO: make cert file name configurable
+const dbCertLocation = path.join(__dirname, "rds-combined-ca-bundle.pem");
+
 export default async function start() {
   let server: Http2Server;
   let dbSSLCert: (string | Buffer)[] | undefined;
   const app: express.Application = express();
 
   if(dbSSLValidate) {
-    //TODO: make cert file name configurable
-    dbSSLCert = [fs.readFileSync("rds-combined-ca-bundle.pem")]
+    console.log('Reading DB cert from: ' + dbCertLocation);
+    dbSSLCert = [fs.readFileSync(dbCertLocation)]
   }
 
   const db = await initialiseDb(dbUrl, dbName, dbSSLCert);
