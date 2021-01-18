@@ -41,8 +41,8 @@ export function createConfigFromEnv(env: ProcessEnv): Config {
   if (env['AWS_BUCKET_INPUT_EVENT_QUEUE_URL']) {
     retVal.awsBucketInputEventQueueUrl = env['AWS_BUCKET_INPUT_EVENT_QUEUE_URL'];
   }
-  if (env['AWS_END_POINT']) {
-    retVal.awsEndPoint = env['AWS_END_POINT'];
+  if (env['AWS_ENDPOINT']) {
+    retVal.awsEndPoint = env['AWS_ENDPOINT'];
   }
   if (env['AWS_SRC_BUCKET']) {
     retVal.srcS3Bucket = env['SRC_BUCKET'];
