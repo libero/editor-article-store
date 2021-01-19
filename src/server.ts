@@ -41,12 +41,12 @@ const dbSSLValidate = configManager.get("dbSSLValidate");
 const dbCertLocation = path.join(__dirname, "rds-combined-ca-bundle.pem");
 
 export default async function start() {
+  console.log('Starting server...');
   let server: Http2Server;
   let dbSSLCert: (string | Buffer)[] | undefined;
   const app: express.Application = express();
 
   if(dbSSLValidate) {
-    console.log('Reading DB cert from: ' + dbCertLocation);
     dbSSLCert = [fs.readFileSync(dbCertLocation)]
   }
 
@@ -91,7 +91,7 @@ export default async function start() {
     process.on("SIGINT", terminate);
     process.on("SIGTERM", terminate);
     console.log(
-      `Server listening at http://localhost:${configManager.get("port")}`
+      `Server listening on port ${configManager.get("port")}`
     );
   });
 

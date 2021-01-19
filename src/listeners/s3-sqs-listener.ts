@@ -1,7 +1,9 @@
+import { default as path } from 'path';
+import { default as fs } from 'fs';
 import { Consumer } from "sqs-consumer";
 import AWS from "aws-sdk";
 import { configManager } from "../services/config-manager";
-import { MongoClient } from "mongodb";
+import initialiseDb from "../db";
 
 import {
   createConfigFromArgs,
@@ -30,14 +32,22 @@ const s3 = new AWS.S3({
 
 
 export default async function start() {
+  console.log('Starting import listener...');
   // Connection URL
-  const url = configManager.get("dbUrl");
+  const dbUrl = configManager.get("dbUrl");
   // Target bucket
   const editorBucket = configManager.get("editorS3Bucket");
   // Database Name
   const dbName = configManager.get("dbName");
-  const client = await MongoClient.connect(url);
-  const db = client.db(dbName);
+  // connect to cluster with TSL enabled 
+  const dbSSLValidate = configManager.get("dbSSLValidate");
+  const dbCertLocation = path.join(__dirname, "rds-combined-ca-bundle.pem");
+
+  let dbSSLCert: (string | Buffer)[] | undefined;
+  if(dbSSLValidate) {
+    dbSSLCert = [fs.readFileSync(dbCertLocation)]
+  }
+  const db = await initialiseDb(dbUrl, dbName, dbSSLCert);
 
   const handler = importHandler(s3, db, editorBucket);
 
