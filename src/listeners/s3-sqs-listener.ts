@@ -41,7 +41,7 @@ export default async function start() {
   const dbName = configManager.get("dbName");
   // connect to cluster with TSL enabled 
   const dbSSLValidate = configManager.get("dbSSLValidate");
-  const dbCertLocation = path.join(__dirname, "rds-combined-ca-bundle.pem");
+  const dbCertLocation = "/rds-combined-ca-bundle.pem";
 
   let dbSSLCert: (string | Buffer)[] | undefined;
   if(dbSSLValidate) {
