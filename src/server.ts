@@ -38,7 +38,7 @@ const dbName = configManager.get("dbName");
 const dbSSLValidate = configManager.get("dbSSLValidate");
 
 //TODO: make cert file name configurable
-const dbCertLocation = path.join(__dirname, "rds-combined-ca-bundle.pem");
+const dbCertLocation = "/rds-combined-ca-bundle.pem";
 
 export default async function start() {
   console.log('Starting server...');
