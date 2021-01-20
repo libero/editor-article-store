@@ -59,7 +59,7 @@ describe("changeRepository", () => {
     expect({ ...change, _id: insertedId }).toEqual(changeFromDb);
   });
 
-  test("should write change to the database", async () => {
+  it("should write change to the database", async () => {
     const repo = changeRepository(db);
     const change: Change = {
       articleId: "1234",
