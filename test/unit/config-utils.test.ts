@@ -52,25 +52,31 @@ describe('createConfigFromEnv()', () => {
   test('Cope with full input', () => {
     const input = {
       PORT: '8080',
-      DB_URL: 'mongo',
+      DB_ENDPOINT: 'mongo',
+      DB_USER: 'root',
+      DB_PASSWORD: 'password',
+      DB_URI_QUERY: 'foo=bar',
       DB_SSL_VALIDATE: 'true',
       DB_NAME: 'dbname',
       AWS_REGION: 'AWS_REGION',
       AWS_ACCESS_KEY: 'AWS_ACCESS_KEY',
       AWS_SECRET_ACCESS_KEY: 'AWS_SECRET_ACCESS_KEY',
       AWS_BUCKET_INPUT_EVENT_QUEUE_URL: 'AWS_BUCKET_INPUT_EVENT_QUEUE_URL',
-      AWS_END_POINT: 'AWS_END_POINT'
+      AWS_ENDPOINT: 'AWS_ENDPOINT'
     };
     const output = {
       port: 8080,
-      dbUrl: 'mongo',
+      dbEndpoint: 'mongo',
+      dbUser: 'root',
+      dbPassword: 'password',
+      dbUriQuery: 'foo=bar',
       dbName: 'dbname',
       dbSSLValidate: true,
       awsRegion: 'AWS_REGION',
       awsAccessKey: 'AWS_ACCESS_KEY',
       awsSecretAccessKey: 'AWS_SECRET_ACCESS_KEY',
       awsBucketInputEventQueueUrl: 'AWS_BUCKET_INPUT_EVENT_QUEUE_URL',
-      awsEndPoint: 'AWS_END_POINT'
+      awsEndpoint: 'AWS_ENDPOINT'
     };
     expect(createConfigFromEnv(input)).toEqual(output);
   });

@@ -19,6 +19,7 @@ import {
   createConfigFromArgs,
   createConfigFromEnv,
 } from "./utils/config-utils";
+import { buildDatabaseUri } from './utils/db-utils';
 
 import initialiseDb from "./db";
 
@@ -28,11 +29,11 @@ configManager.apply(defaultConfig);
 configManager.apply(createConfigFromEnv(process.env));
 configManager.apply(createConfigFromArgs(process.argv));
 
-// Connection URL
-const dbUrl = configManager.get("dbUrl");
-
 // Database Name
 const dbName = configManager.get("dbName");
+
+// Connection URI
+const dbUri = buildDatabaseUri(configManager.get("dbEndpoint"), configManager.get("dbUser"), configManager.get("dbPassword"), configManager.get("dbUriQuery"))
 
 // connect to cluster with TSL enabled 
 const dbSSLValidate = configManager.get("dbSSLValidate");
@@ -50,7 +51,7 @@ export default async function start() {
     dbSSLCert = [fs.readFileSync(dbCertLocation)]
   }
 
-  const db = await initialiseDb(dbUrl, dbName, dbSSLCert);
+  const db = await initialiseDb(dbUri, dbName, dbSSLCert);
 
   AWS.config.update({
     region: configManager.get("awsRegion"),
@@ -58,7 +59,7 @@ export default async function start() {
     secretAccessKey: configManager.get("awsSecretAccessKey"),
   });
   const s3 = new AWS.S3({
-    endpoint: configManager.get("awsEndPoint"),
+    endpoint: configManager.get("awsEndpoint"),
     apiVersion: "2006-03-01",
     signatureVersion: "v4",
     s3ForcePathStyle: true,

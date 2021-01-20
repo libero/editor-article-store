@@ -23,7 +23,7 @@ AWS.config.update({
   secretAccessKey: configManager.get("awsSecretAccessKey"),
 });
 const s3 = new AWS.S3({
-  endpoint: configManager.get("awsEndPoint"),
+  endpoint: configManager.get("awsEndpoint"),
   apiVersion: "2006-03-01",
   signatureVersion: "v4",
   s3ForcePathStyle: true,

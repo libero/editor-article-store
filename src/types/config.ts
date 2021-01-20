@@ -4,8 +4,11 @@ export type Config = {
   awsAccessKey?: string;
   awsSecretAccessKey?: string;
   awsBucketInputEventQueueUrl?: string;
-  awsEndPoint?: string;
-  dbUrl?: string;
+  awsEndpoint?: string;
+  dbEndpoint?: string;
+  dbUriQuery?: string;
+  dbUser?: string;
+  dbPassword?: string;
   dbSSLValidate?: boolean;
   dbName?: string;
   editorS3Bucket?: string;
