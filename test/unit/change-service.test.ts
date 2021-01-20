@@ -29,6 +29,7 @@ describe("articleService", () => {
       articleId: "123",
       applied: false,
       user: 'static-for-now',
+      type: 'steps',
       steps: [],
       path: 'abstract',
       timestamp: 1605198300275,

@@ -1,3 +1,4 @@
+import { Change } from "../../src/types/change";
 import { Db, MongoClient } from "mongodb";
 import changeRepository from "../../src/repositories/changes";
 
@@ -25,11 +26,12 @@ describe("changeRepository", () => {
     }).not.toThrow();
   });
 
-  test("should write change to the database", async () => {
+  it("should write change to the database", async () => {
     const repo = changeRepository(db);
-    const change = {
+    const change: Change = {
       articleId: "1234",
       applied: false,
+      type: 'steps',
       user: 'static-for-now',
       path: 'abstract',
       timestamp: 1605198300275,
@@ -57,11 +59,12 @@ describe("changeRepository", () => {
     expect({ ...change, _id: insertedId }).toEqual(changeFromDb);
   });
 
-  test("should write change to the database", async () => {
+  it("should write change to the database", async () => {
     const repo = changeRepository(db);
-    const change = {
+    const change: Change = {
       articleId: "1234",
       applied: false,
+      type: 'steps',
       path: 'abstract',
       user: 'static-for-now',
       timestamp: 1605198300275,

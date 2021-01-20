@@ -47,7 +47,7 @@ async function checkFileExists(key: string, bucket: string): Promise<boolean> {
 }
 
 async function waitForConditionOrTimeout(check: Function, limit: number) {
-  return new Promise((resolve) => {
+  return new Promise<void>((resolve) => {
     const startTime = new Date().getTime();
     const interval = setInterval(async () => {
       const timeLapsed = new Date().getTime() - startTime;
