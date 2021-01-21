@@ -20,8 +20,17 @@ export function createConfigFromEnv(env: ProcessEnv): Config {
   if (env['PORT']) {
     retVal.port = parseInt(env['PORT']);
   }
-  if (env['DB_URL']) {
-    retVal.dbUrl = env['DB_URL'];
+  if (env['DB_ENDPOINT']) {
+    retVal.dbEndpoint = env['DB_ENDPOINT'];
+  }
+  if (env['DB_URI_QUERY']) {
+    retVal.dbUriQuery = env['DB_URI_QUERY'];
+  }
+  if (env['DB_USER']) {
+    retVal.dbUser = env['DB_USER'];
+  }
+  if (env['DB_PASSWORD']) {
+    retVal.dbPassword = env['DB_PASSWORD'];
   }
   if (env['DB_SSL_VALIDATE']) {
     retVal.dbSSLValidate = env['DB_SSL_VALIDATE'] === 'true';
@@ -42,7 +51,7 @@ export function createConfigFromEnv(env: ProcessEnv): Config {
     retVal.awsBucketInputEventQueueUrl = env['AWS_BUCKET_INPUT_EVENT_QUEUE_URL'];
   }
   if (env['AWS_ENDPOINT']) {
-    retVal.awsEndPoint = env['AWS_ENDPOINT'];
+    retVal.awsEndpoint = env['AWS_ENDPOINT'];
   }
   if (env['AWS_SRC_BUCKET']) {
     retVal.srcS3Bucket = env['SRC_BUCKET'];

@@ -11,6 +11,7 @@ import {
 } from "../utils/config-utils";
 import { defaultConfig } from "../config/default";
 import importHandler from './import-handler';
+import { buildDatabaseUri } from '../utils/db-utils';
 
 // Load the configuration for this service with the following precedence...
 //   process args > environment vars > config file.
@@ -25,7 +26,7 @@ AWS.config.update({
 });
 
 const s3 = new AWS.S3({
-  endpoint: configManager.get("awsEndPoint"),
+  endpoint: configManager.get("awsEndpoint"),
   apiVersion: "2006-03-01",
   s3ForcePathStyle: true,
 });
@@ -33,12 +34,16 @@ const s3 = new AWS.S3({
 
 export default async function start() {
   console.log('Starting import listener...');
-  // Connection URL
-  const dbUrl = configManager.get("dbUrl");
-  // Target bucket
-  const editorBucket = configManager.get("editorS3Bucket");
+
   // Database Name
   const dbName = configManager.get("dbName");
+
+  // Connection URI
+  const dbUri = buildDatabaseUri(configManager.get("dbEndpoint"), configManager.get("dbUser"), configManager.get("dbPassword"), configManager.get("dbUriQuery"))
+
+  // Target bucket
+  const editorBucket = configManager.get("editorS3Bucket");
+
   // connect to cluster with TSL enabled 
   const dbSSLValidate = configManager.get("dbSSLValidate");
   const dbCertLocation = "/rds-combined-ca-bundle.pem";
@@ -47,7 +52,7 @@ export default async function start() {
   if(dbSSLValidate) {
     dbSSLCert = [fs.readFileSync(dbCertLocation)]
   }
-  const db = await initialiseDb(dbUrl, dbName, dbSSLCert);
+  const db = await initialiseDb(dbUri, dbName, dbSSLCert);
 
   const handler = importHandler(s3, db, editorBucket);
 
@@ -66,7 +71,7 @@ export default async function start() {
       });
     },
     sqs: new AWS.SQS({
-      endpoint: configManager.get("awsEndPoint"),
+      endpoint: configManager.get("awsEndpoint"),
     })
   });
   S3SQSListener.on("message_received", async function(message) {
