@@ -87,6 +87,6 @@ describe("changeRepository", () => {
     const insertedId = await repo.insert(change);
     expect(insertedId).toBeDefined();
     const changes = await repo.get("1234");
-    expect({ total: 1, change: [{ ...change, _id: insertedId }] }).toEqual(changes);
+    expect({ total: 1, changes: [{ ...change, _id: insertedId }] }).toEqual(changes);
   });
 });
