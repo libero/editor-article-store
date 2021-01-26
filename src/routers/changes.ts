@@ -20,8 +20,9 @@ export default (changesService: ChangeService, articleService: ArticleService): 
       if (article === null) {
         return res.sendStatus(404);
       }
-      const changes = await changesService.getChangesforArticle(articleId);
-      return res.json({ changes });
+      const page = parseInt((req.query.page as string) || '0', 10);
+      const changes = await changesService.getChangesforArticle(articleId, page);
+      return res.json(changes);
     },
     http501Response
   );

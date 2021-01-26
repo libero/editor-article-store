@@ -1,9 +1,9 @@
 import { Db } from 'mongodb';
-import changeRepository from '../repositories/changes';
+import changeRepository, {ChangesResultSet} from '../repositories/changes';
 import { Change } from '../types/change';
 
 export type ChangeService = {
-  getChangesforArticle: (articleId: string, page?: number) => Promise<Array<Change>>;
+  getChangesforArticle: (articleId: string, page: number) => Promise<ChangesResultSet>;
   registerChange: (change: Change) => Promise<string>;
 }
 
