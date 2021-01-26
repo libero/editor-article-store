@@ -61,7 +61,7 @@ describe("articleService", () => {
       ],
     };
     getMock = jest.fn().mockReturnValue([change]);
-    const changes = await changeService(db).getChangesforArticle("1234");
+    const changes = await changeService(db).getChangesforArticle("1234", 0);
     expect(changes).toEqual([change]);
   });
 });
