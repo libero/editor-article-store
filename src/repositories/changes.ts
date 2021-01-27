@@ -3,9 +3,14 @@ import { Change } from "../types/change";
 
 const MAX_PAGE_SIZE = 100;
 
+export interface ChangesResultSet {
+  changes: Array<Change>;
+  total: number;
+}
+
 export type ChangeRepository = {
   insert: (change: Change) => Promise<string>;
-  get: (articleId: string, page?: number) => Promise<Array<Change>>;
+  get: (articleId: string, page?: number) => Promise<ChangesResultSet>;
 }
 
 export default function changeRepository(db: Db): ChangeRepository {
@@ -18,14 +23,17 @@ export default function changeRepository(db: Db): ChangeRepository {
     },
     get: async (articleId: string, page = 0) => {
       const skip = page * MAX_PAGE_SIZE;
-      const changes = await db
+      const changesCursor = db
         .collection("changes")
         .find({ articleId })
         .sort({ timestamp: 1 })
         .skip(skip)
-        .limit(MAX_PAGE_SIZE)
-        .toArray();
-      return changes as Array<Change>;
+        .limit(MAX_PAGE_SIZE);
+      
+      const changes = await changesCursor.toArray() as Array<Change>;
+      const total = await changesCursor.count();
+
+      return { changes, total };
     },
   };
 }
