@@ -31,6 +31,14 @@ const s3 = new AWS.S3({
   s3ForcePathStyle: true,
 });
 
+function parseMessage(message: AWS.SQS.Message): { key: string, bucketName: string }[] {
+  try {
+    const messageBody = JSON.parse(message.Body || "");
+    return messageBody.Records.map((record: any) => ({ key: record.s3.object.key, bucketName: record.s3.bucket.name}));  
+  } catch {
+    throw new Error('Unable to parse message:' + message);
+  }
+}
 
 export default async function start() {
   console.log('Starting import listener...');
@@ -61,35 +69,31 @@ export default async function start() {
     region: configManager.get("awsRegion"),
     batchSize: 1,
     handleMessage: async (message) => {
-      /* istanbul ignore next */
-      const messageBody = JSON.parse(message.Body || "");
-      /* istanbul ignore next */
-      messageBody?.Records?.forEach((record: any) => {
+      // Throw in here to leave message on queue
+      const keyBucketList = parseMessage(message);
+      for(const keyBucketItem of keyBucketList) {
         console.log(
-          `SQS - AWS S3 uploaded event been consumed - { Key: ${record.s3.object.key}, Bucket: ${record.s3.bucket.name} }`
+          `SQS - S3 upload event received - { Key: ${keyBucketItem.key}, Bucket: ${keyBucketItem.bucketName} }`
         );
-      });
+        await handler.import(keyBucketItem.key, keyBucketItem.bucketName);
+      }
     },
     sqs: new AWS.SQS({
       endpoint: configManager.get("awsEndpoint"),
     })
   });
-  S3SQSListener.on("message_received", async function(message) {
-    const messageBody = JSON.parse(message.Body);
-    if (messageBody?.Records?.length) {
-      messageBody.Records.forEach(async (record: any) => {
-        console.log(
-          `SQS - AWS S3 uploaded event been consumed - { Key: ${record.s3.object.key}, Bucket: ${record.s3.bucket.name} }`
-        );
-        try {
-          await handler.import(record.s3.object.key, record.s3.bucket.name);
-        } catch(error) {
-          S3SQSListener.emit('error', error);
-        }
-      });
-    }
+
+  S3SQSListener.on("message_processed", async function(message) {
+    const keyBucketList = parseMessage(message);
+    keyBucketList.forEach(async (record: any) => {
+      console.log(
+        `SQS - S3 upload event successfully consumed - { Key: ${record.key}, Bucket: ${record.bucketName} }`
+      );
+    });
+  }).on("processing_error", function(err) {
+    console.log('SQS - Error processing message - ', err.message);
   }).on("error", function(err) {
-    console.log(err);
+    console.log('SQS - Error interacting with queue - ', err);
   });
 
   S3SQSListener.start();
