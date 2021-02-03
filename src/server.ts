@@ -1,7 +1,6 @@
 import { default as cors } from "cors";
 import { default as fs } from 'fs';
 import { default as express } from "express";
-import { default as path } from "path";
 import { Http2Server } from "http2";
 import AWS from "aws-sdk";
 import bodyParser from "body-parser";
@@ -33,7 +32,7 @@ configManager.apply(createConfigFromArgs(process.argv));
 const dbName = configManager.get("dbName");
 
 // Connection URI
-const dbUri = buildDatabaseUri(configManager.get("dbEndpoint"), configManager.get("dbUser"), configManager.get("dbPassword"), configManager.get("dbUriQuery"))
+const dbUri = buildDatabaseUri(configManager.get("dbEndpoint"), configManager.get("dbUser"), configManager.get("dbPassword"), configManager.get("dbUriQuery"));
 
 // connect to cluster with TSL enabled 
 const dbSSLValidate = configManager.get("dbSSLValidate");
