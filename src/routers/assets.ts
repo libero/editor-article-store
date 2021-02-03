@@ -1,16 +1,11 @@
 import { default as express } from "express";
 import multer from 'multer';
-
-import { logRequest } from "../middlewares/log-request";
 import { AssetService } from "../services/asset"
 
 const upload = multer();
 
 export default (assetService: AssetService): express.Router => {
   const router = express.Router({mergeParams: true});
-
-  // Log all requests on this route.
-  router.use(logRequest);
 
   router.post("/", upload.single('file'), async (req, res) => {
     const { articleId } = req.params;
