@@ -3,6 +3,7 @@ import { default as fs } from 'fs';
 import { Consumer } from "sqs-consumer";
 import AWS from "aws-sdk";
 import { configManager } from "../services/config-manager";
+import AssetService from '../services/asset';
 import initialiseDb from "../db";
 
 import {
@@ -54,7 +55,9 @@ export default async function start() {
   }
   const db = await initialiseDb(dbUri, dbName, dbSSLCert);
 
-  const handler = importHandler(s3, db, editorBucket);
+  // Initialize services
+  const assetService = AssetService(s3, configManager);
+  const handler = importHandler(assetService, db);
 
   const S3SQSListener = Consumer.create({
     queueUrl: configManager.get("awsBucketInputEventQueueUrl"),

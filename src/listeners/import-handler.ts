@@ -1,12 +1,10 @@
 import { Article } from "../types/article";
 import { Db } from "mongodb";
-import { S3 } from "aws-sdk";
 import decompress from "decompress";
-import { stringType } from "aws-sdk/clients/iam";
-import convert from "./convert-image";
 import FileType from "file-type";
+import { AssetService } from '../services/asset';
 
-export default function importHandler(s3:S3, db: Db, targetBucket:stringType) {
+export default function importHandler(assetService: AssetService, db: Db) {
   // S3 has the following format /folder/zip-id-version.zip
   const extractS3Path = (s3Key: string): {
     version: string;
@@ -33,13 +31,8 @@ export default function importHandler(s3:S3, db: Db, targetBucket:stringType) {
     });
   };
 
-  const fetchAndUnzip = async (Key: string, Bucket: string) => {
-    const { Body } = await s3
-    .getObject({
-      Key,
-      Bucket,
-    })
-    .promise();
+  const fetchAndUnzip = async (key: string, bucket: string) => {
+    const Body = await assetService.getAsset(key, bucket);
     return decompress(Body as Buffer);
   }
 
@@ -49,16 +42,7 @@ export default function importHandler(s3:S3, db: Db, targetBucket:stringType) {
     const contentType = await FileType.fromBuffer(content);
     return { fileName, content, contentType}
   }
-  const storeFileToTargetS3 = async (Body: Buffer | string = '', Key: string, ContentType: string|undefined) => {
-    const params = {
-      Body,
-      Bucket: targetBucket,
-      Key,
-      ACL: "private",
-      ContentType,
-    };
-    await s3.putObject(params).promise();
-  }
+
   return {
     import: async (key:string, srcBucket:string) => {
       let zipContentsDirectory;
@@ -80,45 +64,7 @@ export default function importHandler(s3:S3, db: Db, targetBucket:stringType) {
       for (const file of zipContentsDirectory) {
         if (file) {
           const { fileName, content, contentType } = await getFileDetails(file);
-          try {
-            await storeFileToTargetS3(content, `${articleId}/${fileName}`, contentType?.mime);
-            console.log(
-              `Object stored: { Key: ${articleId}/${fileName}, Bucket: ${targetBucket} }`
-            );
-          } catch (error) {
-            throw new Error(
-              `Error when storing object: { Key: ${articleId}/${fileName}, Bucket: ${targetBucket} } - ${error}`
-            );
-          }
-
-          if (file.path.includes(".tif")) {
-            let convertedTif;
-            try {
-              convertedTif = await convert(
-                content
-              );
-            } catch(error) {
-              throw new Error(`Error when converting .tif file: { Key: ${articleId}/${fileName}, Bucket: ${targetBucket} } - ${error}`)
-            }
-
-            const jpgKey = `${articleId}/${fileName.replace(
-              ".tif",
-              ".jpg"
-            )}`;
-
-            try {
-              const { buffer: jpgBuffer, contentType: jpgCcontentType } = convertedTif;
-              await storeFileToTargetS3(jpgBuffer, jpgKey, jpgCcontentType?.mime as unknown as string);
-              console.log(
-                `Object stored: { Key: ${jpgKey}, Bucket: ${targetBucket} }`
-              );
-            } catch(error) {
-              throw new Error(
-                `Error when storing object: { Key: ${jpgKey}, Bucket: ${targetBucket} } converted from .tif file: { Key: ${articleId}/${fileName}, Bucket: ${targetBucket} } - ${error}`
-              );
-            }
-          }
-  
+          await assetService.saveAsset(articleId, content, contentType?.mime as string, fileName);
           if (file.path.includes(".xml")) {
             try {
               const articleToStore = {
@@ -134,7 +80,7 @@ export default function importHandler(s3:S3, db: Db, targetBucket:stringType) {
               );
             } catch (error) {
               throw new Error(
-                `Error storing article XML: { ArticleID: ${articleId}, Version: ${version} } - ${error}`);
+                `Error storing article XML: { ArticleID: ${articleId}, Version: ${version} } - ${error.message}`);
             }
           }
         }

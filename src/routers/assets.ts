@@ -14,7 +14,7 @@ export default (assetService: AssetService): express.Router => {
 
   router.post("/", upload.single('file'), async (req, res) => {
     const { articleId } = req.params;
-    const s3Name = await assetService.saveFileToS3(
+    const s3Name = await assetService.saveAsset(
       articleId,
       req.file.buffer,
       req.file.mimetype,
@@ -26,7 +26,8 @@ export default (assetService: AssetService): express.Router => {
 
   router.get("/:fileKey", async (req, res) => {
     const { articleId, fileKey } = req.params;
-    const assetUrl = await assetService.getAssetUrl(articleId, fileKey);
+    const assetKey = `${articleId}/${fileKey}`;
+    const assetUrl = await assetService.getAssetUrl(assetKey);
     if (assetUrl === null) {
       res.sendStatus(404);
     } else {
