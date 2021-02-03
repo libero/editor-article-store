@@ -58,6 +58,7 @@ async function buildHandler() {
 export default async function start() {
   console.log('Starting import listener...');
 
+  const handler = await buildHandler();
   const S3SQSListener = Consumer.create({
     queueUrl: configManager.get("awsBucketInputEventQueueUrl"),
     region: configManager.get("awsRegion"),
