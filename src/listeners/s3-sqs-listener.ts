@@ -2,6 +2,7 @@ import { default as fs } from 'fs';
 import { Consumer } from "sqs-consumer";
 import AWS from "aws-sdk";
 import { configManager } from "../services/config-manager";
+import AssetService from '../services/asset';
 import initialiseDb from "../db";
 import {
   createConfigFromArgs,
@@ -49,15 +50,15 @@ async function buildHandler() {
    dbSSLCert = [fs.readFileSync(dbCertLocation)]
  }
  const db = await initialiseDb(dbUri, dbName, dbSSLCert);
+ const assetService = AssetService(s3, configManager);
 
- return importHandler(s3, db, editorBucket);
+ return importHandler(assetService, db);
 }
 
 export default async function start() {
   console.log('Starting import listener...');
 
   const handler = await buildHandler();
-
   const S3SQSListener = Consumer.create({
     queueUrl: configManager.get("awsBucketInputEventQueueUrl"),
     region: configManager.get("awsRegion"),

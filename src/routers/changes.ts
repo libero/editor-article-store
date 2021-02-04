@@ -1,5 +1,4 @@
 import { default as express } from "express";
-import { logRequest } from "../middlewares/log-request";
 import { http501Response } from "../providers/errors";
 import { ArticleService } from "../services/article";
 import { ChangeService } from "../services/changes";
@@ -7,9 +6,6 @@ import {Change, SerializedChangePayload} from "../types/change";
 
 export default (changesService: ChangeService, articleService: ArticleService): express.Router => {
   const changesRouter: express.Router = express.Router({ mergeParams: true });
-
-  // Log all requests on this route.
-  changesRouter.use(logRequest);
 
   // Get a list of all the changes.
   changesRouter.get(

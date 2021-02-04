@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import convert from "../../src/listeners/convert-image";
+import convert from "../../src/utils/convert-image-utils";
 
 describe("convertImage", () => {
   test("should convert a tif buffer", async () => {
