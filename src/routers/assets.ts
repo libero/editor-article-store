@@ -11,12 +11,18 @@ export default (assetService: AssetService): express.Router => {
 
   router.post("/", upload.single('file'), async (req, res) => {
     const { articleId } = req.params;
+    if (!req.file) {
+      console.log('Unable to store asset: No file');
+      res.sendStatus(400);
+      return;
+    }
+
     const s3Name = await assetService.saveAsset(
       articleId,
       req.file.buffer,
       req.file.mimetype,
       // TODO: uuid based S3 key should be refactored into asset service
-      `${uuidv4()}.${path.extname(req.file.originalname)}`
+      uuidv4()+path.extname(req.file.originalname)
     );
 
     res.json({assetName: s3Name});

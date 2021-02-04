@@ -12,7 +12,7 @@ describe('Get /assets', () => {
       .expect(404);
   });
 
-  test.only('Should return 301 for assets that are found - tiff', async () => {
+  test('Should return 301 for assets that are found - tiff', async () => {
     await agent
       .get('/articles/54296/assets/elife-54296-fig1.tif')
       .set('Accept', 'application/json')
@@ -21,7 +21,7 @@ describe('Get /assets', () => {
 
   test('Should return 301 for assets that are found - jpg', async () => {
     await agent
-      .get('/articles/54296/assets/elife-54296-fig1.jpg')
+      .get('/articles/54296/assets/elife-54296-fig1.jpeg')
       .set('Accept', 'application/json')
       .expect(301);
   });
@@ -43,12 +43,18 @@ describe('Get /assets', () => {
 });
 
 describe('Post /assets', () => {
-  it('Should return 200 if asset is uploaded', async () => {
+  it('Should return 200 and asset key if file is uploaded', async () => {
     const buffer = Buffer.from('some file data');
+    const resp = await agent
+      .post("/articles/54296/assets")
+      .set('content-type', 'multipart/form-data')
+      .attach('file', buffer, 'custom_file_name.txt')
+      .expect(200);
+    expect(JSON.parse(resp.text).assetName).toHaveLength(40)
+  });
+  it('Should return 400 if no file is uploaded', async () => {
     await agent
     .post("/articles/54296/assets")
-    .set('content-type', 'multipart/form-data')
-    .attach('file', buffer, 'custom_file_name.txt')
-    .expect(200);
+    .expect(400);
   });
 });
