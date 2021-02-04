@@ -72,7 +72,7 @@ describe("SQS bucket listener", () => {
     const xmlExists = async () =>
       checkFileExists(`${folderName}/elife-00006.xml`, editorBucket);
     const jpgExists = async () =>
-      checkFileExists(`${folderName}/elife-00006-fig1.jpg`, editorBucket);
+      checkFileExists(`${folderName}/elife-00006-fig1.jpeg`, editorBucket);
     const tiffExists = async () =>
       checkFileExists(`${folderName}/elife-00006-fig1.tif`, editorBucket);
     const pdfExists = async () =>
