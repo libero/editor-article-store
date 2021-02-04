@@ -3,7 +3,6 @@ import assetService from "../../src/services/asset";
 import { ConfigManagerInstance } from "../../src/services/config-manager";
 import imageConverter from '../../src/utils/convert-image-utils';
 
-jest.mock('uuid', () => ({ v4: () => '1111-1111-1111-1111'}));
 const getSignedUrlMock = jest.fn();
 const headObjectMock = jest.fn();
 const putObjectMock = jest.fn();
@@ -93,10 +92,10 @@ describe("assetService", () => {
           mockS3,
           mockConfigManager
         ).saveAsset("11111", Buffer.from("some content"), "image/jpeg", "someFileName.jpeg");
-        expect(assetkey).toBe("1111-1111-1111-1111.jpeg");
+        expect(assetkey).toBe("someFileName.jpeg");
         expect(putObjectMock).toBeCalledWith(expect.objectContaining({
           Bucket: "editorS3Bucket",
-          Key: "11111/1111-1111-1111-1111.jpeg",
+          Key: "11111/someFileName.jpeg",
           ACL: "private",
           ContentType: "image/jpeg",
         }));
@@ -106,7 +105,7 @@ describe("assetService", () => {
         await expect(assetService(
           mockS3,
           mockConfigManager
-        ).saveAsset("11111", Buffer.from("some content"), "image/jpeg", "someFileName.jpeg")).rejects.toThrow("Error when storing object: { Key: 11111/1111-1111-1111-1111.jpeg, Bucket: editorS3Bucket } - Some Error");
+        ).saveAsset("11111", Buffer.from("some content"), "image/jpeg", "someFileName.jpeg")).rejects.toThrow("Error when storing object: { Key: 11111/someFileName.jpeg, Bucket: editorS3Bucket } - Some Error");
       });
     
       it("converts a tiff to a jpeg and stores both and returns jpeg key", async () => {
@@ -114,17 +113,17 @@ describe("assetService", () => {
           mockS3,
           mockConfigManager
         ).saveAsset("11111", Buffer.from("some content"), "image/tiff", "someFileName.tiff");
-        expect(assetKey).toBe("1111-1111-1111-1111.jpeg");
+        expect(assetKey).toBe("someFileName.jpeg");
         expect(putObjectMock).toBeCalledTimes(2);
         expect(putObjectMock).toBeCalledWith(expect.objectContaining({
           Bucket: "editorS3Bucket",
-          Key: "11111/1111-1111-1111-1111.tiff",
+          Key: "11111/someFileName.tiff",
           ACL: "private",
           ContentType: "image/tiff",
         }));
         expect(putObjectMock).toBeCalledWith(expect.objectContaining({
           Bucket: "editorS3Bucket",
-          Key: "11111/1111-1111-1111-1111.jpeg",
+          Key: "11111/someFileName.jpeg",
           ACL: "private",
           ContentType: "image/jpeg",
         }));
@@ -135,7 +134,7 @@ describe("assetService", () => {
         await expect(assetService(
           mockS3,
           mockConfigManager
-        ).saveAsset("11111", Buffer.from("some content"), "image/tiff", "someFileName.tiff")).rejects.toThrow("Error when converting .tif file: { Key: 11111/1111-1111-1111-1111.tiff, Bucket: editorS3Bucket } - Error converting");
+        ).saveAsset("11111", Buffer.from("some content"), "image/tiff", "someFileName.tiff")).rejects.toThrow("Error when converting .tif file: { Key: 11111/someFileName.tiff, Bucket: editorS3Bucket } - Error converting");
       });
 
       it("converts both .tif and .tiff files", async () => {
@@ -154,14 +153,14 @@ describe("assetService", () => {
 
       it("throws correct error if storing the converted tif file fails", async () => {
         const mockPutObject = jest.fn((params) => { 
-          if(params.Key === "11111/1111-1111-1111-1111.jpeg") { throw new Error("Some Error")}
+          if(params.Key === "11111/someFileName.jpeg") { throw new Error("Some Error")}
           return { promise: () => {} };
         });
         putObjectMock.mockImplementation(mockPutObject as unknown as () => { promise: () => void });
         await expect(assetService(
           mockS3,
           mockConfigManager
-        ).saveAsset("11111", Buffer.from("some content"), "image/tiff", "someFileName.tif")).rejects.toThrow("Error when storing object: { Key: 11111/1111-1111-1111-1111.jpeg, Bucket: editorS3Bucket } converted from .tif file: { Key: 11111/1111-1111-1111-1111.tif, Bucket: editorS3Bucket } - Some Error");
+        ).saveAsset("11111", Buffer.from("some content"), "image/tiff", "someFileName.tif")).rejects.toThrow("Error when storing object: { Key: 11111/someFileName.jpeg, Bucket: editorS3Bucket } converted from .tif file: { Key: 11111/someFileName.tif, Bucket: editorS3Bucket } - Some Error");
       });
     });
   });

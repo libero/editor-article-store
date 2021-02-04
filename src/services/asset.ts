@@ -1,6 +1,4 @@
 import { S3 } from "aws-sdk";
-import {v4 as uuidv4} from 'uuid';
-
 import { configManager } from "./config-manager";
 import convert from '../utils/convert-image-utils';
 import path from "path";
@@ -67,9 +65,8 @@ export default function assetService(s3: S3, config: typeof configManager): Asse
     },
 
     saveAsset: async (articleId: string, fileContent: Buffer, mimeType: string, fileName: string): Promise<string> => {
-      const ext = fileName.split('.').pop() || mimeType.split('/').pop();
-      const uniqueFileId = uuidv4();
-      const assetKey = `${articleId}/${uniqueFileId}.${ext}`;
+      const ext = fileName?.split('.')?.pop() || mimeType?.split('/')?.pop() || '';
+      const assetKey = `${articleId}/${fileName}`;
 
       try {
         await storeFileToTargetS3(fileContent, assetKey , mimeType);
@@ -105,9 +102,9 @@ export default function assetService(s3: S3, config: typeof configManager): Asse
             `Error when storing object: { Key: ${jpgAssetKey}, Bucket: ${targetBucket} } converted from .tif file: { Key: ${assetKey}, Bucket: ${targetBucket} } - ${error.message}`
           );
         }
-        return `${uniqueFileId}.jpeg`;
+        return `${keyName}.jpeg`;
       }
-      return `${uniqueFileId}.${ext}`;
+      return fileName;
     }
   };
 }

@@ -1,6 +1,8 @@
 import { default as express } from "express";
+import path from 'path';
 import multer from 'multer';
 import { AssetService } from "../services/asset"
+import {v4 as uuidv4} from 'uuid';
 
 const upload = multer();
 
@@ -13,7 +15,8 @@ export default (assetService: AssetService): express.Router => {
       articleId,
       req.file.buffer,
       req.file.mimetype,
-      req.file.originalname
+      // TODO: uuid based S3 key should be refactored into asset service
+      `${uuidv4()}.${path.extname(req.file.originalname)}`
     );
 
     res.json({assetName: s3Name});
