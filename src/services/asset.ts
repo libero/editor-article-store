@@ -2,7 +2,7 @@ import { S3 } from "aws-sdk";
 import { configManager } from "./config-manager";
 import convert from '../utils/convert-image-utils';
 import path from "path";
-
+import { v4 as uuid } from 'uuid';
 export type AssetService = {
   getAsset: (key: string, bucket: string) => Promise<string | Buffer | undefined>;
   getAssetUrl: (key: string) => Promise<string | null>;
@@ -66,8 +66,8 @@ export default function assetService(s3: S3, config: typeof configManager): Asse
 
     saveAsset: async (articleId: string, fileContent: Buffer, mimeType: string, fileName: string): Promise<string> => {
       const ext = fileName?.split('.')?.pop() || mimeType?.split('/')?.pop() || '';
-      const assetKey = `${articleId}/${fileName}`;
-
+      const assetKeyPrefix = `${articleId}/${uuid()}`;
+      const assetKey = `${assetKeyPrefix}/${fileName}`;
       try {
         await storeFileToTargetS3(fileContent, assetKey , mimeType);
         console.log(
@@ -89,8 +89,9 @@ export default function assetService(s3: S3, config: typeof configManager): Asse
         } catch(error) {
           throw new Error(`Error when converting .tif file: { Key: ${assetKey}, Bucket: ${targetBucket} } - ${error.message}`)
         }
-        const { dir: keyDir, name: keyName } = path.parse(assetKey)
-        const jpgAssetKey = path.join(keyDir, keyName) + ".jpeg";
+        const { name: keyName } = path.parse(fileName)
+        const jpgAssetKey = path.join(assetKeyPrefix, keyName) + ".jpeg";
+
         try {
           const { buffer: jpgBuffer, contentType: jpgCcontentType } = convertedTif;
           await storeFileToTargetS3(jpgBuffer, jpgAssetKey, jpgCcontentType?.mime as unknown as string);

@@ -55,8 +55,9 @@ describe("changeRepository", () => {
     const changeFromDb = await db
       .collection("changes")
       .findOne({ articleId: change.articleId });
+    delete changeFromDb.created;
     expect(insertedId).toBeDefined();
-    expect({ ...change, _id: insertedId }).toEqual(changeFromDb);
+    expect(changeFromDb).toMatchObject({ ...change, _id: insertedId });
   });
 
   it("should write change to the database", async () => {
@@ -87,6 +88,7 @@ describe("changeRepository", () => {
     const insertedId = await repo.insert(change);
     expect(insertedId).toBeDefined();
     const changes = await repo.get("1234");
-    expect({ total: 1, changes: [{ ...change, _id: insertedId }] }).toEqual(changes);
+    changes.changes.forEach(element => delete element.created)
+    expect(changes).toStrictEqual(expect.objectContaining({ total: 1, changes: [{ ...change, _id: insertedId }] }));
   });
 });
