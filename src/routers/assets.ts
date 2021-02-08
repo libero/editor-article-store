@@ -35,7 +35,7 @@ export default (assetService: AssetService): express.Router => {
     if (assetUrl === null) {
       res.sendStatus(404);
     } else {
-      res.redirect(301, assetUrl);
+      res.redirect(302, assetUrl);
     }
   });
 

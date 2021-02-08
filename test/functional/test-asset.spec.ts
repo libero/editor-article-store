@@ -12,33 +12,33 @@ describe('Get /assets', () => {
       .expect(404);
   });
 
-  test('Should return 301 for assets that are found - tiff', async () => {
+  test('Should return 302 for assets that are found - tiff', async () => {
     await agent
       .get('/articles/54296/assets/elife-54296-fig1.tif')
       .set('Accept', 'application/json')
-      .expect(301);
+      .expect(302);
   });
 
-  test('Should return 301 for assets that are found - jpg', async () => {
+  test('Should return 302 for assets that are found - jpg', async () => {
     await agent
       .get('/articles/54296/assets/elife-54296-fig1.jpeg')
       .set('Accept', 'application/json')
-      .expect(301);
+      .expect(302);
   });
 
-  test('Should return 301 for assets that are found - pdf', async () => {
+  test('Should return 302 for assets that are found - pdf', async () => {
     await agent
       .get('/articles/54296/assets/elife-54296.pdf')
       .set('Accept', 'application/json')
-      .expect(301);
+      .expect(302);
   });
 
-  // perphas this shouldn't be possible
-  test('Should return 301 for assets that are found - xml', async () => {
+  // prehaps this shouldn't be possible
+  test('Should return 302 for assets that are found - xml', async () => {
      await agent
       .get('/articles/54296/assets/elife-54296.xml')
       .set('Accept', 'application/json')
-      .expect(301);
+      .expect(302);
   });
 });
 
