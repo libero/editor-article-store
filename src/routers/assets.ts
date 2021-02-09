@@ -1,5 +1,4 @@
 import { default as express } from "express";
-import path from 'path';
 import multer from 'multer';
 import { AssetService } from "../services/asset"
 
@@ -27,7 +26,7 @@ export default (assetService: AssetService): express.Router => {
   });
 
   router.get("/:fileKey", async (req, res) => {
-    const { articleId, fileKey } = req.params;
+    const { articleId, fileKey } = req.params; 
     const assetKey = `${articleId}/${fileKey}`;
     const assetUrl = await assetService.getAssetUrl(assetKey);
     if (assetUrl === null) {
