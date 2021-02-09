@@ -11,6 +11,7 @@ const dbMock = {
 const getAssetMock = jest.fn();
 const saveAssetMock = jest.fn();
 const assetServiceMock = {
+  getArticleAssetKeysByFilename: jest.fn(),
   getAsset: getAssetMock,
   getAssetUrl: jest.fn(),
   saveAsset: saveAssetMock
