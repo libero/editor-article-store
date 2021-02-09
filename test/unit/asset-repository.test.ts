@@ -2,11 +2,12 @@ import { Asset } from "../../src/types/asset";
 import { Db, MongoClient } from "mongodb";
 import assetRepository from "../../src/repositories/assets";
 
-const largeAssetCollection = Array(101).fill({
+const largeAssetCollection = (count = 101, mergeData?: Partial<Asset>) => Array(count).fill({
   assetId: '10000',
   articleId: 'articleId',
   fileName: "someotherfile.tiff",
-  created: new Date().toISOString()
+  created: new Date().toISOString(),
+  ...mergeData
 }).map((article, index) => ({...article, assetId: (Number(article.assetId) + index).toString() }));
 
 
@@ -93,27 +94,58 @@ describe("assetRepository", () => {
         }
     ]);
       const assetCollection1 = await assetRepository(db).getByArticleId('articleId1');
-      expect(assetCollection1).toHaveLength(2);
+      expect(assetCollection1.assets).toHaveLength(2);
+      expect(assetCollection1.total).toBe(2);
       const assetCollection2 = await assetRepository(db).getByArticleId('articleId2');
-      expect(assetCollection2).toHaveLength(2);
-      assetCollection1.forEach(asset => {
+      expect(assetCollection2.assets).toHaveLength(2);
+      expect(assetCollection2.total).toBe(2);
+      assetCollection1.assets.forEach(asset => {
         expect(asset.articleId).toBe('articleId1');
       });
-      assetCollection2.forEach(asset => {
+      assetCollection2.assets.forEach(asset => {
         expect(asset.articleId).toBe('articleId2');
       });
     });
     test('it defaults to first 100 assets', async () => {
-      await db.collection("assets").insertMany(largeAssetCollection);
-      const returnedArticles = await assetRepository(db).getByArticleId('articleId');
-      expect(returnedArticles.length).toBe(100);
-      expect(returnedArticles[0].assetId).toBe("10000");
+      await db.collection("assets").insertMany(largeAssetCollection());
+      const returnedAssets = await assetRepository(db).getByArticleId('articleId');
+      expect(returnedAssets.assets.length).toBe(100);
+      expect(returnedAssets.total).toBe(101);
+      expect(returnedAssets.assets[0].assetId).toBe("10000");
     });
     test("gets assets from given page of results", async () => {
-      await db.collection("assets").insertMany(largeAssetCollection);
-      const returnedArticles = await assetRepository(db).getByArticleId('articleId', 1);
-      expect(returnedArticles.length).toBe(1);
-      expect(returnedArticles[0].assetId).toBe("10100");
+      await db.collection("assets").insertMany(largeAssetCollection());
+      const returnedAssets = await assetRepository(db).getByArticleId('articleId', 1);
+      expect(returnedAssets.assets.length).toBe(1);
+      expect(returnedAssets.total).toBe(101);
+      expect(returnedAssets.assets[0].assetId).toBe("10100");
+    })
+  });
+  describe('getByQuery', () => {
+    it('returns given a query', async () => {
+      await db.collection("assets").insertMany(largeAssetCollection(10, { articleId: 'foo' }));
+      await db.collection("assets").insertMany(largeAssetCollection(10, { articleId: 'bar' }));
+      await db.collection("assets").insertMany(largeAssetCollection(10, { articleId: 'bar', fileName: 'yyy' }));
+      const returnedAssets1 = await assetRepository(db).getByQuery({ articleId: 'bar' });
+      expect(returnedAssets1.assets.length).toBe(20);
+      expect(returnedAssets1.total).toBe(20);
+      const returnedAssets2 = await assetRepository(db).getByQuery({ articleId: 'bar', fileName: 'yyy' });
+      expect(returnedAssets2.assets.length).toBe(10);
+      expect(returnedAssets2.total).toBe(10);
+    });
+    test('it defaults to first 100 assets', async () => {
+      await db.collection("assets").insertMany(largeAssetCollection());
+      const returnedAssets = await assetRepository(db).getByQuery({});
+      expect(returnedAssets.assets.length).toBe(100);
+      expect(returnedAssets.total).toBe(101);
+      expect(returnedAssets.assets[0].assetId).toBe("10000");
+    });
+    test("gets assets from given page of results", async () => {
+      await db.collection("assets").insertMany(largeAssetCollection());
+      const returnedAssets = await assetRepository(db).getByQuery({}, 1);
+      expect(returnedAssets.assets.length).toBe(1);
+      expect(returnedAssets.total).toBe(101);
+      expect(returnedAssets.assets[0].assetId).toBe("10100");
     })
   });
 });

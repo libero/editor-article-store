@@ -4,6 +4,23 @@ import * as request from 'supertest';
 const API_URL = 'localhost:8080';
 const agent = request.agent(API_URL);
 
+describe('Post /assets', () => {
+  it('Should return 200 and asset key if file is uploaded', async () => {
+    const buffer = Buffer.from('some file data');
+    const resp = await agent
+      .post("/articles/54296/assets")
+      .set('content-type', 'multipart/form-data')
+      .attach('file', buffer, 'custom_file_name.txt')
+      .expect(200);
+    expect(JSON.parse(resp.text).assetName).toHaveLength(40)
+  });
+  it('Should return 400 if no file is uploaded', async () => {
+    await agent
+    .post("/articles/54296/assets")
+    .expect(400);
+  });
+});
+
 describe('Get /assets', () => {
   test('Returns 404 for assets that are not found', async () => {
     await agent
@@ -39,22 +56,5 @@ describe('Get /assets', () => {
       .get('/articles/54296/assets/elife-54296.xml')
       .set('Accept', 'application/json')
       .expect(302);
-  });
-});
-
-describe('Post /assets', () => {
-  it('Should return 200 and asset key if file is uploaded', async () => {
-    const buffer = Buffer.from('some file data');
-    const resp = await agent
-      .post("/articles/54296/assets")
-      .set('content-type', 'multipart/form-data')
-      .attach('file', buffer, 'custom_file_name.txt')
-      .expect(200);
-    expect(JSON.parse(resp.text).assetName).toHaveLength(40)
-  });
-  it('Should return 400 if no file is uploaded', async () => {
-    await agent
-    .post("/articles/54296/assets")
-    .expect(400);
   });
 });

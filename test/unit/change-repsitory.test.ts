@@ -52,11 +52,11 @@ describe("changeRepository", () => {
       ],
     };
     const insertedId = await repo.insert(change);
+    expect(insertedId).toBeDefined();
     const changeFromDb = await db
       .collection("changes")
       .findOne({ articleId: change.articleId });
     delete changeFromDb.created;
-    expect(insertedId).toBeDefined();
     expect(changeFromDb).toMatchObject({ ...change, _id: insertedId });
   });
 

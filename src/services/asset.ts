@@ -4,8 +4,10 @@ import { v4 as uuid } from 'uuid';
 import { configManager } from "./config-manager";
 import convert from '../utils/convert-image-utils';
 import { AssetRepository } from "../repositories/assets";
+import { Asset } from "../types/asset";
 
 export type AssetService = {
+  getArticleAssetIdsByFilename: (articleId: string, fileName: string) => Promise<Asset[]>
   getAsset: (key: string, bucket: string) => Promise<string | Buffer | undefined>;
   getAssetUrl: (key: string) => Promise<string | null>;
   saveAsset: (articleId: string, fileContent: Buffer, mimeType: string, fileName: string) => Promise<string>;
@@ -63,6 +65,10 @@ export default function assetService(s3: S3, assetRepository: AssetRepository, c
         Key: key,
         Expires: 3600,
       });
+    },
+    getArticleAssetIdsByFilename: async (articleId, fileName) => {
+      const { assets } = await assetRepository.getByQuery({articleId, fileName});
+      return assets;
     },
     getAsset: async (key: string, bucket: string) => {
       const { Body } = await s3
