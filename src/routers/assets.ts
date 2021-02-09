@@ -27,7 +27,13 @@ export default (assetService: AssetService): express.Router => {
 
   router.get("/:fileKey", async (req, res) => {
     const { articleId, fileKey } = req.params; 
-    const assetKey = `${articleId}/${fileKey}`;
+    let assetKey = `${articleId}/${fileKey}`;
+
+    if (!fileKey.includes('/')) {
+      const [ key ] = await assetService.getArticleAssetKeysByFilename(articleId, fileKey);
+      assetKey = key;
+    }
+
     const assetUrl = await assetService.getAssetUrl(assetKey);
     if (assetUrl === null) {
       res.sendStatus(404);

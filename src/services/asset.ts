@@ -7,7 +7,7 @@ import { AssetRepository } from "../repositories/assets";
 import { Asset } from "../types/asset";
 
 export type AssetService = {
-  getArticleAssetIdsByFilename: (articleId: string, fileName: string) => Promise<Asset[]>
+  getArticleAssetKeysByFilename: (articleId: string, fileName: string) => Promise<string[]>
   getAsset: (key: string, bucket: string) => Promise<string | Buffer | undefined>;
   getAssetUrl: (key: string) => Promise<string | null>;
   saveAsset: (articleId: string, fileContent: Buffer, mimeType: string, fileName: string) => Promise<string>;
@@ -66,9 +66,9 @@ export default function assetService(s3: S3, assetRepository: AssetRepository, c
         Expires: 3600,
       });
     },
-    getArticleAssetIdsByFilename: async (articleId, fileName) => {
+    getArticleAssetKeysByFilename: async (articleId, fileName) => {
       const { assets } = await assetRepository.getByQuery({articleId, fileName});
-      return assets;
+      return assets.map(asset => `${asset.articleId}/${asset.assetId}/${asset.fileName}`);
     },
     getAsset: async (key: string, bucket: string) => {
       const { Body } = await s3

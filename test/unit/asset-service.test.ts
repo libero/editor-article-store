@@ -25,10 +25,13 @@ const mockConfigManager = ({
   get: mockConfigGet
 }as unknown) as ConfigManagerInstance;
 
-const mockGetByArticleId = jest.fn(async () => ([{_id: 'someAssetId', articleId: 'articleId', assetId: 'assetId', fileName: 'someFile.tiff'}]));
+const mockGetByArticleId = jest.fn(async () => ({ assets: [{_id: 'someAssetId', articleId: 'articleId', assetId: 'assetId', fileName: 'someFile.tiff'}], total: 1}));
+const mockGetByQuery = jest.fn(async () => ({ assets: [{_id: 'someAssetId123', articleId: 'articleId123', assetId: 'assetId123', fileName: 'someFile123.tiff'}], total: 1}));
+
 const mockAssetRepo: AssetRepository = {
   insert: async (asset: Asset) => 'someAssetId',
-  getByArticleId: mockGetByArticleId
+  getByArticleId: mockGetByArticleId,
+  getByQuery: mockGetByQuery
 }
 
 jest.mock('../../src/utils/convert-image-utils');
@@ -183,6 +186,17 @@ describe("assetService", () => {
           mockAssetRepo,
           mockConfigManager
         ).saveAsset("11111", Buffer.from("some content"), "image/tiff", "someFileName.tif")).rejects.toThrow("Error when storing S3 object: { Key: 11111/11111111-1111-1111-1111-111111111111/someFileName.jpeg, Bucket: editorS3Bucket } converted from .tif file: { Key: 11111/11111111-1111-1111-1111-111111111111/someFileName.tif, Bucket: editorS3Bucket } - Some Error");
+      });
+    });
+    describe('getArticleAssetKeysByFilename', () => {
+      it('returns expected list of keys', async () => {
+        const assetKeys = await assetService(
+          mockS3,
+          mockAssetRepo,
+          mockConfigManager
+        ).getArticleAssetKeysByFilename('someAssetId123', 'someFile123.tiff');
+        expect(mockGetByQuery).toBeCalledWith({ articleId: 'someAssetId123', fileName: 'someFile123.tiff'})
+        expect(assetKeys).toEqual(['articleId123/assetId123/someFile123.tiff'])
       });
     });
   });
