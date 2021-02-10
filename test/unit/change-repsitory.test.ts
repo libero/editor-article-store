@@ -8,13 +8,14 @@ describe("changeRepository", () => {
 
   beforeAll(async () => {
     connection = await MongoClient.connect(process.env.MONGO_URL || "", {
+      useNewUrlParser: true,
       useUnifiedTopology: true,
     });
     db = await connection.db();
   });
 
   beforeEach(async () => {
-    await db.dropDatabase();
+    await db.collection('changes').deleteMany({});
   });
 
   afterAll(async () => {

@@ -12,7 +12,7 @@ describe('Post /assets', () => {
       .set('content-type', 'multipart/form-data')
       .attach('file', buffer, 'custom_file_name.txt')
       .expect(200);
-    expect(JSON.parse(resp.text).assetName).toHaveLength(40)
+    expect(JSON.parse(resp.text).assetName).toHaveLength(57)
   });
   it('Should return 400 if no file is uploaded', async () => {
     await agent

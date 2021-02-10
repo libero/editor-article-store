@@ -34,6 +34,11 @@ export default (assetService: AssetService): express.Router => {
       assetKey = key;
     }
 
+    if (!assetKey) {
+      res.sendStatus(404);
+      return;
+    }
+
     const assetUrl = await assetService.getAssetUrl(assetKey);
     if (assetUrl === null) {
       res.sendStatus(404);

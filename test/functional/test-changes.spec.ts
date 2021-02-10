@@ -47,7 +47,7 @@ describe("Get /article/id/changes", () => {
           .expect("Content-Type", /json/)
           .then((response) => {
             const changes = response.body.changes;
-            const { _id, ...rest } = changes[0];
+            const { _id, created, ...rest } = changes[0];
             expect(changes.length).toBe(1);
             expect(rest).toEqual({
               ...change,
