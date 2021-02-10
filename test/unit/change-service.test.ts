@@ -1,7 +1,7 @@
 import changeService from "../../src/services/changes";
 
-let insertMock = jest.fn().mockReturnValue(null);
-let getMock = jest.fn().mockReturnValue(null);
+let insertMock = jest.fn();
+let getMock = jest.fn();
 const mockChangesRepo =  {
     insert: insertMock,
     get: getMock,
@@ -11,6 +11,8 @@ describe("changeService", () => {
 
   beforeEach(async () => {
     jest.restoreAllMocks();
+    getMock.mockImplementation(() => null);
+    insertMock.mockImplementation(() => null);
   });
 
   test("should not throw", () => {
@@ -20,7 +22,7 @@ describe("changeService", () => {
   });
 
   test("Returns id if inserted", async () => {
-    insertMock = jest.fn().mockReturnValue("507f1f77bcf86cd799439011");
+    insertMock.mockImplementation(() => "507f1f77bcf86cd799439011");
     const insertedId = await changeService(mockChangesRepo).registerChange({
       articleId: "123",
       applied: false,
@@ -56,7 +58,7 @@ describe("changeService", () => {
         },
       ],
     };
-    getMock = jest.fn().mockReturnValue({ total: 1, changes: [change] });
+    getMock.mockImplementation(() => ({ total: 1, changes: [change] }));
     const changes = await changeService(mockChangesRepo).getChangesforArticle("1234", 0);
     expect(changes).toEqual({ total: 1, changes: [change] });
   });
