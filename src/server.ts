@@ -22,6 +22,9 @@ import { buildDatabaseUri } from './utils/db-utils';
 
 import initialiseDb from "./db";
 import AssetRepository from "./repositories/assets";
+import ChangesRepository from "./repositories/changes";
+import ArticleRepository from "./repositories/articles";
+
 
 // Load the configuration for this service with the following precedence...
 //   process args > environment vars > config file.
@@ -66,10 +69,11 @@ export default async function start() {
   });
   // Initialize repositories
   const assetRepository = AssetRepository(db);
-
+  const changeRepository = ChangesRepository(db)
+  const articleRepository = ArticleRepository(db);
   // Initialize services
-  const articleService = ArticleService(db);
-  const changesService = ChangesService(db);
+  const articleService = ArticleService(articleRepository);
+  const changesService = ChangesService(changeRepository);
   const assetService = AssetService(s3, assetRepository, configManager);
 
   // Register middlewares
