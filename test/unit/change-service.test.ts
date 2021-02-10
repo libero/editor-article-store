@@ -7,7 +7,7 @@ const mockChangesRepo =  {
     get: getMock,
 };
 
-describe("articleService", () => {
+describe("changeService", () => {
 
   beforeEach(async () => {
     jest.restoreAllMocks();
