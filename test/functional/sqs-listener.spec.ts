@@ -28,22 +28,15 @@ const s3 = new AWS.S3({
   signatureVersion: "v4",
   s3ForcePathStyle: true,
 });
+const sqs = new AWS.SQS();
 
-async function checkFileExists(key: string, bucket: string): Promise<boolean> {
+async function checkMessagesProcessed(): Promise<boolean> {
   try {
-    await s3
-      .headObject({
-        Bucket: bucket,
-        Key: key,
-      })
-      .promise();
-    return true;
+    const { Attributes } =  await sqs.getQueueAttributes({ QueueUrl: configManager.get('awsBucketInputEventQueueUrl'), AttributeNames: ['ApproximateNumberOfMessages'] }).promise();
+    return !!Attributes &&  Attributes['ApproximateNumberOfMessages'] === '0';
   } catch (error) {
-    if (error && error.code === "NotFound") {
       return false;
     }
-    throw error;
-  }
 }
 
 async function waitForConditionOrTimeout(check: Function, limit: number) {
@@ -56,7 +49,7 @@ async function waitForConditionOrTimeout(check: Function, limit: number) {
         resolve();
         clearInterval(interval);
       }
-    }, 1000);
+    }, 1500);
   });
 }
 
@@ -69,24 +62,11 @@ describe("SQS bucket listener", () => {
       .toString()
       .slice(-5);
 
-    const xmlExists = async () =>
-      checkFileExists(`${folderName}/elife-00006.xml`, editorBucket);
-    const jpgExists = async () =>
-      checkFileExists(`${folderName}/elife-00006-fig1.jpeg`, editorBucket);
-    const tiffExists = async () =>
-      checkFileExists(`${folderName}/elife-00006-fig1.tif`, editorBucket);
-    const pdfExists = async () =>
-      checkFileExists(`${folderName}/elife-00006.pdf`, editorBucket);
-
-    await expect(xmlExists()).resolves.toBe(false);
-    await expect(jpgExists()).resolves.toBe(false);
-    await expect(tiffExists()).resolves.toBe(false);
-    await expect(pdfExists()).resolves.toBe(false);
-
     const zipBuffer = fs.readFileSync(
       path.join(__dirname, "..", "test-files", "elife-00006-vor-r1.zip")
     );
-
+    const bucketContentBefore = await s3.listObjects({ Prefix: folderName, Bucket: editorBucket}).promise();
+    expect(bucketContentBefore.Contents).toHaveLength(0);
     await s3
       .putObject({
         Body: zipBuffer,
@@ -95,12 +75,13 @@ describe("SQS bucket listener", () => {
         ACL: "private",
       })
       .promise();
-
-    await waitForConditionOrTimeout(xmlExists, 50000);
-
-    await expect(xmlExists()).resolves.toBe(true);
-    await expect(jpgExists()).resolves.toBe(true);
-    await expect(tiffExists()).resolves.toBe(true);
-    await expect(pdfExists()).resolves.toBe(true);
+    await waitForConditionOrTimeout(checkMessagesProcessed, 50000)
+    
+    const { Contents = []} = await s3.listObjects({ Prefix: folderName, Bucket: editorBucket}).promise();
+    const contentsString = JSON.stringify(Contents);
+    expect(contentsString).toContain('elife-00006.xml');
+    expect(contentsString).toContain('elife-00006-fig1.jpeg');
+    expect(contentsString).toContain('elife-00006-fig1.tif');
+    expect(contentsString).toContain('elife-00006.pdf');
   });
 });
