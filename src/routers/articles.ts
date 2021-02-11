@@ -53,5 +53,27 @@ export default (articleService: ArticleService): express.Router => {
     }
   });
 
+  // exports the specified article XML with changes.
+  router.get("/:articleId/export", async (req, res) => {
+    const accept = req.headers.accept || "";
+    const articleId = req.params.articleId;
+
+    const articleXml = await articleService.exportXml(articleId);
+
+    if (articleXml === null) {
+      return res.sendStatus(404);
+    }
+
+    if (accept.includes("application/xml")) {
+      return res
+        .type("text/xml")
+        .status(200)
+        .send(articleXml);
+    } else {
+      // anything but XML is unacceptable
+      return res.sendStatus(406);
+    }
+  });
+
   return router;
 };

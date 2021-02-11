@@ -1,5 +1,6 @@
 import { Db } from "mongodb";
 import { Change } from "../types/change";
+import {JSONObject} from "../model/manuscript";
 
 const MAX_PAGE_SIZE = 100;
 
@@ -11,6 +12,7 @@ export interface ChangesResultSet {
 export type ChangeRepository = {
   insert: (change: Change) => Promise<string>;
   get: (articleId: string, page?: number) => Promise<ChangesResultSet>;
+  getAllRawChanges: (articleId: string) => Promise<JSONObject[]>;
 }
 
 export default function changeRepository(db: Db): ChangeRepository {
@@ -35,5 +37,14 @@ export default function changeRepository(db: Db): ChangeRepository {
 
       return { changes, total };
     },
+
+    getAllRawChanges: (articleId: string, page = 0) => {
+      const changesCursor = db
+        .collection("changes")
+        .find({ articleId })
+        .sort({ timestamp: 1 });
+
+      return changesCursor.toArray() as Promise<JSONObject[]>;
+    }
   };
 }
