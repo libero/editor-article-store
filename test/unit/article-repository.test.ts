@@ -15,12 +15,12 @@ describe("articleRepository", () => {
   let db: Db;
 
   beforeAll(async () => {
-    connection = await MongoClient.connect(process.env.MONGO_URL || "", { useUnifiedTopology: true });
+    connection = await MongoClient.connect(process.env.MONGO_URL || "", { useUnifiedTopology: true, useNewUrlParser: true });
     db = await connection.db();
   });
 
   beforeEach(async () => {
-    await db.dropDatabase();
+    await db.collection('articles').deleteMany({});
   })
 
   afterAll(async () => {

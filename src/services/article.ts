@@ -1,15 +1,12 @@
-import { Db } from 'mongodb';
-
 import { Article } from "../types/article";
-import articleRepository from '../repositories/articles';
+import { ArticleRepository } from '../repositories/articles';
 
 export type ArticleService = {
   getArticles: (page: number) => Promise<Array<Article>>;
   findByArticleId: (articleId: string) => Promise<Article>;
 }
 
-export default (db: Db): ArticleService => {
-  const articleRepo = articleRepository(db);
+export default (articleRepo: ArticleRepository): ArticleService => {
   return {
     getArticles: async (page: number) => {
       return articleRepo.get(page);

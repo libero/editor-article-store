@@ -6,4 +6,5 @@ export type Article = {
   version: string;
   datatype: string;
   fileName: string;
+  created?: string;
 };

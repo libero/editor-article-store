@@ -14,6 +14,7 @@ export default function articleRepository(db: Db): ArticleRepository {
     insert: async (article: Article) => {
       const { insertedId } = await db.collection("articles").insertOne({
         ...article,
+        created: new Date().toISOString()
       });
       return insertedId as string;
     },
