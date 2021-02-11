@@ -1,6 +1,5 @@
-import { Db } from 'mongodb';
-
 import { Article } from "../types/article";
+import { ArticleRepository } from '../repositories/articles';
 import articleRepository from '../repositories/articles';
 import {getArticleManuscript} from '../xml-exporter/article-parser';
 import {applyChangesToManuscript} from '../model/changes.utils';
@@ -14,10 +13,7 @@ export type ArticleService = {
   exportXml: (articleId: string) => Promise<string | null>;
 }
 
-export default (db: Db): ArticleService => {
-  const articleRepo = articleRepository(db);
-  const changesRepo = changeRepository(db);
-
+export default (articleRepo: ArticleRepository): ArticleService => {
   return {
     getArticles: (page: number) => {
       return articleRepo.get(page);

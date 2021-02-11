@@ -12,6 +12,7 @@ import { defaultConfig } from "../config/default";
 import importHandler from './import-handler';
 import { parseMessage, handleMessage } from './message-handler';
 import { buildDatabaseUri } from '../utils/db-utils';
+import AssetRepository from "../repositories/assets";
 
 // Load the configuration for this service with the following precedence...
 //   process args > environment vars > config file.
@@ -38,9 +39,6 @@ async function buildHandler() {
  // Connection URI
  const dbUri = buildDatabaseUri(configManager.get("dbEndpoint"), configManager.get("dbUser"), configManager.get("dbPassword"), configManager.get("dbUriQuery"))
 
- // Target bucket
- const editorBucket = configManager.get("editorS3Bucket");
-
  // connect to cluster with TSL enabled 
  const dbSSLValidate = configManager.get("dbSSLValidate");
  const dbCertLocation = "/rds-combined-ca-bundle.pem";
@@ -50,7 +48,8 @@ async function buildHandler() {
    dbSSLCert = [fs.readFileSync(dbCertLocation)]
  }
  const db = await initialiseDb(dbUri, dbName, dbSSLCert);
- const assetService = AssetService(s3, configManager);
+ const assetRepository = await AssetRepository(db);
+ const assetService = AssetService(s3, assetRepository, configManager);
 
  return importHandler(assetService, db);
 }

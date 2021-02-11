@@ -30,4 +30,5 @@ export type Change = {
   // todo: this probably needs to be on a step by step basis. Like this because client generate a step for each action.
   applied: boolean; 
   user: string;
+  created?: string;
 } & SerializedChangePayload;

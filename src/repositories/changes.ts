@@ -20,6 +20,7 @@ export default function changeRepository(db: Db): ChangeRepository {
     insert: async (change: Change) => {
       const { insertedId } = await db.collection("changes").insertOne({
         ...change,
+        created: new Date().toISOString()
       });
       return insertedId as string;
     },

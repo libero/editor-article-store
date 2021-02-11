@@ -1,31 +1,29 @@
-import { Db } from "mongodb";
 import changeService from "../../src/services/changes";
 
-let insertMock = jest.fn().mockReturnValue(null);
-let getMock = jest.fn().mockReturnValue(null);
-jest.mock("../../src/repositories/changes", () => {
-  return jest.fn().mockImplementation(() => ({
+let insertMock = jest.fn();
+let getMock = jest.fn();
+const mockChangesRepo =  {
     insert: insertMock,
     get: getMock,
-  }));
-});
+};
 
-describe("articleService", () => {
-  const db = ({} as unknown) as Db;
+describe("changeService", () => {
 
   beforeEach(async () => {
     jest.restoreAllMocks();
+    getMock.mockImplementation(() => null);
+    insertMock.mockImplementation(() => null);
   });
 
   test("should not throw", () => {
     expect(() => {
-      changeService(({} as unknown) as Db);
+      changeService((mockChangesRepo));
     }).not.toThrow();
   });
 
   test("Returns id if inserted", async () => {
-    insertMock = jest.fn().mockReturnValue("507f1f77bcf86cd799439011");
-    const insertedId = await changeService(db).registerChange({
+    insertMock.mockImplementation(() => "507f1f77bcf86cd799439011");
+    const insertedId = await changeService(mockChangesRepo).registerChange({
       articleId: "123",
       applied: false,
       user: 'static-for-now',
@@ -60,8 +58,8 @@ describe("articleService", () => {
         },
       ],
     };
-    getMock = jest.fn().mockReturnValue({ total: 1, changes: [change] });
-    const changes = await changeService(db).getChangesforArticle("1234", 0);
+    getMock.mockImplementation(() => ({ total: 1, changes: [change] }));
+    const changes = await changeService(mockChangesRepo).getChangesforArticle("1234", 0);
     expect(changes).toEqual({ total: 1, changes: [change] });
   });
 });
