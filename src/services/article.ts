@@ -1,9 +1,8 @@
-import { Article } from "../types/article";
-import { ArticleRepository } from '../repositories/articles';
-import articleRepository from '../repositories/articles';
+import {Article} from "../types/article";
+import {ArticleRepository} from '../repositories/articles';
 import {getArticleManuscript} from '../xml-exporter/article-parser';
 import {applyChangesToManuscript} from '../model/changes.utils';
-import changeRepository from "../repositories/changes";
+import {ChangeRepository} from "../repositories/changes";
 import {JSONObject} from "../model/manuscript";
 import {serializeManuscript} from "../xml-exporter/manuscript-serializer";
 
@@ -13,7 +12,7 @@ export type ArticleService = {
   exportXml: (articleId: string) => Promise<string | null>;
 }
 
-export default (articleRepo: ArticleRepository): ArticleService => {
+export default (articleRepo: ArticleRepository, changesRepo: ChangeRepository): ArticleService => {
   return {
     getArticles: (page: number) => {
       return articleRepo.get(page);

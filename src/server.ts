@@ -72,7 +72,7 @@ export default async function start() {
   const changeRepository = ChangesRepository(db)
   const articleRepository = ArticleRepository(db);
   // Initialize services
-  const articleService = ArticleService(articleRepository);
+  const articleService = ArticleService(articleRepository, changeRepository);
   const changesService = ChangesService(changeRepository);
   const assetService = AssetService(s3, assetRepository, configManager);
 
