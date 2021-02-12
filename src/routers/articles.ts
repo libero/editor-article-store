@@ -37,6 +37,7 @@ export default (articleService: ArticleService): express.Router => {
     const article = await articleService.findByArticleId(articleId);
 
     if (!article) {
+      console.log(`No Article Found: ${articleId}`)
       return res.sendStatus(404);
     }
 
