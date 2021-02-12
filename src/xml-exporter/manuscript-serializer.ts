@@ -1,23 +1,25 @@
 import {EditorState} from 'prosemirror-state';
 import {DOMSerializer} from "prosemirror-model";
-import * as jsdom from "jsdom";
 import {Article} from "../types/article";
 import {Manuscript} from "../model/manuscript";
+
+import xmldom from 'xmldom';
+import {parseXML} from "./parser-xml";
 
 export function createXmlDomSerializer(editorState: EditorState): DOMSerializer {
   return DOMSerializer.fromSchema(editorState.schema);
 }
 
-export function serializeManuscriptSection(editorState: EditorState, dom: jsdom.JSDOM): DocumentFragment {
+export function serializeManuscriptSection(editorState: EditorState, document: Document ): DocumentFragment {
   const serializer = createXmlDomSerializer(editorState);
-  return serializer.serializeFragment(editorState.doc.content, { document: dom.window.document });
+  return serializer.serializeFragment(editorState.doc.content, { document });
 }
 
 export function serializeManuscript(article: Article, manuscript: Manuscript): string {
-  const dom = new jsdom.JSDOM(article.xml);
+  const xmlDoc = parseXML(article.xml);
 
-  const titleXml = serializeManuscriptSection(manuscript.title, dom);
-  const title = dom.window.document.querySelector('title-group article-title') as Element;
+  const titleXml = serializeManuscriptSection(manuscript.title, xmlDoc);
+  const title = xmlDoc.querySelector('title-group article-title') as Element;
   title.innerHTML = '';
   title.appendChild(titleXml);
 
@@ -31,5 +33,5 @@ export function serializeManuscript(article: Article, manuscript: Manuscript): s
   // // // const relatedArticles = doc.querySelectorAll('related-article');
   // const acknowledgements = doc.querySelector('ack') as Element;
   // const body = doc.querySelector('body') as Element;
-  return dom.serialize();
+  return new xmldom.XMLSerializer().serializeToString(xmlDoc);
 }
