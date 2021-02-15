@@ -1,6 +1,6 @@
-import { Change } from "../../src/types/change";
+import { Change } from "../../../src/types/change";
 import { Db, MongoClient } from "mongodb";
-import changeRepository from "../../src/repositories/changes";
+import changeRepository from "../../../src/repositories/changes";
 
 describe("changeRepository", () => {
   let connection: MongoClient;

@@ -1,9 +1,9 @@
 import { S3 } from "aws-sdk";
-import { AssetRepository } from "../../src/repositories/assets";
-import assetService from "../../src/services/asset";
-import { ConfigManagerInstance } from "../../src/services/config-manager";
-import { Asset } from "../../src/types/asset";
-import imageConverter from '../../src/utils/convert-image-utils';
+import { AssetRepository } from "../../../src/repositories/assets";
+import assetService from "../../../src/services/asset";
+import { ConfigManagerInstance } from "../../../src/services/config-manager";
+import { Asset } from "../../../src/types/asset";
+import imageConverter from '../../../src/utils/convert-image-utils';
 
 jest.mock('uuid', () => ({ v4: () => '11111111-1111-1111-1111-111111111111'}));
 
@@ -34,7 +34,7 @@ const mockAssetRepo: AssetRepository = {
   getByQuery: mockGetByQuery
 }
 
-jest.mock('../../src/utils/convert-image-utils');
+jest.mock('../../../src/utils/convert-image-utils');
 
 describe("assetService", () => {
   beforeEach(() => {

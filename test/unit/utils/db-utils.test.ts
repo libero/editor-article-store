@@ -1,4 +1,4 @@
-import { buildDatabaseUri } from '../../src/utils/db-utils';
+import { buildDatabaseUri } from '../../../src/utils/db-utils';
 
 describe('buildDatabaseUri', () => {
   it('creates a URI given all parameters', () => {

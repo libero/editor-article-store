@@ -1,6 +1,6 @@
 
-import changeService from "../../src/services/changes";
-import { ChangeRepository } from "../../src/repositories/changes";
+import changeService from "../../../src/services/changes";
+import { ChangeRepository } from "../../../src/repositories/changes";
 let insertMock = jest.fn();
 let getMock = jest.fn();
 

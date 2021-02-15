@@ -1,7 +1,7 @@
 import { Db } from "mongodb";
-import { ArticleRepository } from "../../src/repositories/articles";
-import articleService from "../../src/services/article";
-import { ChangeRepository } from "../../src/repositories/changes";
+import { ArticleRepository } from "../../../src/repositories/articles";
+import articleService from "../../../src/services/article";
+import { ChangeRepository } from "../../../src/repositories/changes";
 
 let getByArticleIdMock = jest.fn();
 let getArticlesMock = jest.fn();
