@@ -1,6 +1,7 @@
 import { Db } from "mongodb";
 import { ArticleRepository } from "../../src/repositories/articles";
 import articleService from "../../src/services/article";
+import { ChangeRepository } from "../../src/repositories/changes";
 
 let getByArticleIdMock = jest.fn();
 let getArticlesMock = jest.fn();
@@ -10,6 +11,15 @@ const mockArticleRepo = {
   getByArticleId: getByArticleIdMock,
   get: getArticlesMock
 } as ArticleRepository;
+
+let insertChangesMock = jest.fn();
+let getChanesMock = jest.fn();
+
+const mockChangesRepo =  {
+    insert: insertChangesMock,
+    get: getChanesMock,
+    getAllRawChanges: jest.fn()
+} as ChangeRepository;
 
 describe("articleService", () => {
   const db = {} as unknown as Db;
@@ -22,12 +32,12 @@ describe("articleService", () => {
 
   test("should not throw", () => {
     expect(() => {
-      articleService(mockArticleRepo);
+      articleService(mockArticleRepo, mockChangesRepo);
     }).not.toThrow();
   });
 
   test("Returns null if article is not found", async () => {
-    const result = await articleService(mockArticleRepo).findByArticleId("123");
+    const result = await articleService(mockArticleRepo, mockChangesRepo).findByArticleId("123");
     expect(result).toBe(null);
   });
 
@@ -41,14 +51,14 @@ describe("articleService", () => {
       version: "v1"
     };
     getByArticleIdMock.mockImplementation(() => data);
-    const result = await articleService(mockArticleRepo).findByArticleId("12345");
+    const result = await articleService(mockArticleRepo, mockChangesRepo).findByArticleId("12345");
     expect(result).toBeDefined();
     expect(result).toEqual({...data });
   });
 
   test("Returns empty array if no articles", async () => {
     getArticlesMock.mockImplementation(() => []);
-    const articles = await articleService(mockArticleRepo).getArticles(0);
+    const articles = await articleService(mockArticleRepo, mockChangesRepo).getArticles(0);
     expect(articles.length).toBe(0);
     expect(getArticlesMock).toBeCalledWith(0);
   });
@@ -61,7 +71,7 @@ describe("articleService", () => {
       fileName: "main.xml",
     };
     getArticlesMock.mockImplementation(() => [data]);
-    const articles = await articleService(mockArticleRepo).getArticles(0);
+    const articles = await articleService(mockArticleRepo, mockChangesRepo).getArticles(0);
     expect(articles.length).toBe(1);
     expect(articles[0]).toEqual({ ...data });
     expect(getArticlesMock).toBeCalledWith(0);
