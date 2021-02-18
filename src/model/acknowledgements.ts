@@ -5,7 +5,7 @@ import * as acknowledgementsConfig from './config/acknowledgements.config';
 import { makeSchemaFromConfig } from './utils';
 import xmldom from 'xmldom';
 
-export function createAcknowledgementsState(content?: Element): EditorState {
+export function createAcknowledgementsState(content?: Element | null): EditorState {
   const xmlContentDocument = new xmldom.DOMImplementation().createDocument('', '', null);
   xmlContentDocument.createElement('title');
   if (content) {

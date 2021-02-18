@@ -10,7 +10,7 @@ export function createTitleState(content: Element): EditorState {
   const schema = makeSchemaFromConfig(titleConfig.topNode, titleConfig.nodes, titleConfig.marks);
   const xmlContentDocument = new xmldom.DOMImplementation().createDocument('', '', null);
   const title = xmlContentDocument.createElement('title');
-  // const xmlContentDocument = new jsdom.JSDOM('').window.document;
+
   if (content) {
     title.appendChild(content);
   }

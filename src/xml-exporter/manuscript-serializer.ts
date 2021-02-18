@@ -19,9 +19,50 @@ export function serializeManuscript(article: Article, manuscript: Manuscript): s
   const xmlDoc = parseXML(article.xml);
 
   const titleXml = serializeManuscriptSection(manuscript.title, xmlDoc);
-  const title = xmlDoc.querySelector('title-group article-title') as Element;
-  title.innerHTML = '';
-  title.appendChild(titleXml);
+  const titleEl = xmlDoc.querySelector('title-group article-title') as Element;
+  clearNode(titleEl);
+  titleEl.parentNode!.replaceChild(titleXml, titleEl);
+
+  const abstractXML = serializeManuscriptSection(manuscript.abstract, xmlDoc);
+  let abstractEl = Array.from(xmlDoc.querySelectorAll('abstract'))
+    .find((el: Element) => !el.hasAttribute('abstract-type'));
+  if (!abstractEl) {
+    abstractEl = xmlDoc.createElement('abstract');
+    xmlDoc.querySelector('article-meta')!.appendChild(abstractEl);
+  }
+  clearNode(abstractEl);
+  abstractEl.appendChild(abstractXML.firstChild!.firstChild!);
+
+  const impactStatementXml = serializeManuscriptSection(manuscript.impactStatement, xmlDoc);
+  let impactStatementEl = Array.from(xmlDoc.querySelectorAll('abstract'))
+    .find((el: Element) => el.getAttribute('abstract-type') === 'toc');
+
+  if (!impactStatementEl) {
+    impactStatementEl = xmlDoc.createElement('abstract');
+    impactStatementEl.setAttribute('abstract-type', 'toc');
+    xmlDoc.querySelector('article-meta')!.appendChild(impactStatementEl);
+  }
+
+  clearNode(impactStatementEl);
+  impactStatementEl.appendChild(impactStatementXml.firstChild!.firstChild!);
+
+  const acknowledgementsXml = serializeManuscriptSection(manuscript.acknowledgements, xmlDoc);
+  let acknowledgementsEl = xmlDoc.querySelector('ack') as Element;
+
+  if (!acknowledgementsEl) {
+    acknowledgementsEl = xmlDoc.createElement('ack');
+    acknowledgementsEl.setAttribute('id', 'ack');
+    const ackTitleEl = xmlDoc.createElement('title');
+
+    ackTitleEl.appendChild(xmlDoc.createTextNode('Acknowledgements'));
+    acknowledgementsEl.appendChild(ackTitleEl);
+    xmlDoc.querySelector('back')!.appendChild(acknowledgementsEl);
+  }
+
+  const ackTitleEl = acknowledgementsEl.firstChild as Element;
+  clearNode(acknowledgementsEl);
+  acknowledgementsEl.appendChild(ackTitleEl);
+  acknowledgementsEl.appendChild(acknowledgementsXml);
 
   // // // const keywordGroups = doc.querySelectorAll('kwd-group');
   // const abstract = doc.querySelector('abstract:not([abstract-type])') as Element;
@@ -34,4 +75,9 @@ export function serializeManuscript(article: Article, manuscript: Manuscript): s
   // const acknowledgements = doc.querySelector('ack') as Element;
   // const body = doc.querySelector('body') as Element;
   return new xmldom.XMLSerializer().serializeToString(xmlDoc);
+
+}
+
+function clearNode(el: Element) {
+  Array.from(el.childNodes).forEach(child => child.parentNode!.removeChild(child))
 }

@@ -39,7 +39,7 @@ export const nodes = {
     content: 'inline*',
     parseDOM: [{ tag: 'article-title' }],
     toDOM() {
-      return ['h1', { class: 'article-title' }, 0];
+      return ['article-title', 0];
     }
   },
 
@@ -48,7 +48,7 @@ export const nodes = {
     content: 'paragraph',
     parseDOM: [{ tag: 'abstract' }],
     toDOM() {
-      return ['p', { class: 'abstract' }, 0];
+      return ['p', 0];
     }
   },
 
@@ -66,7 +66,7 @@ export const nodes = {
     group: 'block',
     parseDOM: [{ tag: 'p' }],
     toDOM() {
-      return ['p', { class: 'paragraph' }, 0];
+      return ['p', 0];
     }
   },
 

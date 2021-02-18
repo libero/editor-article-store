@@ -16,30 +16,30 @@ export const marks = {
   },
 
   italic: {
-    parseDOM: [{ tag: 'italic' }, { tag: 'em' }, { tag: 'i' }],
+    parseDOM: [{ tag: 'italic' }],
     toDOM(): DOMOutputSpecArray {
-      return ['em', 0];
+      return ['italic', 0];
     }
   },
 
   strikethrough: {
-    parseDOM: [{ tag: 'sc' }, { tag: 'strike' }, { tag: 's' }],
+    parseDOM: [{ tag: 'sc' }],
     toDOM(): DOMOutputSpecArray {
-      return ['strike', 0];
+      return ['sc', 0];
     }
   },
 
   underline: {
-    parseDOM: [{ tag: 'underline' }, { tag: 'u' }],
+    parseDOM: [{ tag: 'underline' }],
     toDOM(): DOMOutputSpecArray {
-      return ['u', 0];
+      return ['underline', 0];
     }
   },
 
   bold: {
-    parseDOM: [{ tag: 'bold' }, { tag: 'strong' }, { tag: 'b' }],
+    parseDOM: [{ tag: 'bold' }],
     toDOM(): DOMOutputSpecArray {
-      return ['strong', 0];
+      return ['bold', 0];
     }
   },
   link: {
@@ -53,17 +53,11 @@ export const marks = {
         getAttrs(dom: Element) {
           return { href: dom.getAttribute('xlink:href') };
         }
-      },
-      {
-        tag: 'a[href]',
-        getAttrs(dom: Element) {
-          return { href: dom.getAttribute('href') };
-        }
       }
     ],
     toDOM(node: ProsemirrorNode) {
       const { href } = node.attrs;
-      return ['a', { href, 'link-type': 'ext-link' }, 0];
+      return ['ext-link', { 'xlink:href': href, 'ext-link-type': 'uri' }, 0];
     }
   }
 };
