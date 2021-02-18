@@ -4,20 +4,20 @@ import { set } from 'lodash';
 
 import * as bodyConfig from './config/body.config';
 import { makeSchemaFromConfig } from './utils';
-import jsdom from "jsdom";
+import xmldom from 'xmldom';
 
 export function createBodyState(content: Element, id: string): EditorState {
   const schema = makeSchemaFromConfig(bodyConfig.topNode, bodyConfig.nodes, bodyConfig.marks);
-  const xmlContentDocument = new jsdom.JSDOM('').window.document;
-
+  const xmlContentDocument = new xmldom.DOMImplementation().createDocument('', '', null);
+  const body = xmlContentDocument.createElement('body');
   if (content) {
-    xmlContentDocument.body.appendChild(content);
+    body.appendChild(content);
   }
 
   set(xmlContentDocument, 'manuscriptPath', `/manuscripts/${id}`);
 
   return EditorState.create({
-    doc: ProseMirrorDOMParser.fromSchema(schema).parse(xmlContentDocument),
+    doc: ProseMirrorDOMParser.fromSchema(schema).parse(body),
     schema
   });
 }
