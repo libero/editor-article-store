@@ -1,0 +1,651 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Reference model creates book reference 1`] = `
+Reference {
+  "_id": "id",
+  "_type": "book",
+  "authors": Array [
+    Object {
+      "groupName": "
+            Berk
+            V
+          ",
+    },
+    Object {
+      "groupName": "R Development Core Team",
+    },
+  ],
+  "referenceInfo": Object {
+    "chapterTitle": Object {
+      "doc": Object {
+        "type": "annotatedReferenceInfoDoc",
+      },
+      "selection": Object {
+        "anchor": 0,
+        "head": 0,
+        "type": "text",
+      },
+    },
+    "doi": "",
+    "edition": "4th Edition",
+    "editors": Array [],
+    "elocationId": "",
+    "firstPage": undefined,
+    "inPress": false,
+    "lastPage": undefined,
+    "pmid": "",
+    "publisherLocation": "London",
+    "publisherName": "Verso",
+    "source": Object {
+      "doc": Object {
+        "type": "annotatedReferenceInfoDoc",
+      },
+      "selection": Object {
+        "anchor": 0,
+        "head": 0,
+        "type": "text",
+      },
+    },
+    "volume": undefined,
+    "year": "2010",
+  },
+}
+`;
+
+exports[`Reference model creates conference reference 1`] = `
+Reference {
+  "_id": "id",
+  "_type": "confproc",
+  "authors": Array [
+    Object {
+      "groupName": "
+            Berk
+            V
+          ",
+    },
+    Object {
+      "groupName": "R Development Core Team",
+    },
+  ],
+  "referenceInfo": Object {
+    "articleTitle": Object {
+      "doc": Object {
+        "content": Array [
+          Object {
+            "text": "Automated hypothesis generation based on mining scientific literature",
+            "type": "text",
+          },
+        ],
+        "type": "annotatedReferenceInfoDoc",
+      },
+      "selection": Object {
+        "anchor": 0,
+        "head": 0,
+        "type": "text",
+      },
+    },
+    "conferenceDate": "",
+    "conferenceLocation": "",
+    "conferenceName": Object {
+      "doc": Object {
+        "content": Array [
+          Object {
+            "text": "Proceedings of the 20th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining",
+            "type": "text",
+          },
+        ],
+        "type": "annotatedReferenceInfoDoc",
+      },
+      "selection": Object {
+        "anchor": 0,
+        "head": 0,
+        "type": "text",
+      },
+    },
+    "doi": "10.1145/2623330.2623667",
+    "elocationId": "",
+    "extLink": "",
+    "firstPage": "1877",
+    "lastPage": "1886",
+    "volume": undefined,
+    "year": "2014",
+  },
+}
+`;
+
+exports[`Reference model creates data reference 1`] = `
+Reference {
+  "_id": "id",
+  "_type": "data",
+  "authors": Array [
+    Object {
+      "groupName": "
+            Berk
+            V
+          ",
+    },
+    Object {
+      "groupName": "R Development Core Team",
+    },
+  ],
+  "referenceInfo": Object {
+    "accessionId": "NM_009324",
+    "dataTitle": Object {
+      "doc": Object {
+        "content": Array [
+          Object {
+            "text": "Mus musculus T-box 2 (Tbx2), mRNA",
+            "type": "text",
+          },
+        ],
+        "type": "annotatedReferenceInfoDoc",
+      },
+      "selection": Object {
+        "anchor": 0,
+        "head": 0,
+        "type": "text",
+      },
+    },
+    "doi": "",
+    "extLink": "http://www.ncbi.nlm.nih.gov/nuccore/120407038",
+    "source": Object {
+      "doc": Object {
+        "type": "annotatedReferenceInfoDoc",
+      },
+      "selection": Object {
+        "anchor": 0,
+        "head": 0,
+        "type": "text",
+      },
+    },
+    "specificUse": undefined,
+    "version": "NM_009324.2",
+    "year": "2014",
+  },
+}
+`;
+
+exports[`Reference model creates journal reference 1`] = `
+Reference {
+  "_id": "id",
+  "_type": "journal",
+  "authors": Array [
+    Object {
+      "groupName": "
+            Berk
+            V
+          ",
+    },
+    Object {
+      "groupName": "R Development Core Team",
+    },
+  ],
+  "referenceInfo": Object {
+    "articleTitle": Object {
+      "doc": Object {
+        "content": Array [
+          Object {
+            "text": "Assembly principles of ",
+            "type": "text",
+          },
+          Object {
+            "marks": Array [
+              Object {
+                "type": "italic",
+              },
+            ],
+            "text": "Vibrio cholerae",
+            "type": "text",
+          },
+          Object {
+            "text": " biofilms",
+            "type": "text",
+          },
+        ],
+        "type": "annotatedReferenceInfoDoc",
+      },
+      "selection": Object {
+        "anchor": 0,
+        "head": 0,
+        "type": "text",
+      },
+    },
+    "doi": "",
+    "elocationId": "",
+    "firstPage": "236",
+    "inPress": false,
+    "lastPage": "239",
+    "pmid": "",
+    "source": Object {
+      "doc": Object {
+        "type": "annotatedReferenceInfoDoc",
+      },
+      "selection": Object {
+        "anchor": 0,
+        "head": 0,
+        "type": "text",
+      },
+    },
+    "volume": "337",
+    "year": "2012",
+  },
+}
+`;
+
+exports[`Reference model creates patent reference 1`] = `
+Reference {
+  "_id": "id",
+  "_type": "patent",
+  "authors": Array [
+    Object {
+      "groupName": "
+            Berk
+            V
+          ",
+    },
+    Object {
+      "groupName": "R Development Core Team",
+    },
+  ],
+  "referenceInfo": Object {
+    "articleTitle": Object {
+      "doc": Object {
+        "content": Array [
+          Object {
+            "text": "Imidazopyridine Derivative",
+            "type": "text",
+          },
+        ],
+        "type": "annotatedReferenceInfoDoc",
+      },
+      "selection": Object {
+        "anchor": 0,
+        "head": 0,
+        "type": "text",
+      },
+    },
+    "doi": "",
+    "extLink": "https://patents.google.com/patent/WO2015087996A1/en",
+    "patent": "2015087996",
+    "publisherName": "",
+    "source": Object {
+      "doc": Object {
+        "type": "annotatedReferenceInfoDoc",
+      },
+      "selection": Object {
+        "anchor": 0,
+        "head": 0,
+        "type": "text",
+      },
+    },
+    "year": "2015",
+  },
+}
+`;
+
+exports[`Reference model creates periodical reference 1`] = `
+Reference {
+  "_id": "id",
+  "_type": "periodical",
+  "authors": Array [
+    Object {
+      "groupName": "
+            Berk
+            V
+          ",
+    },
+    Object {
+      "groupName": "R Development Core Team",
+    },
+  ],
+  "referenceInfo": Object {
+    "articleTitle": Object {
+      "doc": Object {
+        "content": Array [
+          Object {
+            "text": "Obesity affects economic, social status",
+            "type": "text",
+          },
+        ],
+        "type": "annotatedReferenceInfoDoc",
+      },
+      "selection": Object {
+        "anchor": 0,
+        "head": 0,
+        "type": "text",
+      },
+    },
+    "date": "1993-09-09",
+    "extLink": "",
+    "firstPage": "1",
+    "lastPage": "4",
+    "source": Object {
+      "doc": Object {
+        "type": "annotatedReferenceInfoDoc",
+      },
+      "selection": Object {
+        "anchor": 0,
+        "head": 0,
+        "type": "text",
+      },
+    },
+    "volume": undefined,
+  },
+}
+`;
+
+exports[`Reference model creates preprint reference 1`] = `
+Reference {
+  "_id": "id",
+  "_type": "preprint",
+  "authors": Array [
+    Object {
+      "groupName": "
+            Berk
+            V
+          ",
+    },
+    Object {
+      "groupName": "R Development Core Team",
+    },
+  ],
+  "referenceInfo": Object {
+    "articleTitle": Object {
+      "doc": Object {
+        "content": Array [
+          Object {
+            "text": "Gender and international diversity improves equity in peer review",
+            "type": "text",
+          },
+        ],
+        "type": "annotatedReferenceInfoDoc",
+      },
+      "selection": Object {
+        "anchor": 0,
+        "head": 0,
+        "type": "text",
+      },
+    },
+    "doi": "10.1101/400515",
+    "extLink": "",
+    "pmid": "",
+    "source": Object {
+      "doc": Object {
+        "type": "annotatedReferenceInfoDoc",
+      },
+      "selection": Object {
+        "anchor": 0,
+        "head": 0,
+        "type": "text",
+      },
+    },
+    "year": "2019",
+  },
+}
+`;
+
+exports[`Reference model creates report reference 1`] = `
+Reference {
+  "_id": "id",
+  "_type": "report",
+  "authors": Array [
+    Object {
+      "groupName": "
+            Berk
+            V
+          ",
+    },
+    Object {
+      "groupName": "R Development Core Team",
+    },
+  ],
+  "referenceInfo": Object {
+    "doi": "",
+    "extLink": "http://www.who.int/malaria/publications/world-malaria-report-2015/en/",
+    "isbn": "",
+    "pmid": "",
+    "publisherLocation": "Geneva",
+    "publisherName": "World Health Organization",
+    "source": Object {
+      "doc": Object {
+        "type": "annotatedReferenceInfoDoc",
+      },
+      "selection": Object {
+        "anchor": 0,
+        "head": 0,
+        "type": "text",
+      },
+    },
+    "volume": undefined,
+    "year": "2015",
+  },
+}
+`;
+
+exports[`Reference model creates report reference 2`] = `
+Reference {
+  "_id": "id",
+  "_type": "report",
+  "authors": Array [
+    Object {
+      "groupName": "
+            Berk
+            V
+          ",
+    },
+    Object {
+      "groupName": "R Development Core Team",
+    },
+  ],
+  "referenceInfo": Object {
+    "doi": "",
+    "extLink": "http://www.who.int/malaria/publications/world-malaria-report-2015/en/",
+    "isbn": "",
+    "pmid": "",
+    "publisherLocation": "Geneva",
+    "publisherName": "World Health Organization",
+    "source": Object {
+      "doc": Object {
+        "type": "annotatedReferenceInfoDoc",
+      },
+      "selection": Object {
+        "anchor": 0,
+        "head": 0,
+        "type": "text",
+      },
+    },
+    "volume": undefined,
+    "year": "2015",
+  },
+}
+`;
+
+exports[`Reference model creates software reference 1`] = `
+Reference {
+  "_id": "id",
+  "_type": "software",
+  "authors": Array [
+    Object {
+      "groupName": "
+            Berk
+            V
+          ",
+    },
+    Object {
+      "groupName": "R Development Core Team",
+    },
+  ],
+  "referenceInfo": Object {
+    "articleTitle": Object {
+      "doc": Object {
+        "type": "annotatedReferenceInfoDoc",
+      },
+      "selection": Object {
+        "anchor": 0,
+        "head": 0,
+        "type": "text",
+      },
+    },
+    "doi": "",
+    "extLink": "http://www.R-project.org/",
+    "publisherLocation": "Vienna, Austria",
+    "publisherName": "R Foundation for Statistical Computing",
+    "source": Object {
+      "doc": Object {
+        "type": "annotatedReferenceInfoDoc",
+      },
+      "selection": Object {
+        "anchor": 0,
+        "head": 0,
+        "type": "text",
+      },
+    },
+    "version": "",
+    "year": "2014",
+  },
+}
+`;
+
+exports[`Reference model creates thesis reference 1`] = `
+Reference {
+  "_id": "id",
+  "_type": "thesis",
+  "authors": Array [
+    Object {
+      "groupName": "
+            Berk
+            V
+          ",
+    },
+    Object {
+      "groupName": "R Development Core Team",
+    },
+  ],
+  "referenceInfo": Object {
+    "articleTitle": Object {
+      "doc": Object {
+        "content": Array [
+          Object {
+            "text": "Automated hypothesis generation based on mining scientific literature",
+            "type": "text",
+          },
+        ],
+        "type": "annotatedReferenceInfoDoc",
+      },
+      "selection": Object {
+        "anchor": 0,
+        "head": 0,
+        "type": "text",
+      },
+    },
+    "doi": "10.7554/eLife.42697",
+    "extLink": "http://www.R-project.org/",
+    "pmid": "31038122",
+    "publisherLocation": "Vienna, Austria",
+    "publisherName": "R Foundation for Statistical Computing",
+    "year": "2014",
+  },
+}
+`;
+
+exports[`Reference model creates web reference 1`] = `
+Reference {
+  "_id": "id",
+  "_type": "web",
+  "authors": Array [
+    Object {
+      "groupName": "
+            Berk
+            V
+          ",
+    },
+    Object {
+      "groupName": "R Development Core Team",
+    },
+  ],
+  "referenceInfo": Object {
+    "articleTitle": Object {
+      "doc": Object {
+        "content": Array [
+          Object {
+            "text": "James Watson had a chance to salvage his reputation on race. He made things worse",
+            "type": "text",
+          },
+        ],
+        "type": "annotatedReferenceInfoDoc",
+      },
+      "selection": Object {
+        "anchor": 0,
+        "head": 0,
+        "type": "text",
+      },
+    },
+    "dateInCitation": "2019-01-01",
+    "extLink": "https://www.nytimes.com/2019/01/01/science/watson-dna-genetics-race.html",
+    "source": Object {
+      "doc": Object {
+        "type": "annotatedReferenceInfoDoc",
+      },
+      "selection": Object {
+        "anchor": 0,
+        "head": 0,
+        "type": "text",
+      },
+    },
+    "year": "2019",
+  },
+}
+`;
+
+exports[`Reference model should create reference state from XML 1`] = `
+Array [
+  Reference {
+    "_id": "test",
+    "_type": "patent",
+    "authors": Array [
+      Object {
+        "groupName": "
+            Berk
+            V
+          ",
+      },
+      Object {
+        "groupName": "R Development Core Team",
+      },
+    ],
+    "referenceInfo": Object {
+      "articleTitle": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "Imidazopyridine Derivative",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "doi": "",
+      "extLink": "https://patents.google.com/patent/WO2015087996A1/en",
+      "patent": "2015087996",
+      "publisherName": "",
+      "source": Object {
+        "doc": Object {
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "year": "2015",
+    },
+  },
+]
+`;
