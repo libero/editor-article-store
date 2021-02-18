@@ -10,7 +10,7 @@ export function createXmlDomSerializer(editorState: EditorState): DOMSerializer 
   return DOMSerializer.fromSchema(editorState.schema);
 }
 
-export function serializeManuscriptSection(editorState: EditorState, document: Document ): DocumentFragment {
+export function serializeManuscriptSection(editorState: EditorState, document: Document): DocumentFragment {
   const serializer = createXmlDomSerializer(editorState);
   return serializer.serializeFragment(editorState.doc.content, { document });
 }
