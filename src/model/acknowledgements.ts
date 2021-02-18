@@ -3,9 +3,11 @@ import { EditorState } from 'prosemirror-state';
 
 import * as acknowledgementsConfig from './config/acknowledgements.config';
 import { makeSchemaFromConfig } from './utils';
-import jsdom from "jsdom";
+import xmldom from 'xmldom';
 
 export function createAcknowledgementsState(content?: Element): EditorState {
+  const xmlContentDocument = new xmldom.DOMImplementation().createDocument('', '', null);
+  xmlContentDocument.createElement('title');
   if (content) {
     const ackTitle = content.querySelector('title');
     if (ackTitle) {
@@ -18,10 +20,9 @@ export function createAcknowledgementsState(content?: Element): EditorState {
     acknowledgementsConfig.nodes,
     acknowledgementsConfig.marks
   );
-  const xmlContentDocument = new jsdom.JSDOM('').window.document;
 
   if (content) {
-    xmlContentDocument.body.appendChild(content);
+    xmlContentDocument.appendChild(content);
   }
 
   return EditorState.create({
