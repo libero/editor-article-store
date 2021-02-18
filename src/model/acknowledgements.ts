@@ -7,7 +7,7 @@ import xmldom from 'xmldom';
 
 export function createAcknowledgementsState(content?: Element | null): EditorState {
   const xmlContentDocument = new xmldom.DOMImplementation().createDocument('', '', null);
-  xmlContentDocument.createElement('title');
+  const ack = xmlContentDocument.createElement('ack');
   if (content) {
     const ackTitle = content.querySelector('title');
     if (ackTitle) {
@@ -22,11 +22,11 @@ export function createAcknowledgementsState(content?: Element | null): EditorSta
   );
 
   if (content) {
-    xmlContentDocument.appendChild(content);
+    ack.appendChild(content);
   }
 
   return EditorState.create({
-    doc: ProseMirrorDOMParser.fromSchema(schema).parse(xmlContentDocument),
+    doc: ProseMirrorDOMParser.fromSchema(schema).parse(ack),
     schema
   });
 }
