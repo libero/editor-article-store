@@ -57,4 +57,25 @@ describe('Get /assets', () => {
       .set('Accept', 'application/json')
       .expect(302);
   });
+
+  test('Should return asset with uuid path or just fileName', async () => {
+    const buffer = Buffer.from('some file data');
+    const resp = await agent
+      .post("/articles/54296/assets")
+      .set('content-type', 'multipart/form-data')
+      .attach('file', buffer, 'foo_file.txt')
+    const assetName =JSON.parse(resp.text).assetName;
+    expect(assetName).toBeDefined();
+
+    const resp1 = await agent
+      .get(`/articles/54296/assets/${assetName}`)
+      .expect(302);
+
+    const resp2 = await agent
+      .get(`/articles/54296/assets/foo_file.txt`)
+      .expect(302); 
+
+    expect(resp1.text).toContain('Found. Redirecting to ');
+    expect(resp2.text).toContain('Found. Redirecting to ');
+  });
 });
