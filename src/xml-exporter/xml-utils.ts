@@ -13,17 +13,27 @@ export function parseXML(xml: string) {
     return nwmatcher({document: xmlDoc}).select(selectors, this);
   };
 
-  xmlDoc.createElement('a').constructor.prototype.matches = function (selectors: string) {
+  const Element = xmlDoc.createElement('a').constructor;
+
+  Element.prototype.matches = function (selectors: string) {
     return nwmatcher({document: xmlDoc}).match(this, selectors);
   };
 
-  xmlDoc.createElement('a').constructor.prototype.hasAttribute = function (attributeName: string) {
+  Element.prototype.hasAttribute = function (attributeName: string) {
     return nwmatcher({document: xmlDoc}).hasAttribute(this, attributeName);
   };
 
-  xmlDoc.createElement('a').constructor.prototype.getAttribute = function (attributeName: string) {
+  Element.prototype.getAttribute = function (attributeName: string) {
     return nwmatcher({document: xmlDoc}).getAttribute(this, attributeName);
   };
 
+  Element.prototype.querySelector = function (selectors: string) {
+    return nwmatcher({document: xmlDoc}).first(selectors, this);
+  };
+
   return xmlDoc;
+}
+
+export function clearNode(el: Element) {
+  Array.from(el.childNodes).forEach(child => child.parentNode!.removeChild(child))
 }

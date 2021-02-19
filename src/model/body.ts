@@ -5,6 +5,7 @@ import { set } from 'lodash';
 import * as bodyConfig from './config/body.config';
 import { makeSchemaFromConfig } from './utils';
 import xmldom from 'xmldom';
+import {Manuscript} from "./manuscript";
 
 export function createBodyState(content: Element, id: string): EditorState {
   const schema = makeSchemaFromConfig(bodyConfig.topNode, bodyConfig.nodes, bodyConfig.marks);
@@ -20,4 +21,8 @@ export function createBodyState(content: Element, id: string): EditorState {
     doc: ProseMirrorDOMParser.fromSchema(schema).parse(body),
     schema
   });
+}
+
+export function serializeBodyState(xmlDoc: Document, manuscript: Manuscript) {
+
 }

@@ -5,7 +5,7 @@ import {createAbstractState, createImpactStatementState} from "../model/abstract
 import {createAcknowledgementsState} from "../model/acknowledgements";
 import {Article} from "../types/article";
 
-import { parseXML } from "./parser-xml";
+import { parseXML } from "./xml-utils";
 
 export function getArticleManuscript(article: Article): Manuscript {
   const xmlDoc = parseXML(article.xml);
@@ -24,20 +24,20 @@ export function getArticleManuscript(article: Article): Manuscript {
   // // const authorNotes = doc.querySelector('author-notes');
   // // const relatedArticles = doc.querySelectorAll('related-article');
   const acknowledgements: Element | null = xmlDoc.querySelector('ack');
-  // const body = xmlDoc.querySelector('body') as Element;
+  const body = xmlDoc.querySelector('body') as Element;
 
   return {
     title: createTitleState(title),
     abstract: createAbstractState(abstract),
     impactStatement: createImpactStatementState(impactStatement),
+    acknowledgements: createAcknowledgementsState(acknowledgements),
+    body: createBodyState(body, article.articleId),
 
     // keywordGroups: createKeywordGroupsState(Array.from(keywordGroups)),
     // authors: authorsState,
-    // body: createBodyState(body, article.articleId),
     // affiliations: createAffiliationsState(Array.from(affiliations)),
     // references: createReferencesState(Array.from(references)),
     // relatedArticles: createRelatedArticleState(Array.from(relatedArticles)),
-    acknowledgements: createAcknowledgementsState(acknowledgements),
     // articleInfo: new ArticleInformation(doc.documentElement, authorsState),
     // journalMeta: {
   //   //   publisherName: getTextContentFromPath(doc, 'journal-meta publisher publisher-name'),
