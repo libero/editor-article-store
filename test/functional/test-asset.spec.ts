@@ -67,16 +67,15 @@ describe('Get /assets', () => {
     const assetName =JSON.parse(resp.text).assetName;
     expect(assetName).toBeDefined();
 
-    const file1 = await agent
+    const resp1 = await agent
       .get(`/articles/54296/assets/${assetName}`)
-      .set('Accept', 'application/json')
       .expect(302);
 
-    const file2 = await agent
+    const resp2 = await agent
       .get(`/articles/54296/assets/foo_file.txt`)
-      .set('Accept', 'application/json')
       .expect(302); 
 
-    expect(file1).toEqual(file2);
+    expect(resp1.text).toContain('Found. Redirecting to ');
+    expect(resp2.text).toContain('Found. Redirecting to ');
   });
 });
