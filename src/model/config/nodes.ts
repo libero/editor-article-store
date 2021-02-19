@@ -6,7 +6,7 @@ import {
   createFigureLicenseAttributes,
   getFigureImageUrlFromXml
 } from '../figure';
-import { parseFigure } from './figure.parser';
+import {parseFigure, serializeFigure} from './figure.parser';
 
 function getTitleLevel(title: Element): number {
   let parent = title.parentNode;
@@ -167,13 +167,9 @@ export const nodes = {
   boxText: {
     content: 'paragraph*',
     group: 'block',
-    parseDOM: [
-      {
-        tag: 'boxed-text'
-      }
-    ],
+    parseDOM: [{ tag: 'boxed-text' }],
     toDOM() {
-      return ['section', { class: 'box-text' }, 0];
+      return ['boxed-text', 0];
     }
   },
 
@@ -200,25 +196,14 @@ export const nodes = {
         getContent: parseFigure
       }
     ],
-    toDOM(node: ProsemirrorNode) {
-      return [
-        'section',
-        {
-          class: 'figure',
-          'data-fig-id': node.attrs.id,
-          'data-fig-label': node.attrs.label,
-          'data-fig-img': node.attrs.img
-        },
-        0
-      ];
-    }
+    toDOM: serializeFigure
   },
 
   figureTitle: {
     content: 'inline*',
     parseDOM: [{ tag: 'caption > title' }],
     toDOM() {
-      return ['p', 0];
+      return ['title', 0];
     }
   },
 
@@ -263,7 +248,7 @@ export const nodes = {
       { tag: 'label', ignore: true }
     ],
     toDOM() {
-      return ['p', 0];
+      return ['license-p', 0];
     }
   },
 

@@ -31,7 +31,7 @@ export function getArticleManuscript(article: Article): Manuscript {
     abstract: createAbstractState(abstract),
     impactStatement: createImpactStatementState(impactStatement),
     acknowledgements: createAcknowledgementsState(acknowledgements),
-    body: createBodyState(body, article.articleId),
+    body: createBodyState(body),
 
     // keywordGroups: createKeywordGroupsState(Array.from(keywordGroups)),
     // authors: authorsState,

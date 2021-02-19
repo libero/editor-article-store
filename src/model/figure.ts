@@ -13,12 +13,6 @@ export const FIGURE_LICENSE_CC0 = 'LICENSE_CCO';
 export const FIGURE_LICENSE_CC_BY_4 = 'LICENSE_CC_BY_4';
 export const FIGURE_LICENSE_OTHER = 'LICENSE_OTHER';
 
-export const FIGURE_LICENSE_SELECT_OPTIONS = [
-  { label: 'CC0', value: FIGURE_LICENSE_CC0 },
-  { label: 'CC by 4.0', value: FIGURE_LICENSE_CC_BY_4 },
-  { label: 'Other', value: FIGURE_LICENSE_CC_BY_4 }
-];
-
 const LICENSE_URLS_MAP: Record<string, string> = {
   'http://creativecommons.org/licenses/by/4.0/': FIGURE_LICENSE_CC_BY_4,
   'http://creativecommons.org/publicdomain/zero/1.0/': FIGURE_LICENSE_CC0
@@ -42,14 +36,13 @@ export function createEmptyLicenseAttributes(): Figure {
   };
 }
 
-export function getFigureImageUrlFromXml(el: Element): string {
-  const paths = get(el.ownerDocument, 'manuscriptPath').split('/');
-  const id = paths[2];
-  return getFigureImageUrl(id, get(el.querySelector('graphic'), 'attributes.xlink:href.value'));
+export function getLicenseUrl(licenseType: string): string {
+  const licenseEntry = Object.entries(LICENSE_URLS_MAP).find(([type]) => type === licenseType);
+  return licenseEntry ? licenseEntry[0] : '';
 }
 
-export function getFigureImageUrl(id: string, fileName: string): string {
-  return `/api/v1/articles/${id}/assets/${fileName.replace(/\.tiff?$/, '.jpeg')}`;
+export function getFigureImageUrlFromXml(el: Element): string {
+  return el.querySelector('graphic')!.getAttribute('xlink:href') || '';
 }
 
 function getLicenseType(el: Element): string {
