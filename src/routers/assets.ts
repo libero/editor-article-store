@@ -25,22 +25,24 @@ export default (assetService: AssetService): express.Router => {
     res.json({assetName: s3Name});
   });
 
-  router.get("/:fileKey", async (req, res) => {
-    const { articleId, fileKey } = req.params; 
+  router.get("/:fileUuid/:fileName?", async (req, res) => {
+    const { articleId, fileUuid, fileName} = req.params;
+    const fileKey = typeof fileName === 'undefined' ? fileUuid : `${fileUuid}/${fileName}`;
     let assetKey = `${articleId}/${fileKey}`;
-
-    if (!fileKey.includes('/')) {
+    
+    if (typeof fileName === 'undefined') {
       const [ key ] = await assetService.getArticleAssetKeysByFilename(articleId, fileKey);
       assetKey = key;
     }
 
     if (!assetKey) {
+      console.log(`Asset Key not found for { articleId: ${articleId}, fileKey: ${fileKey}`);
       res.sendStatus(404);
       return;
     }
-
     const assetUrl = await assetService.getAssetUrl(assetKey);
     if (assetUrl === null) {
+      console.log('Asset URL not found for ' + assetKey);
       res.sendStatus(404);
     } else {
       res.redirect(302, assetUrl);

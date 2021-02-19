@@ -57,4 +57,26 @@ describe('Get /assets', () => {
       .set('Accept', 'application/json')
       .expect(302);
   });
+
+  test('Should return asset with uuid path or just fileName', async () => {
+    const buffer = Buffer.from('some file data');
+    const resp = await agent
+      .post("/articles/54296/assets")
+      .set('content-type', 'multipart/form-data')
+      .attach('file', buffer, 'foo_file.txt')
+    const assetName =JSON.parse(resp.text).assetName;
+    expect(assetName).toBeDefined();
+
+    const file1 = await agent
+      .get(`/articles/54296/assets/${assetName}`)
+      .set('Accept', 'application/json')
+      .expect(302);
+
+    const file2 = await agent
+      .get(`/articles/54296/assets/foo_file.txt`)
+      .set('Accept', 'application/json')
+      .expect(302); 
+
+    expect(file1).toEqual(file2);
+  });
 });
