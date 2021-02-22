@@ -1,0 +1,240 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`figure parsing spec checks empty figure parsing 1`] = `
+Array [
+  Object {
+    "type": "figureTitle",
+  },
+  Object {
+    "type": "figureLegend",
+  },
+  Object {
+    "type": "figureAttribution",
+  },
+]
+`;
+
+exports[`figure parsing spec checks figure parsing 1`] = `
+Array [
+  Object {
+    "content": Array [
+      Object {
+        "text": "Pellentesque porta interdum sodales (",
+        "type": "text",
+      },
+      Object {
+        "attrs": Object {
+          "refId": "bib6",
+          "refText": "Heissler and Sellers, 2016a",
+        },
+        "type": "refCitation",
+      },
+      Object {
+        "text": "). Vestibulum",
+        "type": "text",
+      },
+      Object {
+        "marks": Array [
+          Object {
+            "type": "subscript",
+          },
+        ],
+        "text": "id",
+        "type": "text",
+      },
+      Object {
+        "text": " interdum",
+        "type": "text",
+      },
+      Object {
+        "marks": Array [
+          Object {
+            "type": "superscript",
+          },
+        ],
+        "text": "felis",
+        "type": "text",
+      },
+      Object {
+        "text": ". ",
+        "type": "text",
+      },
+      Object {
+        "marks": Array [
+          Object {
+            "type": "bold",
+          },
+        ],
+        "text": "Vestibulum",
+        "type": "text",
+      },
+      Object {
+        "text": " at ",
+        "type": "text",
+      },
+      Object {
+        "marks": Array [
+          Object {
+            "type": "underline",
+          },
+        ],
+        "text": "viverra",
+        "type": "text",
+      },
+      Object {
+        "text": " lorem. ",
+        "type": "text",
+      },
+      Object {
+        "marks": Array [
+          Object {
+            "type": "strikethrough",
+          },
+        ],
+        "text": "Aliquam Gravida",
+        "type": "text",
+      },
+      Object {
+        "text": " nulla orci, quis tristique tortor ornare at ",
+        "type": "text",
+      },
+      Object {
+        "marks": Array [
+          Object {
+            "attrs": Object {
+              "href": "https://www.biobam.com/",
+            },
+            "type": "link",
+          },
+        ],
+        "text": "https://www.biobam.com/",
+        "type": "text",
+      },
+      Object {
+        "text": ". Pellentesque accumsan sed ipsum eget hendrerit (",
+        "type": "text",
+      },
+      Object {
+        "attrs": Object {
+          "refId": "bib3",
+          "refText": "Foley et al., 2018",
+        },
+        "type": "refCitation",
+      },
+      Object {
+        "text": "). Pellentesque cursus, nibh eu mattis condimentum, massa libero faucibus enim, et tempor orci neque eget",
+        "type": "text",
+      },
+      Object {
+        "marks": Array [
+          Object {
+            "type": "superscript",
+          },
+        ],
+        "text": "mi",
+        "type": "text",
+      },
+      Object {
+        "text": ". Phasellus lacus",
+        "type": "text",
+      },
+      Object {
+        "marks": Array [
+          Object {
+            "type": "subscript",
+          },
+        ],
+        "text": "mi",
+        "type": "text",
+      },
+      Object {
+        "text": ", ultrices quis placerat id, dignissim ac erat.",
+        "type": "text",
+      },
+    ],
+    "type": "paragraph",
+  },
+  Object {
+    "type": "figureTitle",
+  },
+  Object {
+    "type": "figureLegend",
+  },
+  Object {
+    "type": "figureAttribution",
+  },
+]
+`;
+
+exports[`figure parsing spec checks figure serialization 1`] = `
+<fig>
+  <label>
+    Figure 1.
+  </label>
+  <graphic
+     xlink:href="IMAGE_URL"
+    mime-subtype=""
+    mimetype="image"
+  />
+  <caption>
+    <title>
+      Bacterial cells on the surface of a plant leaf.
+    </title>
+    <p>
+      Pellentesque porta interdum sodales (
+      <a
+        class="citation"
+        data-cit-type="reference"
+        data-ref-id="bib6"
+        data-ref-text="Heissler and Sellers, 2016a"
+        href="#"
+      />
+      ). Vestibulum
+      <sub>
+        id
+      </sub>
+       interdum
+      <sup>
+        felis
+      </sup>
+      . 
+      <bold>
+        Vestibulum
+      </bold>
+       at 
+      <underline>
+        viverra
+      </underline>
+       lorem. 
+      <sc>
+        Aliquam Gravida
+      </sc>
+       nulla orci, quis tristique tortor ornare at 
+      <ext-link
+        ext-link-type="uri"
+        xlink:href="https://www.biobam.com/"
+      >
+        https://www.biobam.com/
+      </ext-link>
+      . Pellentesque accumsan sed ipsum eget hendrerit (
+      <a
+        class="citation"
+        data-cit-type="reference"
+        data-ref-id="bib3"
+        data-ref-text="Foley et al., 2018"
+        href="#"
+      />
+      ). Pellentesque cursus, nibh eu mattis condimentum, massa libero faucibus enim, et tempor orci neque eget
+      <sup>
+        mi
+      </sup>
+      . Phasellus lacus
+      <sub>
+        mi
+      </sub>
+      , ultrices quis placerat id, dignissim ac erat.
+    </p>
+    <p />
+  </caption>
+</fig>
+`;

@@ -10,9 +10,9 @@ import {parseFigure, serializeFigure} from './figure.parser';
 
 function getTitleLevel(title: Element): number {
   let parent = title.parentNode;
-  let level = 1;
-  while (parent && parent.nodeName !== 'body') {
-    if (parent.nodeName === 'sec') {
+  let level = 0;
+  while (parent && parent.nodeName.toLowerCase() !== 'body') {
+    if (parent.nodeName.toLowerCase() === 'sec') {
       level++;
     }
     parent = parent.parentNode;
@@ -300,7 +300,7 @@ export const nodes = {
         priority: 100,
         getAttrs(dom: Element) {
           return {
-            figIds: dom.getAttribute('data-fig-ids')!.split(',')
+            figIds: dom.getAttribute('data-fig-ids')!.split(' ')
           };
         }
       }
@@ -312,7 +312,7 @@ export const nodes = {
           href: '#',
           class: 'citation',
           'data-cit-type': 'figure',
-          'data-fig-ids': node.attrs.figIds
+          'data-fig-ids': node.attrs.figIds.join(' ')
         },
         0
       ];

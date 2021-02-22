@@ -65,7 +65,7 @@ describe("articleService", () => {
 
   test("Returns  array if there are articles", async () => {
     const data = {
-      xml: "<xml></xml",
+      xml: "<xml></xml>",
       datatype: "xml",
       articleId: "12345",
       fileName: "main.xml",

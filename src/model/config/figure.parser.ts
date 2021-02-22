@@ -51,28 +51,29 @@ export function serializeFigure(node: ProsemirrorNode): Element {
   caption.appendChild(serializeFigureNode(attrib, xmlDoc));
   figure.appendChild(caption);
 
-  findNodes(node, 'figureLicense').map(licenseNode => figure.appendChild(serializeFigureLincense(licenseNode, xmlDoc)));
+  findNodes(node, 'figureLicense').map(licenseNode => figure.appendChild(serializeFigureLicense(licenseNode, xmlDoc)));
 
   return figure;
 }
 
 function serializeFigureNode(node: ProsemirrorNode, document: Document): Node {
   const serializer = DOMSerializer.fromSchema(node.type.schema);
+  console.log(serializer.serializeNode(node, {document}));
   return serializer.serializeNode(node, {document});
 }
 
-function serializeFigureLincense(node: ProsemirrorNode, xmlDoc: Document) {
+function serializeFigureLicense(node: ProsemirrorNode, xmlDoc: Document) {
   const permissions = xmlDoc.createElement('permissions');
 
-  const ccStmt = xmlDoc.createElement('copyright-statement')
+  const ccStmt = xmlDoc.createElement('copyright-statement');
   ccStmt.appendChild(xmlDoc.createTextNode(node.attrs.licenseInfo.copyrightStatement));
   permissions.appendChild(ccStmt);
 
-  const ccYear = xmlDoc.createElement('copyright-year')
+  const ccYear = xmlDoc.createElement('copyright-year');
   ccYear.appendChild(xmlDoc.createTextNode(node.attrs.licenseInfo.copyrightYear));
   permissions.appendChild(ccYear);
 
-  const ccHolder = xmlDoc.createElement('copyright-holder')
+  const ccHolder = xmlDoc.createElement('copyright-holder');
   ccHolder.appendChild(xmlDoc.createTextNode(node.attrs.licenseInfo.copyrightHolder));
   permissions.appendChild(ccHolder);
 

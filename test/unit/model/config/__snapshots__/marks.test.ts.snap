@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`nodes spec checks nodes spec definition 1`] = `
+Object {
+  "bold": Object {
+    "parseDOM": Array [
+      Object {
+        "tag": "bold",
+      },
+    ],
+    "toDOM": [Function],
+  },
+  "italic": Object {
+    "parseDOM": Array [
+      Object {
+        "tag": "italic",
+      },
+    ],
+    "toDOM": [Function],
+  },
+  "link": Object {
+    "attrs": Object {
+      "href": Object {
+        "default": undefined,
+      },
+    },
+    "inclusive": false,
+    "parseDOM": Array [
+      Object {
+        "getAttrs": [Function],
+        "tag": "ext-link[ext-link-type=\\"uri\\"]",
+      },
+    ],
+    "toDOM": [Function],
+  },
+  "strikethrough": Object {
+    "parseDOM": Array [
+      Object {
+        "tag": "sc",
+      },
+    ],
+    "toDOM": [Function],
+  },
+  "subscript": Object {
+    "parseDOM": Array [
+      Object {
+        "tag": "sub",
+      },
+    ],
+    "toDOM": [Function],
+  },
+  "superscript": Object {
+    "parseDOM": Array [
+      Object {
+        "tag": "sup",
+      },
+    ],
+    "toDOM": [Function],
+  },
+  "underline": Object {
+    "parseDOM": Array [
+      Object {
+        "tag": "underline",
+      },
+    ],
+    "toDOM": [Function],
+  },
+}
+`;
