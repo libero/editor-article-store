@@ -1,7 +1,7 @@
 import { manuscriptEntityToJson, deserializeChanges, cloneManuscript, applyChangesToManuscript } from '../../../src/model/changes.utils';
 import { EditorState } from 'prosemirror-state';
 import { Schema } from "prosemirror-model"
-import {Manuscript} from "src/model/manuscript";
+import {Manuscript} from "../../../src/model/manuscript";
 
 const textSchema = new Schema({
   nodes: {
