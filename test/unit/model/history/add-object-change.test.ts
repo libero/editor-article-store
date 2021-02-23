@@ -17,6 +17,22 @@ describe('AddObjectChange', () => {
       expect(() => new AddObjectChange('somepath', new ExampleBackmatterClass(), 'someId')).not.toThrow();
     });
   });
+  describe('fromJSON', () => {
+    it('Returns AddObjectChange obj from passed JSON - relatedArticles', () => {
+      const mockChangeJSON = {
+          "type": "add-object",
+          "timestamp": 1614097785693,
+          "path": "relatedArticles",
+          "idField": "id",
+          "object": {
+            "_id": "ad319b14-c312-4627-a5a1-d07a548a6e7e",
+            "articleType": "article-reference",
+            "href": "111111"
+          } 
+      };
+      expect(AddObjectChange.fromJSON(mockChangeJSON)).toMatchInlineSnapshot(`This needs to be generated.`);
+    });
+  });
   describe('applyChange', () => {
     // TODO: update this when implimented
     it('returns Manuscript', () => {

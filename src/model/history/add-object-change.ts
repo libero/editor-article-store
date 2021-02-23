@@ -1,6 +1,7 @@
 import { Change } from './change';
-import { Manuscript } from "../manuscript";
+import { JSONObject, Manuscript } from "../manuscript";
 import { BackmatterEntity } from '../backmatter-entity';
+import { deserializeBackmatter } from '../changes.utils';
 
 export class AddObjectChange extends Change {
 
@@ -23,4 +24,13 @@ export class AddObjectChange extends Change {
     console.log('toJSON not implimented for AddObjectChange')
     return {} 
   };
+  static fromJSON(data: JSONObject): AddObjectChange {
+    const change = new AddObjectChange(
+      data.path as string,
+      deserializeBackmatter(data.path as string, data.object as JSONObject),
+      data.idField as string
+    );
+    change._timestamp = data.timestamp as number;
+    return change;
+  }
 }
