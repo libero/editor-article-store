@@ -19,6 +19,12 @@ describe('Related Article model', () => {
     expect(new RelatedArticle(el)).toMatchSnapshot();
   });
 
+  it('creates an empty article if attributes are missing', () => {
+    const el = document.createElement('related-article');
+    expect(new RelatedArticle(el)).toMatchSnapshot();
+  });
+
+
   it('creates an empty related article', () => {
     expect(new RelatedArticle()).toMatchSnapshot();
   });

@@ -16,6 +16,14 @@ RelatedArticle {
 }
 `;
 
+exports[`Related Article model creates an empty article if attributes are missing 1`] = `
+RelatedArticle {
+  "_id": "unique_id",
+  "articleType": "",
+  "href": "",
+}
+`;
+
 exports[`Related Article model creates an empty related article 1`] = `
 RelatedArticle {
   "_id": "unique_id",
