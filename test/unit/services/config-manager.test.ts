@@ -1,5 +1,5 @@
-import { Config } from '../../src/types/config';
-import { configManager } from '../../src/services/config-manager';
+import { Config } from '../../../src/types/config';
+import { configManager } from '../../../src/services/config-manager';
 
 describe('configManager', () => {
   test('Can add a config item', () => {

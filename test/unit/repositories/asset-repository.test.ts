@@ -1,6 +1,6 @@
-import { Asset } from "../../src/types/asset";
+import { Asset } from "../../../src/types/asset";
 import { Db, MongoClient } from "mongodb";
-import assetRepository from "../../src/repositories/assets";
+import assetRepository from "../../../src/repositories/assets";
 
 const largeAssetCollection = (count = 101, mergeData?: Partial<Asset>) => Array(count).fill({
   assetId: '10000',

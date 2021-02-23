@@ -1,5 +1,5 @@
 import { Db } from "mongodb";
-import { AssetService } from '../../src/services/asset';
+import { AssetService } from '../../../src/services/asset';
 
 const mockMongoInsert = jest.fn();
 const dbMock = {
@@ -24,7 +24,7 @@ jest.mock('file-type', () => ({
   fromBuffer: () => ({ mime: 'text/xml' }) 
 }));
 
-import importHandler from '../../src/listeners/import-handler';
+import importHandler from '../../../src/listeners/import-handler';
 
 describe('importHandler', () => {
   beforeEach(() => {

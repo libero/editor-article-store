@@ -1,4 +1,4 @@
-import { handleMessage, parseMessage } from '../../src/listeners/message-handler';
+import { handleMessage, parseMessage } from '../../../src/listeners/message-handler';
 
 const mockSQSMessage = {
   MessageId: "7d32a0c9-59a6-54b7-a64e-1a104acff875",

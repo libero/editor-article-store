@@ -1,4 +1,4 @@
-import { createConfigFromArgs, createConfigFromEnv } from '../../src/utils/config-utils';
+import { createConfigFromArgs, createConfigFromEnv } from '../../../src/utils/config-utils';
 
 describe('createConfigFromArgs()', () => {
  test('Support short form args', () => {
