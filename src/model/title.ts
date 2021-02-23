@@ -9,7 +9,7 @@ import {serializeManuscriptSection} from "../xml-exporter/manuscript-serializer"
 import {Manuscript} from "./manuscript";
 
 
-export function createTitleState(content: Element): EditorState {
+export function createTitleState(content?: Element): EditorState {
   const schema = makeSchemaFromConfig(titleConfig.topNode, titleConfig.nodes, titleConfig.marks);
   const xmlContentDocument = new xmldom.DOMImplementation().createDocument('', '', null);
   const title = xmlContentDocument.createElement('title');

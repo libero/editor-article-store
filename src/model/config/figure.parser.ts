@@ -58,7 +58,6 @@ export function serializeFigure(node: ProsemirrorNode): Element {
 
 function serializeFigureNode(node: ProsemirrorNode, document: Document): Node {
   const serializer = DOMSerializer.fromSchema(node.type.schema);
-  console.log(serializer.serializeNode(node, {document}));
   return serializer.serializeNode(node, {document});
 }
 

@@ -1,5 +1,3 @@
-import { get } from 'lodash';
-
 import { getTextContentFromPath } from './utils';
 
 export interface Figure {
@@ -37,7 +35,7 @@ export function createEmptyLicenseAttributes(): Figure {
 }
 
 export function getLicenseUrl(licenseType: string): string {
-  const licenseEntry = Object.entries(LICENSE_URLS_MAP).find(([type]) => type === licenseType);
+  const licenseEntry = Object.entries(LICENSE_URLS_MAP).find(([url, type]) => type === licenseType);
   return licenseEntry ? licenseEntry[0] : '';
 }
 

@@ -10,4 +10,9 @@ describe('Manuscript state factory', () => {
     const editorState = createTitleState(el);
     expect(editorState).toMatchSnapshot();
   });
+
+  it('creates empty title state', () => {
+    const editorState = createTitleState(undefined);
+    expect(editorState.doc.textContent).toBe('');
+  });
 });
