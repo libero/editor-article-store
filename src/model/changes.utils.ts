@@ -1,9 +1,10 @@
 import { cloneDeepWith } from 'lodash';
 import { EditorState } from 'prosemirror-state';
-import {JSONObject, Manuscript} from './manuscript';
+import {Manuscript} from './manuscript';
 import {ProsemirrorChange} from "./history/prosemirror-change";
 import { Change } from './history/change';
 import {BatchChange} from "./history/batch-change";
+import {JSONObject} from "./types";
 
 export function manuscriptEntityToJson<T>(object: T): JSONObject {
   return cloneDeepWith(object, (value) => {
