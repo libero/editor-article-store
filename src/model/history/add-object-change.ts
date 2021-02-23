@@ -1,5 +1,6 @@
 import { Change } from './change';
-import { JSONObject, Manuscript } from "../manuscript";
+import { Manuscript } from "../manuscript";
+import { JSONObject } from '../types';
 import { BackmatterEntity } from '../backmatter-entity';
 import { deserializeBackmatter } from '../changes.utils';
 

@@ -3,8 +3,8 @@ import {ArticleRepository} from '../repositories/articles';
 import {getArticleManuscript} from '../xml-exporter/article-parser';
 import {applyChangesToManuscript} from '../model/changes.utils';
 import {ChangeRepository} from "../repositories/changes";
-import {JSONObject} from "../model/manuscript";
 import {serializeManuscript} from "../xml-exporter/manuscript-serializer";
+import {JSONObject} from "../model/types";
 
 export type ArticleService = {
   getArticles: (page: number) => Promise<Array<Article>>;

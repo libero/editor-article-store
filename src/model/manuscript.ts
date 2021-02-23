@@ -1,9 +1,8 @@
-import { EditorState } from 'prosemirror-state';
-
+import {EditorState} from 'prosemirror-state';
 // import { Person } from 'app/models/person';
 // import { Affiliation } from 'app/models/affiliation';
 // import { Reference } from 'app/models/reference';
-// import { RelatedArticle } from 'app/models/related-article';
+import {RelatedArticle} from './related-article';
 // import { ArticleInformation } from 'app/models/article-information';
 // import { KeywordGroup, KeywordGroups } from 'app/models/keyword';
 
@@ -24,11 +23,5 @@ export type Manuscript = {
   acknowledgements: EditorState;
   // keywordGroups: KeywordGroups;
   // references: Reference[];
-  // relatedArticles: RelatedArticle[];
-};
-
-type Primitives = number | string | boolean | null | undefined;
-
-export type JSONObject = {
-  [k: string]: Primitives | JSONObject | Array<Primitives | JSONObject>;
+  relatedArticles: RelatedArticle[];
 };

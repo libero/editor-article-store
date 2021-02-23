@@ -1,6 +1,7 @@
 import { deserializeChanges } from "../changes.utils";
-import {JSONObject, Manuscript} from "../manuscript";
+import {Manuscript} from "../manuscript";
 import { Change } from "./change";
+import {JSONObject} from "../types";
 
 export class BatchChange extends Change {
   static fromJSON(data: JSONObject): BatchChange {

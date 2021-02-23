@@ -6,6 +6,7 @@ import {createAcknowledgementsState} from "../model/acknowledgements";
 import {Article} from "../types/article";
 
 import { parseXML } from "./xml-utils";
+import {createRelatedArticleState} from "../model/related-article";
 
 export function getArticleManuscript(article: Article): Manuscript {
   const xmlDoc = parseXML(article.xml);
@@ -22,7 +23,7 @@ export function getArticleManuscript(article: Article): Manuscript {
   // // const affiliations = doc.querySelectorAll('contrib-group:first-of-type aff');
   // // const references = doc.querySelectorAll('ref-list ref element-citation');
   // // const authorNotes = doc.querySelector('author-notes');
-  // // const relatedArticles = doc.querySelectorAll('related-article');
+  const relatedArticles = xmlDoc.querySelectorAll('related-article');
   const acknowledgements: Element | null = xmlDoc.querySelector('ack');
   const body = xmlDoc.querySelector('body') as Element;
 
@@ -37,7 +38,7 @@ export function getArticleManuscript(article: Article): Manuscript {
     // authors: authorsState,
     // affiliations: createAffiliationsState(Array.from(affiliations)),
     // references: createReferencesState(Array.from(references)),
-    // relatedArticles: createRelatedArticleState(Array.from(relatedArticles)),
+    relatedArticles: createRelatedArticleState(Array.from(relatedArticles)),
     // articleInfo: new ArticleInformation(doc.documentElement, authorsState),
     // journalMeta: {
   //   //   publisherName: getTextContentFromPath(doc, 'journal-meta publisher publisher-name'),

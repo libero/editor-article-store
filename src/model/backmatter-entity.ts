@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { JSONObject } from "./manuscript";
+import {JSONObject} from "./types";
 
 export abstract class BackmatterEntity {
   constructor() {
@@ -19,6 +19,7 @@ export abstract class BackmatterEntity {
   protected createEntity(data?: Element | JSONObject): void {
     if (!data) {
       this.createBlank();
+<<<<<<< HEAD
     } else if (data instanceof Element) {
       this.fromXML(data);
     } else {
@@ -26,3 +27,12 @@ export abstract class BackmatterEntity {
     }
   }
 }
+=======
+    } else if (data.ownerDocument) {
+      this.fromXML(data as Element);
+    } else {
+      this.fromJSON(data as JSONObject);
+    }
+  }
+}
+>>>>>>> origin/667-parse-related-articles
