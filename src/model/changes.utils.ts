@@ -56,7 +56,7 @@ export function deserializeBackmatter(path: string, json: JSONObject): Backmatte
   // if (path.match(/keywordGroups\.[^.]+\.keywords/)) {
   //   return new Keyword(json);
   // }
-  throw new Error(`deserialization of backmatter entity for  ${path} is not implemented or provided path is invalid`);
+  throw new Error(`deserialization of backmatter entity for ${path} is not implemented or provided path is invalid`);
 }
 
 export function applyChangesToManuscript(manuscript: Manuscript, changesJson: JSONObject[]): Manuscript {
