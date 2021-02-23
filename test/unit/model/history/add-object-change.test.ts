@@ -30,7 +30,24 @@ describe('AddObjectChange', () => {
             "href": "111111"
           } 
       };
-      expect(AddObjectChange.fromJSON(mockChangeJSON)).toMatchInlineSnapshot(`This needs to be generated.`);
+      expect(() => AddObjectChange.fromJSON(mockChangeJSON)).not.toThrow()
+      const addObjChange = AddObjectChange.fromJSON(mockChangeJSON);
+      expect(addObjChange).toBeInstanceOf(AddObjectChange);
+      expect(addObjChange.toJSON()).toEqual(mockChangeJSON);
+    });
+  });
+  describe('toJSON', () => {
+    it('returns expected JSON', () => {
+      const addObjChange = new AddObjectChange('somepath', new ExampleBackmatterClass(), 'someId')
+      const addObjJSON = addObjChange.toJSON();
+      expect(addObjJSON).toEqual(expect.objectContaining({
+        "idField": "someId",
+        "path": "somepath",
+        "type": "add-object"
+      }));
+      expect(addObjJSON.timestamp).toBeDefined();
+      expect(addObjJSON.object).toBeDefined();
+      expect(addObjJSON.object).toBeInstanceOf(ExampleBackmatterClass);
     });
   });
   describe('applyChange', () => {
@@ -54,13 +71,6 @@ describe('AddObjectChange', () => {
     it('returns false', () => {
       const addObjChange = new AddObjectChange('somepath', new ExampleBackmatterClass(), 'someId')
       expect(addObjChange.isEmpty).toBe(false);
-    });
-  });
-  describe('toJSON', () => {
-    // TODO: update this when / if implimented
-    it('returns empty object', () => {
-      const addObjChange = new AddObjectChange('somepath', new ExampleBackmatterClass(), 'someId')
-      expect(addObjChange.toJSON()).toStrictEqual({});
     });
   });
 });

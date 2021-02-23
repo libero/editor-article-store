@@ -2,7 +2,7 @@ import { Change } from './change';
 import { Manuscript } from "../manuscript";
 import { JSONObject } from '../types';
 import { BackmatterEntity } from '../backmatter-entity';
-import { deserializeBackmatter } from '../changes.utils';
+import { manuscriptEntityToJson, deserializeBackmatter } from '../changes.utils';
 
 export class AddObjectChange extends Change {
 
@@ -21,10 +21,7 @@ export class AddObjectChange extends Change {
     console.log('isEmpty not implimented for AddObjectChange')
     return false; 
   };
-  public toJSON(){ 
-    console.log('toJSON not implimented for AddObjectChange')
-    return {} 
-  };
+
   static fromJSON(data: JSONObject): AddObjectChange {
     const change = new AddObjectChange(
       data.path as string,
@@ -33,5 +30,14 @@ export class AddObjectChange extends Change {
     );
     change._timestamp = data.timestamp as number;
     return change;
+  }
+  public toJSON(): JSONObject {
+    return {
+      type: 'add-object',
+      timestamp: this.timestamp,
+      path: this.path,
+      idField: this.idField,
+      object: manuscriptEntityToJson<BackmatterEntity>(this.object)
+    };
   }
 }

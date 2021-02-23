@@ -19,15 +19,6 @@ export abstract class BackmatterEntity {
   protected createEntity(data?: Element | JSONObject): void {
     if (!data) {
       this.createBlank();
-<<<<<<< HEAD
-    } else if (data instanceof Element) {
-      this.fromXML(data);
-    } else {
-      this.fromJSON(data);
-    }
-  }
-}
-=======
     } else if (data.ownerDocument) {
       this.fromXML(data as Element);
     } else {
@@ -35,4 +26,3 @@ export abstract class BackmatterEntity {
     }
   }
 }
->>>>>>> origin/667-parse-related-articles
