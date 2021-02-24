@@ -25,5 +25,3 @@ export type Manuscript = {
   // references: Reference[];
   relatedArticles: RelatedArticle[];
 };
-
-

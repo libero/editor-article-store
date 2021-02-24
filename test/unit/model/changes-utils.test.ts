@@ -1,4 +1,5 @@
-import { manuscriptEntityToJson, deserializeChanges, cloneManuscript, applyChangesToManuscript } from '../../../src/model/changes.utils';
+import { RelatedArticle } from "../../../src/model/related-article"
+import { deserializeBackmatter, manuscriptEntityToJson, deserializeChanges, cloneManuscript, applyChangesToManuscript } from '../../../src/model/changes.utils';
 import { EditorState } from 'prosemirror-state';
 import { Schema } from "prosemirror-model"
 import {Manuscript} from "../../../src/model/manuscript";
@@ -167,5 +168,26 @@ describe('applyChangesToManuscript', () => {
     expect(JSON.stringify(mockManuscript.body.doc.content)).toBe("null");
     const appliedChanges = applyChangesToManuscript(mockManuscript, [mockProsemirrorChange]);
     expect(JSON.stringify(appliedChanges.body.doc.content)).toBe('[{"type":"text","text":"some new text"}]');
+  });
+});
+
+describe('deserializeBackmatter', () => {
+  it('returns a relatedArticle object when passed relatedArticles backmatter JSON', () => {
+    const relatedArticle = deserializeBackmatter('relatedArticles', {
+      "_id": "ad319b14-c312-4627-a5a1-d07a548a6e7e",
+      "articleType": "article-reference",
+      "href": "111111"
+    });
+    expect(relatedArticle).toBeInstanceOf(RelatedArticle);
+    expect(relatedArticle).toEqual(expect.objectContaining({
+      "_id": "ad319b14-c312-4627-a5a1-d07a548a6e7e",
+      "articleType": "article-reference",
+      "href": "111111"
+    }));
+  });
+  it('throws correct error if passed invalid path', () => {
+    expect(() => deserializeBackmatter('foo', {
+      "bar" : "bar"
+    })).toThrow('deserialization of backmatter entity for foo is not implemented or provided path is invalid');
   });
 });

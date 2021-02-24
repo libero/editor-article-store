@@ -4,7 +4,9 @@ import {Manuscript} from './manuscript';
 import {ProsemirrorChange} from "./history/prosemirror-change";
 import { Change } from './history/change';
 import {BatchChange} from "./history/batch-change";
+import { BackmatterEntity } from './backmatter-entity';
 import {JSONObject} from "./types";
+import { RelatedArticle } from './related-article';
 
 export function manuscriptEntityToJson<T>(object: T): JSONObject {
   return cloneDeepWith(object, (value) => {
@@ -33,29 +35,29 @@ export function cloneManuscript(manuscript: Manuscript): Manuscript {
   return cloneDeepWith(manuscript, cloneCustomizer);
 }
 
-//
-// export function deserializeBackmatter(path: string, json: JSONObject): BackmatterEntity {
-//   if (path.indexOf('affiliations') >= 0) {
-//     return new Affiliation(json);
-//   }
-//
-//   if (path.indexOf('authors') >= 0) {
-//     return new Person(json);
-//   }
-//
-//   if (path.indexOf('references') >= 0) {
-//     return new Reference(json);
-//   }
-//
-//   if (path.indexOf('relatedArticles') >= 0) {
-//     return new RelatedArticle(json);
-//   }
-//
-//   if (path.match(/keywordGroups\.[^.]+\.keywords/)) {
-//     return new Keyword(json);
-//   }
-//   throw new Error(`deserialization of backmatter entity for  ${path} is not implemented or provided path is invalid`);
-// }
+
+export function deserializeBackmatter(path: string, json: JSONObject): BackmatterEntity {
+  // if (path.indexOf('affiliations') >= 0) {
+  //   return new Affiliation(json);
+  // }
+
+  // if (path.indexOf('authors') >= 0) {
+  //   return new Person(json);
+  // }
+
+  // if (path.indexOf('references') >= 0) {
+  //   return new Reference(json);
+  // }
+
+  if (path.indexOf('relatedArticles') >= 0) {
+    return new RelatedArticle(json);
+  }
+
+  // if (path.match(/keywordGroups\.[^.]+\.keywords/)) {
+  //   return new Keyword(json);
+  // }
+  throw new Error(`deserialization of backmatter entity for ${path} is not implemented or provided path is invalid`);
+}
 
 export function applyChangesToManuscript(manuscript: Manuscript, changesJson: JSONObject[]): Manuscript {
   const allChanges = new BatchChange(deserializeChanges(changesJson) as Change[]);

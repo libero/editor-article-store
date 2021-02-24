@@ -27,14 +27,14 @@ describe('Related Article model', () => {
   it('creates an empty related article', () => {
     expect(new RelatedArticle()).toMatchSnapshot();
   });
-
+  
   it('clones a related article', () => {
     const article = new RelatedArticle({articleType: 'SOME_ARTICLE_TYPE', href: 'URL'});
     const clonedArticle = article.clone();
     expect(clonedArticle).not.toBe(article);
     expect(clonedArticle).toEqual(article);
   });
-
+  
   it('creates related article state', () => {
     const el = document.createElement('div');
     el.innerHTML = `
