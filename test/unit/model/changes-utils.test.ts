@@ -3,6 +3,9 @@ import { deserializeBackmatter, manuscriptEntityToJson, deserializeChanges, clon
 import { EditorState } from 'prosemirror-state';
 import { Schema } from "prosemirror-model"
 import {Manuscript} from "../../../src/model/manuscript";
+import { BatchChange } from "../../../src/model/history/batch-change";
+import { ProsemirrorChange } from "../../../src/model/history/prosemirror-change";
+import { AddObjectChange } from "../../../src/model/history/add-object-change";
 
 const textSchema = new Schema({
   nodes: {
@@ -82,6 +85,18 @@ const mockProsemirrorChange = {
   "articleId": "60263"
 }
 
+const mockAddObjectChange = {
+  "type": "add-object",
+  "timestamp": 1614097785693,
+  "path": "relatedArticles",
+  "idField": "id",
+  "object": {
+    "_id": "ad319b14-c312-4627-a5a1-d07a548a6e7e",
+    "articleType": "article-reference",
+    "href": "111111"
+  } 
+};
+
 const mockManuscript: Manuscript = {
   journalMeta: { publisherName: 'foo', issn: 'bar'},
   title: EditorState.create({ schema: textSchema}),
@@ -124,15 +139,23 @@ describe('manuscriptEntityToJson', () => {
 
 describe('deserializeChanges', () => {
   it('deserializes batch changes as expected', () => {
-    expect(JSON.stringify(deserializeChanges([mockBatchChange]))).toBe('[{"type":"batch","changes":[{"type":"prosemirror","timestamp":1613407407225,"path":"body","transactionSteps":[{"stepType":"replace","from":30584,"to":30585,"slice":{"content":[{"type":"refCitation","attrs":{"refId":"bib2","refText":"Foox et al., 2011"}}]}}]}],"timestamp":1613407407225}]')
+    const deserializedChanges = deserializeChanges([mockBatchChange]);
+    expect(deserializedChanges[0]).toBeInstanceOf(BatchChange);
+    expect(JSON.stringify(deserializedChanges)).toBe('[{"type":"batch","changes":[{"type":"prosemirror","timestamp":1613407407225,"path":"body","transactionSteps":[{"stepType":"replace","from":30584,"to":30585,"slice":{"content":[{"type":"refCitation","attrs":{"refId":"bib2","refText":"Foox et al., 2011"}}]}}]}],"timestamp":1613407407225}]');
   });
   it('deserializes prosemirror changes as expected', () => {
-    expect(JSON.stringify(deserializeChanges([mockProsemirrorChange]))).toBe('[{"type":"prosemirror","timestamp":1612261319184,"path":"body","transactionSteps":[{"stepType":"replace","from":0,\"to\":0,\"slice\":{\"content\":[{\"text\":\"some new text\",\"type\":\"text\"}]}}]}]')
+    const deserializedChanges = deserializeChanges([mockProsemirrorChange]);
+    expect(deserializedChanges[0]).toBeInstanceOf(ProsemirrorChange);
+    expect(JSON.stringify(deserializedChanges)).toBe('[{"type":"prosemirror","timestamp":1612261319184,"path":"body","transactionSteps":[{"stepType":"replace","from":0,\"to\":0,\"slice\":{\"content\":[{\"text\":\"some new text\",\"type\":\"text\"}]}}]}]');
   });
-
-  it('filters out none batch/prosemirror changes', () => {
+  it('deserializes add-object changes as expected', () => {
+    const deserializedChanges = deserializeChanges([mockAddObjectChange]);
+    expect(deserializedChanges[0]).toBeInstanceOf(AddObjectChange);
+    expect(JSON.stringify(deserializedChanges)).toBe('[{"type":"add-object","timestamp":1614097785693,"path":"relatedArticles","idField":"id","object":{"_id":"ad319b14-c312-4627-a5a1-d07a548a6e7e","articleType":"article-reference","href":"111111"}}]');
+  });
+  it('filters out unsupported change types', () => {
     expect(JSON.stringify(deserializeChanges([mockProsemirrorChange, {
-      "type": "update-object",
+      "type": "some-unsupported-change",
       "timestamp": 1613407407221,
       "path": "references.1",
       "differences": [
@@ -166,8 +189,13 @@ describe('cloneManuscript', () => {
 describe('applyChangesToManuscript', () => {
   it('applies a given set of changes to a manuscript', () => {
     expect(JSON.stringify(mockManuscript.body.doc.content)).toBe("null");
-    const appliedChanges = applyChangesToManuscript(mockManuscript, [mockProsemirrorChange]);
+    const appliedChanges = applyChangesToManuscript(mockManuscript, [mockProsemirrorChange, mockAddObjectChange]);
     expect(JSON.stringify(appliedChanges.body.doc.content)).toBe('[{"type":"text","text":"some new text"}]');
+    expect(appliedChanges.relatedArticles).toEqual([{
+      "_id": "ad319b14-c312-4627-a5a1-d07a548a6e7e",
+      "articleType": "article-reference",
+      "href": "111111"
+    }]);
   });
 });
 
