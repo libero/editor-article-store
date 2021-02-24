@@ -3,9 +3,10 @@ import { EditorState } from 'prosemirror-state';
 import {Manuscript} from './manuscript';
 import {ProsemirrorChange} from "./history/prosemirror-change";
 import { Change } from './history/change';
-import {BatchChange} from "./history/batch-change";
+import { BatchChange } from "./history/batch-change";
+import { AddObjectChange } from "./history/add-object-change";
 import { BackmatterEntity } from './backmatter-entity';
-import {JSONObject} from "./types";
+import { JSONObject } from "./types";
 import { RelatedArticle } from './related-article';
 
 export function manuscriptEntityToJson<T>(object: T): JSONObject {
@@ -23,7 +24,8 @@ export function deserializeChanges(changesJson: JSONObject[]): Array<Change>  {
         return ProsemirrorChange.fromJSON(changeData);
       case 'batch':
         return BatchChange.fromJSON(changeData);
-
+      case 'add-object':
+        return AddObjectChange.fromJSON(changeData);
       default:
         return null;
     }
