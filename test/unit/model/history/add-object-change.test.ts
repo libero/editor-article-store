@@ -1,6 +1,7 @@
 import { AddObjectChange } from '../../../../src/model/history/add-object-change'
 import { BackmatterEntity } from '../../../../src/model/backmatter-entity';
 import { Manuscript } from '../../../../src/model/manuscript';
+import { get } from 'lodash';
 
 class ExampleBackmatterClass extends BackmatterEntity {
   constructor() {
@@ -51,12 +52,20 @@ describe('AddObjectChange', () => {
     });
   });
   describe('applyChange', () => {
-    // TODO: update this when implimented
-    it('returns Manuscript', () => {
+    it('inserts a new object into Manuscript', () => {
+      const insertedObject = new ExampleBackmatterClass()
+      const addObjChange = new AddObjectChange('somepath', insertedObject, 'someId')
+      const manuscript = {'somepath': [new ExampleBackmatterClass()]} as unknown as Manuscript;
+      const newManuscript = addObjChange.applyChange(manuscript);
+      expect(get(newManuscript, 'somepath.1')).toBe(insertedObject);
+      expect(get(newManuscript, 'somepath.length')).toBe(2);
+    });
+
+    it('throws if path is not array', () => {
       const addObjChange = new AddObjectChange('somepath', new ExampleBackmatterClass(), 'someId')
-      const manuscript = {} as unknown as Manuscript;
-      expect(addObjChange.applyChange(manuscript)).toEqual(manuscript);
-    })
+      const manuscript = {'somepath': {}} as unknown as Manuscript;
+      expect(() => addObjChange.applyChange(manuscript)).toThrow(new TypeError('Trying to make AddObject change on a non-array section'));
+    });
   });
   describe('rollbackChange', () => {
     // TODO: update this when / if implimented
@@ -67,7 +76,6 @@ describe('AddObjectChange', () => {
     })
   });
   describe('isEmpty', () => {
-    // TODO: update this when / if implimented
     it('returns false', () => {
       const addObjChange = new AddObjectChange('somepath', new ExampleBackmatterClass(), 'someId')
       expect(addObjChange.isEmpty).toBe(false);
