@@ -1,6 +1,7 @@
 import { manuscriptEntityToJson, deserializeChanges, cloneManuscript, applyChangesToManuscript } from '../../../src/model/changes.utils';
 import { EditorState } from 'prosemirror-state';
 import { Schema } from "prosemirror-model"
+import {Manuscript} from "../../../src/model/manuscript";
 
 const textSchema = new Schema({
   nodes: {
@@ -80,13 +81,14 @@ const mockProsemirrorChange = {
   "articleId": "60263"
 }
 
-const mockManuscript = {
+const mockManuscript: Manuscript = {
   journalMeta: { publisherName: 'foo', issn: 'bar'},
   title: EditorState.create({ schema: textSchema}),
   abstract: EditorState.create({ schema: textSchema}),
   impactStatement: EditorState.create({ schema: textSchema}),
   body: EditorState.create({ schema: textSchema}),
   acknowledgements: EditorState.create({ schema: textSchema}),
+  relatedArticles: []
 };
 
 describe('manuscriptEntityToJson', () => {

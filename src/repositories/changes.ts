@@ -1,6 +1,6 @@
 import { Db } from "mongodb";
 import { Change } from "../types/change";
-import {JSONObject} from "../model/manuscript";
+import {JSONObject} from "../model/types";
 
 const MAX_PAGE_SIZE = 100;
 

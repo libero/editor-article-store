@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Related Article model creates a related article from object  1`] = `
+RelatedArticle {
+  "_id": "unique_id",
+  "articleType": "SOME_ARTICLE_TYPE",
+  "href": "URL",
+}
+`;
+
+exports[`Related Article model creates a related article from xml 1`] = `
+RelatedArticle {
+  "_id": "unique_id",
+  "articleType": "commentary-article",
+  "href": "10.7554/eLife.48498",
+}
+`;
+
+exports[`Related Article model creates an empty article if attributes are missing 1`] = `
+RelatedArticle {
+  "_id": "unique_id",
+  "articleType": "",
+  "href": "",
+}
+`;
+
+exports[`Related Article model creates an empty related article 1`] = `
+RelatedArticle {
+  "_id": "unique_id",
+  "articleType": "",
+  "href": "",
+}
+`;

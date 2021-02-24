@@ -2,8 +2,9 @@ import { EditorState, Transaction } from 'prosemirror-state';
 import { Step } from 'prosemirror-transform';
 import { get, set } from 'lodash';
 import { Change } from './change';
-import { JSONObject, Manuscript } from '../manuscript';
+import { Manuscript } from '../manuscript';
 import {cloneManuscript} from "../changes.utils";
+import {JSONObject} from "../types";
 
 export class ProsemirrorChange extends Change {
   public static fromJSON(data: JSONObject): ProsemirrorChange {

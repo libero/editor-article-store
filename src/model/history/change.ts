@@ -1,4 +1,5 @@
-import { JSONObject, Manuscript } from "../manuscript";
+import { Manuscript } from "../manuscript";
+import {JSONObject} from "../types";
 
 export abstract class Change {
   abstract applyChange(manuscript: Manuscript): Manuscript;
