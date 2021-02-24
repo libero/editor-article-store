@@ -51,12 +51,53 @@ describe('AddObjectChange', () => {
     });
   });
   describe('applyChange', () => {
-    // TODO: update this when implimented
-    it('returns Manuscript', () => {
-      const addObjChange = new AddObjectChange('somepath', new ExampleBackmatterClass(), 'someId')
-      const manuscript = {} as unknown as Manuscript;
-      expect(addObjChange.applyChange(manuscript)).toEqual(manuscript);
-    })
+    class SomeObjectClass extends ExampleBackmatterClass {
+      public value1: string = '';
+      public value2: string = '';
+      constructor(val1: string, val2: string) {
+        super();
+        this.value1 = val1;
+        this.value2 = val2;
+      }
+    }
+
+    it('can add object to an empty manuscript array value', () => {
+      const aChange = new SomeObjectClass('foo', 'bar');
+      const addObjChange = new AddObjectChange('relatedArticles', aChange, 'someId')
+      const manuscript = {
+        relatedArticles: []
+      } as unknown as Manuscript;
+      expect(manuscript.relatedArticles).toHaveLength(0);
+      const changedManuscript = addObjChange.applyChange(manuscript)
+      expect(changedManuscript.relatedArticles).toHaveLength(1);
+      expect(changedManuscript.relatedArticles[0]).toBe(aChange)
+    });
+    it('can add object to a populated manuscript array value', () => {
+      const aChange = new SomeObjectClass('foo', 'bar');
+      const addObjChange = new AddObjectChange('relatedArticles', aChange, 'someId')
+      const manuscript = {
+        relatedArticles: [ new SomeObjectClass('x', 'y') ]
+      } as unknown as Manuscript;
+      expect(manuscript.relatedArticles).toHaveLength(1);
+      const changedManuscript = addObjChange.applyChange(manuscript);
+      expect(changedManuscript.relatedArticles).toHaveLength(2);
+      expect(changedManuscript.relatedArticles[1]).toBe(aChange)
+    });
+    it('throws error if add object is applied to a non-array manuscript property', () => {
+      const aChange = new SomeObjectClass('foo', 'bar');
+      const addObjChange = new AddObjectChange('relatedArticles', aChange, 'someId')
+      const manuscript = {
+        relatedArticles: 'im a string'
+      } as unknown as Manuscript;
+      expect(() => addObjChange.applyChange(manuscript)).toThrow('Trying to make AddObject change on a non-array section');
+    });
+    it('throws error if add object is applied to a non existant manuscript property', () => {
+      const aChange = new SomeObjectClass('foo', 'bar');
+      const addObjChange = new AddObjectChange('relatedArticles', aChange, 'someId')
+      const manuscript = {
+      } as unknown as Manuscript;
+      expect(() => addObjChange.applyChange(manuscript)).toThrow('Trying to make AddObject change on a non-array section');
+    });
   });
   describe('rollbackChange', () => {
     // TODO: update this when / if implimented
