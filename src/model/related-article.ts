@@ -42,7 +42,6 @@ export function createRelatedArticleState(relatedArticlesXml: Element[]): Relate
 }
 
 export function serializeRelatedArticles(xmlDoc: Document, manuscript: Manuscript)  {
-  console.log(xmlDoc.querySelectorAll('article-meta > related-article').length);
   xmlDoc.querySelectorAll('article-meta > related-article')
     .forEach((el: Element) => el.parentNode!.removeChild(el));
 
