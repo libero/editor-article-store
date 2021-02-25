@@ -5,6 +5,7 @@ import {ProsemirrorChange} from "./history/prosemirror-change";
 import { Change } from './history/change';
 import { BatchChange } from "./history/batch-change";
 import { AddObjectChange } from "./history/add-object-change";
+import { DeleteObjectChange } from './history/delete-object-change';
 import { BackmatterEntity } from './backmatter-entity';
 import { JSONObject } from "./types";
 import { RelatedArticle } from './related-article';
@@ -26,6 +27,8 @@ export function deserializeChanges(changesJson: JSONObject[]): Array<Change>  {
         return BatchChange.fromJSON(changeData);
       case 'add-object':
         return AddObjectChange.fromJSON(changeData);
+      case 'delete-object':
+        return DeleteObjectChange.fromJSON(changeData);
       default:
         return null;
     }

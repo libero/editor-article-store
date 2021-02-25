@@ -1,8 +1,9 @@
 import { Change } from './change';
 import { BackmatterEntity } from '../backmatter-entity';
 import { Manuscript } from "../manuscript";
-import { manuscriptEntityToJson, deserializeBackmatter } from '../changes.utils';
+import { manuscriptEntityToJson, deserializeBackmatter, cloneManuscript } from '../changes.utils';
 import { JSONObject } from '../types';
+import { get, set } from 'lodash';
 
 export class DeleteObjectChange extends Change {
   constructor(private path: string, private object: BackmatterEntity, private idField: string) {
@@ -27,8 +28,17 @@ export class DeleteObjectChange extends Change {
     };
   }
   public applyChange(manuscript: Manuscript) {
-    console.log('applyChange not implimented for AddObjectChange')
-    return manuscript;
+    const originalSection = get(manuscript, this.path);
+
+    if (!Array.isArray(originalSection)) {
+      throw new TypeError('Trying to make DeleteObject change on a non-array section');
+    }
+    const removedIndex = originalSection.findIndex((item) => item[this.idField] === get(this.object, this.idField));
+    const updatedSection = [...originalSection];
+    if (removedIndex > -1){
+      updatedSection.splice(removedIndex, 1);
+    }
+    return set(cloneManuscript(manuscript), this.path, updatedSection);
   }
 
   public get isEmpty() { 

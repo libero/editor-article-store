@@ -6,6 +6,7 @@ import {Manuscript} from "../../../src/model/manuscript";
 import { BatchChange } from "../../../src/model/history/batch-change";
 import { ProsemirrorChange } from "../../../src/model/history/prosemirror-change";
 import { AddObjectChange } from "../../../src/model/history/add-object-change";
+import { DeleteObjectChange } from "../../../src/model/history/delete-object-change";
 
 const textSchema = new Schema({
   nodes: {
@@ -97,6 +98,18 @@ const mockAddObjectChange = {
   } 
 };
 
+const mockDeleteObjectChange = {
+  "type": "delete-object",
+  "timestamp": 1614097785693,
+  "path": "relatedArticles",
+  "idField": "id",
+  "object": {
+    "_id": "ad319b14-c312-4627-a5a1-d07a548a6e7f",
+    "articleType": "article-reference",
+    "href": "222222"
+  } 
+};
+
 const mockManuscript: Manuscript = {
   journalMeta: { publisherName: 'foo', issn: 'bar'},
   title: EditorState.create({ schema: textSchema}),
@@ -153,6 +166,11 @@ describe('deserializeChanges', () => {
     expect(deserializedChanges[0]).toBeInstanceOf(AddObjectChange);
     expect(JSON.stringify(deserializedChanges)).toBe('[{"type":"add-object","timestamp":1614097785693,"path":"relatedArticles","idField":"id","object":{"_id":"ad319b14-c312-4627-a5a1-d07a548a6e7e","articleType":"article-reference","href":"111111"}}]');
   });
+  it('deserializes delete-object changes as expected', () => {
+    const deserializedChanges = deserializeChanges([mockDeleteObjectChange]);
+    expect(deserializedChanges[0]).toBeInstanceOf(DeleteObjectChange);
+    expect(JSON.stringify(deserializedChanges)).toBe('[{"type":"delete-object","timestamp":1614097785693,"path":"relatedArticles","idField":"id","object":{"_id":"ad319b14-c312-4627-a5a1-d07a548a6e7f","articleType":"article-reference","href":"222222"}}]');
+  });
   it('filters out unsupported change types', () => {
     expect(JSON.stringify(deserializeChanges([mockProsemirrorChange, {
       "type": "some-unsupported-change",
@@ -189,7 +207,9 @@ describe('cloneManuscript', () => {
 describe('applyChangesToManuscript', () => {
   it('applies a given set of changes to a manuscript', () => {
     expect(JSON.stringify(mockManuscript.body.doc.content)).toBe("null");
-    const appliedChanges = applyChangesToManuscript(mockManuscript, [mockProsemirrorChange, mockAddObjectChange]);
+    const addObjToBeRemoved = {"type":"add-object","timestamp":1614266180919,"path":"relatedArticles","idField":"id","object":{"_id":"73144bb5-660b-4b1e-90eb-de6d315315bf","articleType":"article-reference","href":"dsdsfsdfsd"}};
+    const removeObj = {"type":"delete-object","timestamp":1614266187541,"path":"relatedArticles","removedIndex":1,"idField":"id","object":{"_id":"73144bb5-660b-4b1e-90eb-de6d315315bf","articleType":"article-reference","href":"dsdsfsdfsd"}};
+    const appliedChanges = applyChangesToManuscript(mockManuscript, [mockProsemirrorChange, mockAddObjectChange, addObjToBeRemoved, removeObj ]);
     expect(JSON.stringify(appliedChanges.body.doc.content)).toBe('[{"type":"text","text":"some new text"}]');
     expect(appliedChanges.relatedArticles).toEqual([{
       "_id": "ad319b14-c312-4627-a5a1-d07a548a6e7e",
