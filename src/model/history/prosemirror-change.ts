@@ -37,22 +37,6 @@ export class ProsemirrorChange extends Change {
     return set(cloneManuscript(manuscript), this.path, editorState.apply(this.transaction));
   }
 
-  rollbackChange(manuscript: Manuscript): Manuscript {
-    if(!this.isEmpty) {
-      throw new TypeError('Cannot revert an empty prosemirror transaction')
-    }
-
-    const invertedSteps = this.transaction!.steps.map((step, index) => {
-      return step.invert(this.transaction!.docs[index]);
-    });
-
-    const editorState = get(manuscript, this.path);
-    const rollbackTransaction = editorState.tr;
-    invertedSteps.reverse().forEach((step) => rollbackTransaction.maybeStep(step));
-
-    return set(cloneManuscript(manuscript), this.path, editorState.apply(rollbackTransaction));
-  }
-
   toJSON(): JSONObject {
     return {
       type: 'prosemirror',

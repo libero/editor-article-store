@@ -70,13 +70,14 @@ export class UpdateObjectChange<T> extends Change {
   }
 
   applyChange(manuscript: Manuscript): Manuscript {
-    console.log('Apply changes not implemented for UpdateObjectChange');
-    return manuscript;
-  }
+    const originalSection = get(manuscript, this.path);
+    const updatedSection = this.differences.reduce((acc: T, diff) => {
+      const newAcc = cloneManuscript(acc) as T;
+      deepDiff.applyChange(newAcc, acc, diff);
+      return newAcc;
+    }, originalSection);
 
-  rollbackChange(manuscript: Manuscript): Manuscript {
-    console.log('Rollback changes not implemented for UpdateObjectChange');
-    return manuscript;
+    return set(cloneManuscript(manuscript), this.path, updatedSection);
   }
 
   toJSON(): JSONObject {
