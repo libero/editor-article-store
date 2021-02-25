@@ -32,11 +32,10 @@ export function deserializeChanges(changesJson: JSONObject[]): Array<Change>  {
   }).filter(Boolean) as Change[];
 }
 
-export function cloneManuscript(manuscript: Manuscript): Manuscript {
+export function cloneManuscript<T>(manuscript: T): T {
   const cloneCustomizer = (value: any): EditorState | undefined => (value instanceof EditorState ? value : undefined);
   return cloneDeepWith(manuscript, cloneCustomizer);
 }
-
 
 export function deserializeBackmatter(path: string, json: JSONObject): BackmatterEntity {
   // if (path.indexOf('affiliations') >= 0) {
