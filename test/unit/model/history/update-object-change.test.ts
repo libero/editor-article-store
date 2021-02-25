@@ -120,7 +120,6 @@ describe('UpdateObjectChange', () => {
     })
   });
   describe('isEmpty', () => {
-    // TODO: update this when / if implimented
     it('returns false when differences array is not empty', () => {
       const updateObjChange = UpdateObjectChange.createFromTwoObjects('somepath', {}, {prop: 'value'});
       expect(updateObjChange.isEmpty).toBe(false);
