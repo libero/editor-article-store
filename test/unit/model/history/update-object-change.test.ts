@@ -104,12 +104,36 @@ describe('UpdateObjectChange', () => {
     });
   });
   describe('applyChange', () => {
-    // TODO: update this when / if implimented
-    it('returns Manuscript', () => {
+    it('returns object unchanged if change path is not on the manuscript', () => {
       const updateObjChange = UpdateObjectChange.createFromTwoObjects('somepath', {}, {prop: 'value'});
       const manuscript = {} as unknown as Manuscript;
       expect(updateObjChange.applyChange(manuscript)).toEqual(manuscript);
-    })
+    });
+
+    it('applies a change with one difference', () => {
+      const updateObjChange = UpdateObjectChange.createFromTwoObjects('somepath', {}, {prop: 'value'});
+      const manuscript = { somepath: {} } as unknown as Manuscript;
+      const updatedManuscript = updateObjChange.applyChange(manuscript);
+      expect(get(updatedManuscript, 'somepath.prop')).toBe('value');
+    });
+
+    it('applies a change with one difference', () => {
+      const updateObjChange = UpdateObjectChange.createFromTwoObjects('somepath', {}, {prop: 'value'});
+      const manuscript = { somepath: {} } as unknown as Manuscript;
+      const updatedManuscript = updateObjChange.applyChange(manuscript);
+      expect(get(updatedManuscript, 'somepath.prop')).toBe('value');
+    });
+
+    it('applies a change with one difference', () => {
+      const updateObjChange = UpdateObjectChange.createFromTwoObjects(
+        'somepath',
+        {prop1: 'old_value', prop2: 'old_value2'},
+        {prop1: 'value', prop2: 'updated_value'});
+      const manuscript = { somepath: {prop1: 'old_value', prop2: 'old_value2'} } as unknown as Manuscript;
+      const updatedManuscript = updateObjChange.applyChange(manuscript);
+      expect(get(updatedManuscript, 'somepath.prop1')).toBe('value');
+      expect(get(updatedManuscript, 'somepath.prop2')).toBe('updated_value');
+    });
   });
 
   describe('isEmpty', () => {

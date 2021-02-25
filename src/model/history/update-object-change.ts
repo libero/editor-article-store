@@ -6,6 +6,7 @@ import {BatchChange} from "./batch-change";
 import {JSONObject} from '../types';
 import {ProsemirrorChange} from './prosemirror-change';
 import {Manuscript} from "../manuscript";
+import { cloneManuscript } from '../changes.utils';
 
 export class UpdateObjectChange<T> extends Change {
   private constructor(private path: string, private differences: deepDiff.Diff<T, T>[] = []) {
@@ -69,8 +70,14 @@ export class UpdateObjectChange<T> extends Change {
   }
 
   applyChange(manuscript: Manuscript): Manuscript {
-    console.log('Apply changes not implemented for UpdateObjectChange');
-    return manuscript;
+    const originalSection = get(manuscript, this.path);
+    const updatedSection = this.differences.reduce((acc: T, diff) => {
+      const newAcc = cloneManuscript(acc) as T;
+      deepDiff.applyChange(newAcc, acc, diff);
+      return newAcc;
+    }, originalSection);
+
+    return set(cloneManuscript(manuscript), this.path, updatedSection);
   }
 
   toJSON(): JSONObject {
