@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Related Article model creates a related article from object  1`] = `
+exports[`Related Article model Model class creates a related article from object  1`] = `
 RelatedArticle {
   "_id": "unique_id",
   "articleType": "SOME_ARTICLE_TYPE",
@@ -8,7 +8,7 @@ RelatedArticle {
 }
 `;
 
-exports[`Related Article model creates a related article from xml 1`] = `
+exports[`Related Article model Model class creates a related article from xml 1`] = `
 RelatedArticle {
   "_id": "unique_id",
   "articleType": "commentary-article",
@@ -16,7 +16,7 @@ RelatedArticle {
 }
 `;
 
-exports[`Related Article model creates an empty article if attributes are missing 1`] = `
+exports[`Related Article model Model class creates an empty article if attributes are missing 1`] = `
 RelatedArticle {
   "_id": "unique_id",
   "articleType": "",
@@ -24,7 +24,7 @@ RelatedArticle {
 }
 `;
 
-exports[`Related Article model creates an empty related article 1`] = `
+exports[`Related Article model Model class creates an empty related article 1`] = `
 RelatedArticle {
   "_id": "unique_id",
   "articleType": "",

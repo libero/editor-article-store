@@ -1,5 +1,6 @@
 import { BackmatterEntity } from './backmatter-entity';
 import {JSONObject} from "./types";
+import {Manuscript} from "../model/manuscript";
 
 export class RelatedArticle extends BackmatterEntity {
   public articleType: string = '';
@@ -19,6 +20,7 @@ export class RelatedArticle extends BackmatterEntity {
   }
 
   protected fromXML(xmlNode: Element): void {
+    this._id = xmlNode.getAttribute('id') || this.id;
     this.articleType = xmlNode.getAttribute('related-article-type') || '';
     this.href = xmlNode.getAttribute('xlink:href') || '';
   }
@@ -37,4 +39,20 @@ export class RelatedArticle extends BackmatterEntity {
 
 export function createRelatedArticleState(relatedArticlesXml: Element[]): RelatedArticle[] {
   return relatedArticlesXml.map((xml: Element) => new RelatedArticle(xml));
+}
+
+export function serializeRelatedArticles(xmlDoc: Document, manuscript: Manuscript)  {
+  xmlDoc.querySelectorAll('article-meta > related-article')
+    .forEach((el: Element) => el.parentNode!.removeChild(el));
+
+  const articleMeta = xmlDoc.querySelector('article-meta');
+  manuscript.relatedArticles.forEach((article: RelatedArticle) => {
+    const articleXml = xmlDoc.createElement('related-article');
+    articleXml.setAttribute('ext-link-type', 'doi');
+    articleXml.setAttribute('id', article.id);
+    articleXml.setAttribute('related-article-type', article.articleType);
+    articleXml.setAttribute('xlink:href', article.href);
+
+    articleMeta!.appendChild(articleXml)
+  })
 }

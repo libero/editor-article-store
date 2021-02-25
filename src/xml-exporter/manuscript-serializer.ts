@@ -9,6 +9,7 @@ import {serializeAbstractState, serializeImpactStatementState} from "../model/ab
 import {serializeTitleState} from "../model/title";
 import {serializeAcknowledgementState} from '../model/acknowledgements';
 import {serializeBodyState} from "../model/body";
+import {serializeRelatedArticles} from "../model/related-article";
 
 export function createXmlDomSerializer(editorState: EditorState): DOMSerializer {
   return DOMSerializer.fromSchema(editorState.schema);
@@ -27,6 +28,7 @@ export function serializeManuscript(article: Article, manuscript: Manuscript): s
   serializeImpactStatementState(xmlDoc, manuscript);
   serializeAcknowledgementState(xmlDoc, manuscript);
   serializeBodyState(xmlDoc, manuscript);
+  serializeRelatedArticles(xmlDoc, manuscript);
 
   // // // const keywordGroups = doc.querySelectorAll('kwd-group');
   // const abstract = doc.querySelector('abstract:not([abstract-type])') as Element;
@@ -35,7 +37,7 @@ export function serializeManuscript(article: Article, manuscript: Manuscript): s
   // // // const affiliations = doc.querySelectorAll('contrib-group:first-of-type aff');
   // // // const references = doc.querySelectorAll('ref-list ref element-citation');
   // // // const authorNotes = doc.querySelector('author-notes');
-  // // // const relatedArticles = doc.querySelectorAll('related-article');
+
   // const acknowledgements = doc.querySelector('ack') as Element;
   // const body = doc.querySelector('body') as Element;
 
