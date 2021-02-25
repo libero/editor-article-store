@@ -64,7 +64,6 @@ describe('UpdateObjectChange', () => {
       expect(get(updateObjJSON, 'changes.0.type')).toBe('update-object');
       expect(get(updateObjJSON, 'changes.0.timestamp')).toBeDefined();
       expect(get(updateObjJSON, 'changes.0.path')).toBe('somepath');
-      expect(get(updateObjJSON, 'changes.1.path')).toBe('somepath.prop2');
       expect(get(updateObjJSON, 'changes.0.differences')).toEqual([{
         kind: "E",
         lhs: "a",
