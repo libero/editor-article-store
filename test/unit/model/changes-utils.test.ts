@@ -1,12 +1,19 @@
-import { RelatedArticle } from "../../../src/model/related-article"
-import { deserializeBackmatter, manuscriptEntityToJson, deserializeChanges, cloneManuscript, applyChangesToManuscript } from '../../../src/model/changes.utils';
-import { EditorState } from 'prosemirror-state';
-import { Schema } from "prosemirror-model"
+import {RelatedArticle} from "../../../src/model/related-article"
+import {
+  applyChangesToManuscript,
+  cloneManuscript,
+  deserializeBackmatter,
+  deserializeChanges,
+  manuscriptEntityToJson
+} from '../../../src/model/changes.utils';
+import {EditorState} from 'prosemirror-state';
+import {Schema} from "prosemirror-model"
 import {Manuscript} from "../../../src/model/manuscript";
-import { BatchChange } from "../../../src/model/history/batch-change";
-import { ProsemirrorChange } from "../../../src/model/history/prosemirror-change";
-import { AddObjectChange } from "../../../src/model/history/add-object-change";
-import { DeleteObjectChange } from "../../../src/model/history/delete-object-change";
+import {BatchChange} from "../../../src/model/history/batch-change";
+import {ProsemirrorChange} from "../../../src/model/history/prosemirror-change";
+import {AddObjectChange} from "../../../src/model/history/add-object-change";
+import {DeleteObjectChange} from "../../../src/model/history/delete-object-change";
+import {UpdateObjectChange} from "../../../src/model/history/update-object-change";
 
 const textSchema = new Schema({
   nodes: {
@@ -84,7 +91,7 @@ const mockProsemirrorChange = {
   "user": "static-for-now",
   "applied": false,
   "articleId": "60263"
-}
+};
 
 const mockAddObjectChange = {
   "type": "add-object",
@@ -108,6 +115,24 @@ const mockDeleteObjectChange = {
     "articleType": "article-reference",
     "href": "222222"
   } 
+};
+
+const mockUpdateObjectChange = {
+  "type": "update-object",
+  "timestamp": 1613407407221,
+  "path": "references.1",
+  "differences": [
+    {
+      "kind": "E",
+      "path": [
+        "authors",
+        5,
+        "lastName"
+      ],
+      "lhs": "Foo",
+      "rhs": "Foox"
+    }
+  ]
 };
 
 const mockManuscript: Manuscript = {
@@ -154,23 +179,90 @@ describe('deserializeChanges', () => {
   it('deserializes batch changes as expected', () => {
     const deserializedChanges = deserializeChanges([mockBatchChange]);
     expect(deserializedChanges[0]).toBeInstanceOf(BatchChange);
-    expect(JSON.stringify(deserializedChanges)).toBe('[{"type":"batch","changes":[{"type":"prosemirror","timestamp":1613407407225,"path":"body","transactionSteps":[{"stepType":"replace","from":30584,"to":30585,"slice":{"content":[{"type":"refCitation","attrs":{"refId":"bib2","refText":"Foox et al., 2011"}}]}}]}],"timestamp":1613407407225}]');
+    expect(deserializedChanges[0].toJSON()).toEqual({
+      "type": "batch",
+      "changes": [{
+        "type": "update-object",
+        "timestamp": 1613407407221,
+        "path": "references.1",
+        "differences": [{"kind": "E", "path": ["authors", 5, "lastName"], "lhs": "Foo", "rhs": "Foox"}]
+      }, {
+        "type": "prosemirror",
+        "timestamp": 1613407407225,
+        "path": "body",
+        "transactionSteps": [{
+          "stepType": "replace",
+          "from": 30584,
+          "to": 30585,
+          "slice": {"content": [{"type": "refCitation", "attrs": {"refId": "bib2", "refText": "Foox et al., 2011"}}]}
+        }]
+      }],
+      "timestamp": 1613407407225
+    });
   });
+
   it('deserializes prosemirror changes as expected', () => {
     const deserializedChanges = deserializeChanges([mockProsemirrorChange]);
     expect(deserializedChanges[0]).toBeInstanceOf(ProsemirrorChange);
-    expect(JSON.stringify(deserializedChanges)).toBe('[{"type":"prosemirror","timestamp":1612261319184,"path":"body","transactionSteps":[{"stepType":"replace","from":0,\"to\":0,\"slice\":{\"content\":[{\"text\":\"some new text\",\"type\":\"text\"}]}}]}]');
+    expect(deserializedChanges[0].toJSON()).toEqual({
+      "type": "prosemirror",
+      "timestamp": 1612261319184,
+      "path": "body",
+      "transactionSteps": [{
+        "stepType": "replace",
+        "from": 0,
+        "to": 0,
+        "slice": {"content": [{"text": "some new text", "type": "text"}]}
+      }]
+    });
   });
+
   it('deserializes add-object changes as expected', () => {
     const deserializedChanges = deserializeChanges([mockAddObjectChange]);
     expect(deserializedChanges[0]).toBeInstanceOf(AddObjectChange);
-    expect(JSON.stringify(deserializedChanges)).toBe('[{"type":"add-object","timestamp":1614097785693,"path":"relatedArticles","idField":"id","object":{"_id":"ad319b14-c312-4627-a5a1-d07a548a6e7e","articleType":"article-reference","href":"111111"}}]');
+    expect(deserializedChanges[0].toJSON()).toEqual({
+      "type": "add-object",
+      "timestamp": 1614097785693,
+      "path": "relatedArticles",
+      "idField": "id",
+      "object": {"_id": "ad319b14-c312-4627-a5a1-d07a548a6e7e", "articleType": "article-reference", "href": "111111"}
+    });
   });
+
   it('deserializes delete-object changes as expected', () => {
     const deserializedChanges = deserializeChanges([mockDeleteObjectChange]);
     expect(deserializedChanges[0]).toBeInstanceOf(DeleteObjectChange);
-    expect(JSON.stringify(deserializedChanges)).toBe('[{"type":"delete-object","timestamp":1614097785693,"path":"relatedArticles","idField":"id","object":{"_id":"ad319b14-c312-4627-a5a1-d07a548a6e7f","articleType":"article-reference","href":"222222"}}]');
+    expect(deserializedChanges[0].toJSON()).toEqual({
+      "type": "delete-object",
+      "timestamp": 1614097785693,
+      "path": "relatedArticles",
+      "idField": "id",
+      "object": {"_id": "ad319b14-c312-4627-a5a1-d07a548a6e7f", "articleType": "article-reference", "href": "222222"}
+    });
   });
+
+  it('deserializes update-object changes as expected', () => {
+    const deserializedChanges = deserializeChanges([mockUpdateObjectChange]);
+    expect(deserializedChanges[0]).toBeInstanceOf(UpdateObjectChange);
+    expect(deserializedChanges[0].toJSON()).toEqual({
+      "type": "update-object",
+      "timestamp": 1613407407221,
+      "path": "references.1",
+      "differences": [
+        {
+          "kind": "E",
+          "path": [
+            "authors",
+            5,
+            "lastName"
+          ],
+          "lhs": "Foo",
+          "rhs": "Foox"
+        }
+      ]
+    });
+  });
+
   it('filters out unsupported change types', () => {
     expect(JSON.stringify(deserializeChanges([mockProsemirrorChange, {
       "type": "some-unsupported-change",
