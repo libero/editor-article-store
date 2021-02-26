@@ -124,7 +124,7 @@ describe('UpdateObjectChange', () => {
       expect(get(updatedManuscript, 'somepath.prop')).toBe('value');
     });
 
-    it('applies a change with one difference', () => {
+    it('applies a change with multiple difference', () => {
       const updateObjChange = UpdateObjectChange.createFromTwoObjects(
         'somepath',
         {prop1: 'old_value', prop2: 'old_value2'},
@@ -133,6 +133,29 @@ describe('UpdateObjectChange', () => {
       const updatedManuscript = updateObjChange.applyChange(manuscript);
       expect(get(updatedManuscript, 'somepath.prop1')).toBe('value');
       expect(get(updatedManuscript, 'somepath.prop2')).toBe('updated_value');
+    });
+
+    it('applies a change to arrays', () => {
+      const updateObjChange = UpdateObjectChange.createFromTwoObjects(
+        'somepath',
+        {prop: ['v1', 'v2', 'v3'], deepProp: [{p1: 'v2'}]},
+        {prop: ['u1', 'u2'], deepProp: [{p1: 'w2'}]}
+        );
+      const manuscript = { somepath: {prop1: 'old_value', prop2: 'old_value2'} } as unknown as Manuscript;
+      const updatedManuscript = updateObjChange.applyChange(manuscript);
+      
+      expect(get(updatedManuscript, 'somepath.prop')).toEqual( ['u1', 'u2']);
+      expect(get(updatedManuscript, 'somepath.deepProp.0.p1')).toBe('w2');
+      const updateObjJSON = updateObjChange.toJSON();
+      expect(get(updateObjJSON, 'changes.0.differences.0'))
+        .toEqual({kind: 'A', path: ['prop'], index: 2, item: { kind: 'D', lhs: 'v3'}});
+      expect(get(updateObjJSON, 'changes.0.differences.1'))
+        .toEqual({kind: 'E', path: [ 'prop', 1 ], lhs: 'v2', rhs: 'u2'});
+      expect(get(updateObjJSON, 'changes.0.differences.2'))
+        .toEqual({kind: 'E', path: ['prop', 0], lhs: 'v1', rhs: 'u1'});
+
+      expect(get(updateObjJSON, 'changes.0.differences.3'))
+        .toEqual({kind: 'E', path: ['deepProp', 0, 'p1'], lhs: 'v2', rhs: 'w2'});
     });
   });
 
