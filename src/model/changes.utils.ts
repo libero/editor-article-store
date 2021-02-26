@@ -9,6 +9,7 @@ import { DeleteObjectChange } from './history/delete-object-change';
 import { BackmatterEntity } from './backmatter-entity';
 import { JSONObject } from "./types";
 import { RelatedArticle } from './related-article';
+import {UpdateObjectChange} from "./history/update-object-change";
 
 export function manuscriptEntityToJson<T>(object: T): JSONObject {
   return cloneDeepWith(object, (value) => {
@@ -29,6 +30,8 @@ export function deserializeChanges(changesJson: JSONObject[]): Array<Change>  {
         return AddObjectChange.fromJSON(changeData);
       case 'delete-object':
         return DeleteObjectChange.fromJSON(changeData);
+      case 'update-object':
+        return UpdateObjectChange.fromJSON(changeData);
       default:
         return null;
     }

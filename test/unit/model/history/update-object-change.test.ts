@@ -143,7 +143,7 @@ describe('UpdateObjectChange', () => {
         );
       const manuscript = { somepath: {prop1: 'old_value', prop2: 'old_value2'} } as unknown as Manuscript;
       const updatedManuscript = updateObjChange.applyChange(manuscript);
-      
+
       expect(get(updatedManuscript, 'somepath.prop')).toEqual( ['u1', 'u2']);
       expect(get(updatedManuscript, 'somepath.deepProp.0.p1')).toBe('w2');
       const updateObjJSON = updateObjChange.toJSON();
