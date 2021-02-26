@@ -20,11 +20,7 @@ export class AddObjectChange extends Change {
 
     return set(cloneManuscript(manuscript), this.path, [...originalSection, this.object]);
   }
-  
-  public rollbackChange(manuscript: Manuscript) {
-    console.log('rollbackChange not implimented for AddObjectChange')
-    return manuscript;
-  }
+
   public get isEmpty() { 
     console.log('isEmpty not implimented for AddObjectChange')
     return false; 

@@ -26,12 +26,6 @@ export class BatchChange extends Change {
     }, manuscript);
   }
 
-  rollbackChange(manuscript: Manuscript): Manuscript {
-    return this.changes.reduceRight((acc: Manuscript, change: Change) => {
-      return change.rollbackChange(acc);
-    }, manuscript);
-  }
-
   toJSON(): JSONObject {
     return {
       type: 'batch',

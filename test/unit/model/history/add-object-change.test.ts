@@ -99,14 +99,7 @@ describe('AddObjectChange', () => {
       expect(() => addObjChange.applyChange(manuscript)).toThrow('Trying to make AddObject change on a non-array section');
     });
   });
-  describe('rollbackChange', () => {
-    // TODO: update this when / if implimented
-    it('returns Manuscript', () => {
-      const addObjChange = new AddObjectChange('somepath', new ExampleBackmatterClass(), 'someId')
-      const manuscript = {} as unknown as Manuscript;
-      expect(addObjChange.rollbackChange(manuscript)).toEqual(manuscript);
-    })
-  });
+
   describe('isEmpty', () => {
     // TODO: update this when / if implimented
     it('returns false', () => {

@@ -3,7 +3,6 @@ import {JSONObject} from "../types";
 
 export abstract class Change {
   abstract applyChange(manuscript: Manuscript): Manuscript;
-  abstract rollbackChange(manuscript: Manuscript): Manuscript;
   abstract get isEmpty(): boolean;
   abstract toJSON(): JSONObject;
 

@@ -104,21 +104,13 @@ describe('UpdateObjectChange', () => {
     });
   });
   describe('applyChange', () => {
-    // TODO: update this when / if implimented
     it('returns Manuscript', () => {
       const updateObjChange = UpdateObjectChange.createFromTwoObjects('somepath', {}, {prop: 'value'});
       const manuscript = {} as unknown as Manuscript;
       expect(updateObjChange.applyChange(manuscript)).toEqual(manuscript);
     })
   });
-  describe('rollbackChange', () => {
-    // TODO: update this when / if implimented
-    it('returns Manuscript', () => {
-      const updateObjChange = UpdateObjectChange.createFromTwoObjects('somepath', {}, {prop: 'value'});
-      const manuscript = {} as unknown as Manuscript;
-      expect(updateObjChange.rollbackChange(manuscript)).toEqual(manuscript);
-    })
-  });
+
   describe('isEmpty', () => {
     it('returns false when differences array is not empty', () => {
       const updateObjChange = UpdateObjectChange.createFromTwoObjects('somepath', {}, {prop: 'value'});

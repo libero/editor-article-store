@@ -108,14 +108,7 @@ describe('DeleteObjectChange', () => {
       expect(() => addObjChange.applyChange(manuscript)).toThrow('Trying to make DeleteObject change on a non-array section');
     });
   });
-  describe('rollbackChange', () => {
-    // TODO: update this when / if implimented
-    it('returns Manuscript', () => {
-      const deleteObjChange = new DeleteObjectChange('somepath', new ExampleBackmatterClass(), 'someId')
-      const manuscript = {} as unknown as Manuscript;
-      expect(deleteObjChange.rollbackChange(manuscript)).toEqual(manuscript);
-    })
-  });
+
   describe('isEmpty', () => {
     // TODO: update this when / if implimented
     it('returns false', () => {
