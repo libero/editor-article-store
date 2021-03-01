@@ -21,5 +21,11 @@ export class Affiliation extends BackmatterEntity {
 
   protected fromXML(_xml: Element): void {}
 
-  protected fromJSON(_json: JSONObject): void {}
+  protected fromJSON(json: JSONObject): void {
+    this._id = (json._id as string) || this.id;
+    this.label = json.label as string;
+    this.country = json.country as string;
+    this.institution = json.institution as { name: string };
+    this.address = json.address as { city: string };
+  }
 }
