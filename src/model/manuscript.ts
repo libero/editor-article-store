@@ -1,6 +1,6 @@
 import {EditorState} from 'prosemirror-state';
+import { Affiliation } from './affiliation';
 // import { Person } from 'app/models/person';
-// import { Affiliation } from 'app/models/affiliation';
 // import { Reference } from 'app/models/reference';
 import {RelatedArticle} from './related-article';
 // import { ArticleInformation } from 'app/models/article-information';
@@ -16,7 +16,7 @@ export type Manuscript = {
   title: EditorState;
   // articleInfo: ArticleInformation;
   // authors: Person[];
-  // affiliations: Affiliation[];
+  affiliations: Affiliation[];
   abstract: EditorState;
   impactStatement: EditorState;
   body: EditorState;

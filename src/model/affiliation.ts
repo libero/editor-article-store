@@ -29,3 +29,7 @@ export class Affiliation extends BackmatterEntity {
     this.address = json.address as { city: string };
   }
 }
+
+export function createAffiliationsState(affiliationsXml: Element[]): Affiliation[] {
+  return affiliationsXml.map((xml) => new Affiliation(xml));
+}
