@@ -21,9 +21,8 @@ export class AddObjectChange extends Change {
     return set(cloneManuscript(manuscript), this.path, [...originalSection, this.object]);
   }
 
-  public get isEmpty() { 
-    console.log('isEmpty not implimented for AddObjectChange')
-    return false; 
+  public get isEmpty() {
+    return false;
   };
 
   static fromJSON(data: JSONObject): AddObjectChange {

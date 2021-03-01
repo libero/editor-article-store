@@ -41,8 +41,7 @@ export class DeleteObjectChange extends Change {
     return set(cloneManuscript(manuscript), this.path, updatedSection);
   }
 
-  public get isEmpty() { 
-    console.log('isEmpty not implimented for AddObjectChange')
+  public get isEmpty() {
     return false; 
   };
 }

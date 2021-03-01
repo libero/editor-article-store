@@ -297,17 +297,98 @@ describe('cloneManuscript', () => {
 });
 
 describe('applyChangesToManuscript', () => {
-  it('applies a given set of changes to a manuscript', () => {
-    expect(JSON.stringify(mockManuscript.body.doc.content)).toBe("null");
-    const addObjToBeRemoved = {"type":"add-object","timestamp":1614266180919,"path":"relatedArticles","idField":"id","object":{"_id":"73144bb5-660b-4b1e-90eb-de6d315315bf","articleType":"article-reference","href":"dsdsfsdfsd"}};
-    const removeObj = {"type":"delete-object","timestamp":1614266187541,"path":"relatedArticles","removedIndex":1,"idField":"id","object":{"_id":"73144bb5-660b-4b1e-90eb-de6d315315bf","articleType":"article-reference","href":"dsdsfsdfsd"}};
-    const appliedChanges = applyChangesToManuscript(mockManuscript, [mockProsemirrorChange, mockAddObjectChange, addObjToBeRemoved, removeObj ]);
-    expect(JSON.stringify(appliedChanges.body.doc.content)).toBe('[{"type":"text","text":"some new text"}]');
-    expect(appliedChanges.relatedArticles).toEqual([{
-      "_id": "ad319b14-c312-4627-a5a1-d07a548a6e7e",
-      "articleType": "article-reference",
-      "href": "111111"
+  it('adds an entity to related article list', () => {
+    const changesJSON = [{
+      "type": "add-object",
+      "timestamp": 1614097785693,
+      "path": "relatedArticles",
+      "idField": "id",
+      "object": {
+        "_id": "ad319b14-c312-4627-a5a1-d07a548a6e7e",
+        "articleType": "article-reference",
+        "href": "111111"
+      }
+    }];
+
+    const updatedManuscript = applyChangesToManuscript(mockManuscript, changesJSON);
+    expect(updatedManuscript.relatedArticles.length).toBe(1);
+    expect(updatedManuscript.relatedArticles[0]).toEqual(changesJSON[0].object);
+  });
+
+  it('deletes an entity from related article list', () => {
+    const changesJSON = [{
+      "type": "add-object",
+      "timestamp": 161409771111,
+      "path": "relatedArticles",
+      "idField": "id",
+      "object": {
+        "_id": "ad319b14-c312-1111-a5a1-d07a548a6e7e",
+        "articleType": "article-commentary",
+        "href": "222"
+      }
+    }, {
+      "type": "add-object",
+      "timestamp": 1614097785693,
+      "path": "relatedArticles",
+      "idField": "id",
+      "object": {
+        "_id": "ad319b14-c312-4627-a5a1-d07a548a6e7e",
+        "articleType": "article-reference",
+        "href": "111111"
+      }
+    }];
+
+
+    const testManuscript = applyChangesToManuscript(mockManuscript, changesJSON);
+    expect(testManuscript.relatedArticles.length).toBe(2);
+
+    const updatedManuscript = applyChangesToManuscript(testManuscript, [{
+        "type": "delete-object",
+        "timestamp": 1614097785693,
+        "path": "relatedArticles",
+        "idField": "id",
+        "object": {
+          "_id": "ad319b14-c312-1111-a5a1-d07a548a6e7e",
+          "articleType": "article-commentary",
+          "href": "222"
+        }
     }]);
+
+    expect(updatedManuscript.relatedArticles.length).toBe(1);
+    expect(updatedManuscript.relatedArticles[0]).toEqual(changesJSON[1].object);
+  });
+
+  it('updates an entity on related article list', () => {
+    const changesJSON = [{
+      "type": "add-object",
+      "timestamp": 1614097785693,
+      "path": "relatedArticles",
+      "idField": "id",
+      "object": {
+        "_id": "ad319b14-c312-4627-a5a1-d07a548a6e7e",
+        "articleType": "article-reference",
+        "href": "111111"
+      }
+    }];
+
+    const testManuscript = applyChangesToManuscript(mockManuscript, changesJSON);
+
+    const updatedManuscript = applyChangesToManuscript(testManuscript, [{
+      "type": "update-object",
+      "timestamp": 1614250395860,
+      "path": "relatedArticles.0",
+      "differences": [{"kind": "E", "path": ["href"], "lhs": "111111", "rhs": "10.7554/eLife.4849811"}]
+    }]);
+    expect(updatedManuscript.relatedArticles.length).toBe(1);
+    expect(updatedManuscript.relatedArticles[0].id).toBe(changesJSON[0].object._id);
+    expect(updatedManuscript.relatedArticles[0].articleType).toBe(changesJSON[0].object.articleType);
+    expect(updatedManuscript.relatedArticles[0].href).toBe("10.7554/eLife.4849811");
+  });
+
+  it('applies a prosemirror change on the body', () => {
+    expect(mockManuscript.body.doc.textContent).toBe('');
+    const updatedManuscript = applyChangesToManuscript(mockManuscript, [mockProsemirrorChange]);
+    expect(updatedManuscript.body.doc.textContent).toBe('some new text');
   });
 });
 
