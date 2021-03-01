@@ -101,7 +101,6 @@ describe('AddObjectChange', () => {
   });
 
   describe('isEmpty', () => {
-    // TODO: update this when / if implimented
     it('returns false', () => {
       const addObjChange = new AddObjectChange('somepath', new ExampleBackmatterClass(), 'someId')
       expect(addObjChange.isEmpty).toBe(false);

@@ -110,7 +110,6 @@ describe('DeleteObjectChange', () => {
   });
 
   describe('isEmpty', () => {
-    // TODO: update this when / if implimented
     it('returns false', () => {
       const deleteObjChange = new DeleteObjectChange('somepath', new ExampleBackmatterClass(), 'someId')
       expect(deleteObjChange.isEmpty).toBe(false);
