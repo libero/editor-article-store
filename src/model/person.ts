@@ -30,7 +30,21 @@ export class Person extends BackmatterEntity {
   }
 
   protected fromXML(xmlNode: Element): void {}
-  protected fromJSON(json: JSONObject): void {}
+
+  protected fromJSON(json: JSONObject): void {
+    this._id = (json._id as string) || this.id;
+    this.firstName = json.firstName as string || '';
+    this.lastName = json.lastName as string || '';
+    this.suffix = json.suffix as string || '';
+    this.isAuthenticated = !!json.isAuthenticated;
+    this.orcid = json.orcid as string  || '';
+    this.bio = json.bio
+      ? this.createBioEditorStateFromJSON(json.bio as JSONObject)
+      : this.createBioEditorStateFromXml();
+    this.email = json.email as string || '';
+    this.isCorrespondingAuthor = !!json.isCorrespondingAuthor;
+    this.affiliations = Array.isArray(json.affiliations) ? (json.affiliations as string[]) : [];
+  }
 
   protected createBlank(): void {
     this.firstName = '';
@@ -64,5 +78,16 @@ export class Person extends BackmatterEntity {
       doc: bio ? ProseMirrorDOMParser.fromSchema(schema).parse(bio) : undefined,
       schema
     });
+  }
+
+  private createBioEditorStateFromJSON(json: JSONObject): EditorState {
+    const blankState = this.createBioEditorStateFromXml();
+    return EditorState.fromJSON(
+      {
+        schema: blankState.schema,
+        plugins: blankState.plugins
+      },
+      json
+    );
   }
 }
