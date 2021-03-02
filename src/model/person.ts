@@ -5,7 +5,7 @@ import { DOMParser as ProseMirrorDOMParser } from 'prosemirror-model';
 import {BackmatterEntity} from "./backmatter-entity";
 import * as bioConfig from './config/author-bio.config';
 import { JSONObject } from "./types";
-import {makeSchemaFromConfig} from "./utils";
+import {getTextContentFromPath, makeSchemaFromConfig} from "./utils";
 
 export class Person extends BackmatterEntity {
 
@@ -29,7 +29,22 @@ export class Person extends BackmatterEntity {
     }
   }
 
-  protected fromXML(xmlNode: Element): void {}
+  protected fromXML(xml: Element): void {
+    const orcidEl = xml.querySelector('contrib-id[contrib-id-type="orcid"]');
+
+    this._id = xml.getAttribute('id') || this._id;
+    this.firstName = getTextContentFromPath(xml, 'name > given-names');
+    this.lastName = getTextContentFromPath(xml, 'name > surname');
+    this.suffix = getTextContentFromPath(xml, 'name > suffix');
+    this.isAuthenticated = orcidEl ? orcidEl.getAttribute('authenticated') === 'true' : false;
+    this.orcid = orcidEl ? this.getOrcid(orcidEl.textContent!) : '';
+    this.bio = this.createBioEditorStateFromXml(xml.querySelector('bio')!);
+    this.email = getTextContentFromPath(xml, 'email');
+    this.isCorrespondingAuthor = xml.getAttribute('corresp') === 'yes';
+    this.affiliations = Array.from(xml.querySelectorAll('xref[ref-type="aff"]'))
+      .map((xRef) => xRef.getAttribute('rid'))
+      .filter(Boolean) as string[];
+  }
 
   protected fromJSON(json: JSONObject): void {
     this._id = (json._id as string) || this.id;
@@ -89,5 +104,13 @@ export class Person extends BackmatterEntity {
       },
       json
     );
+  }
+
+  private getOrcid(orcidUrl: string): string {
+    const matches = orcidUrl.match(/(([0-9]{4}-?){4})/g);
+    if (matches) {
+      return matches[0];
+    }
+    return '';
   }
 }
