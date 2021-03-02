@@ -1,5 +1,6 @@
 import { BackmatterEntity } from "./backmatter-entity";
 import { JSONObject } from "./types";
+import { getTextContentFromPath } from "./utils";
 
 export class Affiliation extends BackmatterEntity {
   label: string | undefined;
@@ -19,14 +20,30 @@ export class Affiliation extends BackmatterEntity {
     this.address = { city: '' };
   }
 
-  protected fromXML(_xml: Element): void {}
+  protected fromXML(xml: Element): void {
+    this._id = xml.getAttribute('id') as string || this.id;
+    this.label = getTextContentFromPath(xml, 'label') || '';
+    this.institution = {
+      name: [
+        getTextContentFromPath(xml, 'institution[content-type="dept"]'),
+        getTextContentFromPath(xml, 'institution:not([content-type])')
+      ]
+        .filter(Boolean)
+        .join(', ')
+    };
+
+    this.address = {
+      city: getTextContentFromPath(xml, 'addr-line named-content[content-type="city"]') || ''
+    };
+    this.country = getTextContentFromPath(xml, 'country') || '';
+  }
 
   protected fromJSON(json: JSONObject): void {
     this._id = (json._id as string) || this.id;
-    this.label = json.label as string;
-    this.country = json.country as string;
-    this.institution = json.institution as { name: string };
-    this.address = json.address as { city: string };
+    this.label = json.label as string || '';
+    this.country = json.country as string || '';
+    this.institution = json.institution as { name: string } || { name: '' };
+    this.address = json.address as { city: string } || { city: '' };
   }
 }
 
