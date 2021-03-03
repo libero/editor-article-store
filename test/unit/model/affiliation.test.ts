@@ -103,7 +103,8 @@ describe('createAffiliationsState', () => {
     expect(affiliations).toHaveLength(2);
     expect(affiliations[0]).toBeInstanceOf(Affiliation);
     expect(affiliations[1]).toBeInstanceOf(Affiliation);
-    expect(affiliations[0]).toStrictEqual(expect.objectContaining({
+    expect(affiliations).toContainEqual(expect.objectContaining({
+      _id: 'aff1',
       label: 'label',
       institution: {
         name: 'Tech Department, eLife Sciences'
@@ -113,8 +114,9 @@ describe('createAffiliationsState', () => {
       },
       country: 'United Kingdom'
     }));
-    expect(affiliations[1]).toStrictEqual(expect.objectContaining({
-      label: '1',
+    expect(affiliations).toContainEqual(expect.objectContaining({
+      _id: 'aff2',
+      label: '2',
       institution: {
         name: 'Department, University'
       },
