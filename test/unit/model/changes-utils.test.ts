@@ -136,6 +136,7 @@ const mockUpdateObjectChange = {
 };
 
 const mockManuscript: Manuscript = {
+  authors: [],
   journalMeta: { publisherName: 'foo', issn: 'bar'},
   title: EditorState.create({ schema: textSchema}),
   abstract: EditorState.create({ schema: textSchema}),

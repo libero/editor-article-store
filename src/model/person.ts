@@ -21,7 +21,7 @@ export class Person extends BackmatterEntity {
   hasCompetingInterest?: boolean;
   competingInterestStatement?: string;
 
-  constructor(data?: JSONObject | Element, notesXml?: Element) {
+  constructor(data?: JSONObject | Element, notesXml?: Element | null) {
     super();
     this.createEntity(data);
     if (get(data, 'ownerDocument') && get(notesXml, 'ownerDocument')) {
@@ -113,4 +113,8 @@ export class Person extends BackmatterEntity {
     }
     return '';
   }
+}
+
+export function createAuthorsState(authorsXml: Element[], notesXml?: Element | null): Person[] {
+  return authorsXml.map((xml) => new Person(xml, notesXml));
 }

@@ -1,7 +1,7 @@
 import {cloneDeep} from "lodash";
 import {EditorState} from "prosemirror-state";
 
-import {Person} from "../../../src/model/person";
+import {createAuthorsState, Person} from "../../../src/model/person";
 import {JSONObject} from "../../../src/model/types";
 import {clearNode, parseXML} from "../../../src/xml-exporter/xml-utils";
 
@@ -49,6 +49,12 @@ const PERSON_XML_DATA = `
     <xref ref-type="aff" rid="aff3">3</xref>
   </contrib>
 `;
+
+const AUTHOR_NOTES_XML = `<author-notes>
+    <fn fn-type="COI-statement" id="con1">
+      <p>Is an employee of eLife. No other competing interests exist</p>
+    </fn>
+  </author-notes>`;
 
 describe('Person class', () => {
 
@@ -215,12 +221,6 @@ describe('Person class', () => {
     });
 
     describe('creates author with competing interests', () => {
-      const AUTHOR_NOTES_XML = `<author-notes>
-        <fn fn-type="COI-statement" id="con1">
-          <p>Is an employee of eLife. No other competing interests exist</p>
-        </fn>
-      </author-notes>`;
-
       it('creates an author with competing interests', () => {
         const notesXml = parseXML(AUTHOR_NOTES_XML).querySelector('author-notes')!;
         const authorXml = parseXML(PERSON_XML_DATA).querySelector('contrib')!;
@@ -230,7 +230,7 @@ describe('Person class', () => {
         expect(author1.competingInterestStatement).toBe('');
 
         const competingInterestRef = authorXml.ownerDocument.createElement('xref');
-        competingInterestRef.setAttribute('ref-type', 'fn')
+        competingInterestRef.setAttribute('ref-type', 'fn');
         competingInterestRef.setAttribute('rid', 'con1');
         authorXml.appendChild(competingInterestRef);
 
@@ -238,6 +238,98 @@ describe('Person class', () => {
         expect(author2.hasCompetingInterest).toBe(true);
         expect(author2.competingInterestStatement).toBe('Is an employee of eLife. No other competing interests exist');
       });
+    });
+  });
+
+  describe('creates authors state', () => {
+    it('creates an empty authors state', () => {
+      expect(createAuthorsState([])).toEqual([]);
+    });
+
+    it('creates an empty authors state without notes', () => {
+      const author1Xml = parseXML(PERSON_XML_DATA).querySelector('contrib')!;
+      author1Xml.setAttribute('id', 'author-3888');
+
+      const author2Xml = parseXML(`<contrib corresp="yes">
+        <name><surname>Lee</surname><given-names>Siu Sylvia</given-names></name>
+        <contrib-id authenticated="true" contrib-id-type="orcid">https://orcid.org0000-0001-5225-4203</contrib-id>
+        <email>sylvia.lee@cornell.edu</email>
+        <xref ref-type="aff" rid="aff2">2</xref>
+      </contrib>`).querySelector('contrib')!;
+      author2Xml.setAttribute('id', 'author-3889');
+
+      const state = createAuthorsState([author1Xml, author2Xml]);
+      expect(state.length).toBe(2);
+      expect(state[0]).toStrictEqual(expect.objectContaining({
+        _id: 'author-3888',
+        firstName: 'Fred',
+        lastName: 'Atherden',
+        isAuthenticated: true,
+        orcid: '0000-0002-6048-1470',
+        email: 'fatherden@elifesciences.org',
+        isCorrespondingAuthor: true,
+        affiliations: ['aff2', 'aff3']
+      }));
+
+      expect(state[1]).toStrictEqual(expect.objectContaining({
+        _id: 'author-3889',
+        firstName: 'Siu Sylvia',
+        lastName: 'Lee',
+        isAuthenticated: true,
+        orcid: '0000-0001-5225-4203',
+        email: 'sylvia.lee@cornell.edu',
+        isCorrespondingAuthor: true,
+        affiliations: ['aff2']
+      }));
+    });
+
+    it('creates an empty authors state with notes', () => {
+      const author1Xml = parseXML(PERSON_XML_DATA).querySelector('contrib')!;
+      author1Xml.setAttribute('id', 'author-3888');
+
+      const competingInterestRef = author1Xml.ownerDocument.createElement('xref');
+      competingInterestRef.setAttribute('ref-type', 'fn');
+      competingInterestRef.setAttribute('rid', 'con1');
+      author1Xml.appendChild(competingInterestRef);
+
+      const author2Xml = parseXML(`<contrib corresp="yes">
+        <name><surname>Lee</surname><given-names>Siu Sylvia</given-names></name>
+        <contrib-id authenticated="true" contrib-id-type="orcid">https://orcid.org0000-0001-5225-4203</contrib-id>
+        <email>sylvia.lee@cornell.edu</email>
+        <xref ref-type="aff" rid="aff2">2</xref>
+      </contrib>`).querySelector('contrib')!;
+      author2Xml.setAttribute('id', 'author-3889');
+
+      const notesXml = parseXML(AUTHOR_NOTES_XML).querySelector('author-notes')!;
+
+      const state = createAuthorsState([author1Xml, author2Xml], notesXml);
+      expect(state.length).toBe(2);
+      expect(state[0]).toStrictEqual(expect.objectContaining({
+        _id: 'author-3888',
+        firstName: 'Fred',
+        lastName: 'Atherden',
+        suffix: "Capt.",
+        isAuthenticated: true,
+        hasCompetingInterest: true,
+        competingInterestStatement: 'Is an employee of eLife. No other competing interests exist',
+        orcid: '0000-0002-6048-1470',
+        email: 'fatherden@elifesciences.org',
+        isCorrespondingAuthor: true,
+        affiliations: ['aff2', 'aff3']
+      }));
+
+      expect(state[1]).toStrictEqual(expect.objectContaining({
+        _id: 'author-3889',
+        firstName: 'Siu Sylvia',
+        lastName: 'Lee',
+        isAuthenticated: true,
+        hasCompetingInterest: false,
+        competingInterestStatement: '',
+        orcid: '0000-0001-5225-4203',
+        email: 'sylvia.lee@cornell.edu',
+        isCorrespondingAuthor: true,
+        affiliations: ['aff2']
+      }));
     });
   });
 });
