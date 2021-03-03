@@ -8,6 +8,7 @@ import {Article} from "../types/article";
 import { parseXML } from "./xml-utils";
 import {createRelatedArticleState} from "../model/related-article";
 import { createAffiliationsState } from "../model/affiliation";
+import { createAuthorsState } from "../model/person";
 
 export function getArticleManuscript(article: Article): Manuscript {
   const xmlDoc = parseXML(article.xml);
@@ -20,7 +21,8 @@ export function getArticleManuscript(article: Article): Manuscript {
   const impactStatement: Element | undefined = Array.from(xmlDoc.querySelectorAll('abstract'))
     .find((el: Element) => el.getAttribute('abstract-type') === 'toc');
 
-  // // const authors = doc.querySelectorAll('contrib[contrib-type="author"]');
+  const authorsXml = xmlDoc.querySelectorAll('contrib[contrib-type="author"]');
+  const authorNotesXml = xmlDoc.querySelector('author-notes');
   // // const references = doc.querySelectorAll('ref-list ref element-citation');
   // // const authorNotes = doc.querySelector('author-notes');
 
@@ -37,7 +39,7 @@ export function getArticleManuscript(article: Article): Manuscript {
     body: createBodyState(body),
 
     // keywordGroups: createKeywordGroupsState(Array.from(keywordGroups)),
-    // authors: authorsState,
+    authors: createAuthorsState(Array.from(authorsXml), authorNotesXml),
     affiliations: createAffiliationsState(Array.from(affiliations)),
     // references: createReferencesState(Array.from(references)),
     relatedArticles: createRelatedArticleState(Array.from(relatedArticles)),
