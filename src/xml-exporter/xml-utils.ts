@@ -31,6 +31,10 @@ export function parseXML(xml: string) {
     return nwmatcher({document: xmlDoc}).first(selectors, this);
   };
 
+  Element.prototype.querySelectorAll = function (selectors: string) {
+    return nwmatcher({document: xmlDoc}).select(selectors, this);
+  };
+
   return xmlDoc;
 }
 
