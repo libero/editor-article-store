@@ -21,7 +21,8 @@ export function getArticleManuscript(article: Article): Manuscript {
   const impactStatement: Element | undefined = Array.from(xmlDoc.querySelectorAll('abstract'))
     .find((el: Element) => el.getAttribute('abstract-type') === 'toc');
 
-  const authorsXml = xmlDoc.querySelectorAll('contrib[contrib-type="author"]');
+  const authorsXml = Array.from(xmlDoc.querySelectorAll('contrib'))
+    .filter(xmlNode => xmlNode.getAttribute('contrib-type') === 'author');
   const authorNotesXml = xmlDoc.querySelector('author-notes');
   // // const references = doc.querySelectorAll('ref-list ref element-citation');
   // // const authorNotes = doc.querySelector('author-notes');
@@ -39,7 +40,7 @@ export function getArticleManuscript(article: Article): Manuscript {
     body: createBodyState(body),
 
     // keywordGroups: createKeywordGroupsState(Array.from(keywordGroups)),
-    authors: createAuthorsState(Array.from(authorsXml), authorNotesXml),
+    authors: createAuthorsState(authorsXml, authorNotesXml),
     affiliations: createAffiliationsState(Array.from(affiliations)),
     // references: createReferencesState(Array.from(references)),
     relatedArticles: createRelatedArticleState(Array.from(relatedArticles)),

@@ -10,6 +10,7 @@ import { BackmatterEntity } from './backmatter-entity';
 import { JSONObject } from "./types";
 import { RelatedArticle } from './related-article';
 import {UpdateObjectChange} from "./history/update-object-change";
+import {Person} from "./person";
 
 export function manuscriptEntityToJson<T>(object: T): JSONObject {
   return cloneDeepWith(object, (value) => {
@@ -48,9 +49,9 @@ export function deserializeBackmatter(path: string, json: JSONObject): Backmatte
   //   return new Affiliation(json);
   // }
 
-  // if (path.indexOf('authors') >= 0) {
-  //   return new Person(json);
-  // }
+  if (path.indexOf('authors') >= 0) {
+    return new Person(json);
+  }
 
   // if (path.indexOf('references') >= 0) {
   //   return new Reference(json);

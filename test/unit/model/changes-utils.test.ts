@@ -408,6 +408,22 @@ describe('deserializeBackmatter', () => {
       "href": "111111"
     }));
   });
+
+  it('returns a Person object when passed authors backmatter JSON', () => {
+    const relatedArticle = deserializeBackmatter('relatedArticles', {
+      "_id": "ad319b14-c312-4627-a5a1-d07a548a6e7e",
+      "articleType": "article-reference",
+      "href": "111111"
+    });
+    expect(relatedArticle).toBeInstanceOf(RelatedArticle);
+    expect(relatedArticle).toEqual(expect.objectContaining({
+      "_id": "ad319b14-c312-4627-a5a1-d07a548a6e7e",
+      "articleType": "article-reference",
+      "href": "111111"
+    }));
+  });
+
+
   it('throws correct error if passed invalid path', () => {
     expect(() => deserializeBackmatter('foo', {
       "bar" : "bar"
