@@ -142,7 +142,8 @@ const mockManuscript: Manuscript = {
   impactStatement: EditorState.create({ schema: textSchema}),
   body: EditorState.create({ schema: textSchema}),
   acknowledgements: EditorState.create({ schema: textSchema}),
-  relatedArticles: []
+  relatedArticles: [],
+  affiliations: []
 };
 
 describe('manuscriptEntityToJson', () => {
