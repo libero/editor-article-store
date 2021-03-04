@@ -1,60 +1,64 @@
-import {EditorState} from "prosemirror-state";
 import {DOMSerializer} from "prosemirror-model";
 import xmldom from "xmldom";
+import {readFileSync} from "fs";
+import { join, resolve } from "path";
+
 import {
   createXmlDomSerializer,
   serializeManuscript,
   serializeManuscriptSection
 } from "../../../src/xml-exporter/manuscript-serializer";
-
-import {Manuscript} from "../../../src/model/manuscript";
-import {serializeAbstractState, serializeImpactStatementState} from "../../../src/model/abstract";
-import {serializeTitleState} from "../../../src/model/title";
-import {serializeAcknowledgementState} from '../../../src/model/acknowledgements';
-import {createBodyState, serializeBodyState} from "../../../src/model/body";
-import {serializeRelatedArticles} from "../../../src/model/related-article";
-
-jest.mock('../../../src/model/abstract');
-jest.mock('../../../src/model/title');
-jest.mock('../../../src/model/acknowledgements');
-jest.mock('../../../src/model/body', () => ({
-  serializeBodyState: jest.fn(),
-  createBodyState: jest.requireActual('../../../src/model/body').createBodyState
-}));
-jest.mock('../../../src/model/related-article');
+import {createBodyState} from "../../../src/model/body";
+import {getArticleManuscript} from "../../../src/xml-exporter/article-parser";
+import {parseXML} from "../../../src/xml-exporter/xml-utils";
 
 describe('serializeManuscript', () => {
-  it('invokes all serializers', () => {
-    const manuscript: Manuscript = {
-      abstract: new EditorState(),
-      acknowledgements: new EditorState(),
-      affiliations: [],
-      authors: [],
-      body: new EditorState(),
-      impactStatement: new EditorState(),
-      journalMeta: {
-        publisherName: '',
-        issn: ''
-      },
-      relatedArticles: [],
-      title: new EditorState()
+  it('serializes manuscript', () => {
+    const article = {
+      articleId: "1",
+      datatype: "text/xml",
+      fileName: "manuscript.xml",
+      version: "1.0",
+      xml: `<article>
+        <title-group><article-title/></title-group>
+        <article-meta><abstract><p/></abstract><abstract abstract-type="toc"><p/></abstract></article-meta>
+        <body><p/></body>
+        <back><ack><title/><p/></ack></back>
+      </article>`
     };
-    const outputXML = serializeManuscript({
-      articleId: "",
-      datatype: "",
-      fileName: "",
-      version: "",
-      xml: '<xml-tag>sample xml</xml-tag>'
-    }, manuscript);
+    const manuscript = getArticleManuscript(article);
+    const outputXml = serializeManuscript(article, manuscript);
 
-    const DocumentClass = new xmldom.DOMImplementation().createDocument('', '', null).constructor
-    expect(serializeImpactStatementState).toHaveBeenCalledWith(expect.any(DocumentClass), manuscript);
-    expect(serializeAbstractState).toHaveBeenCalledWith(expect.any(DocumentClass), manuscript);
-    expect(serializeTitleState).toHaveBeenCalledWith(expect.any(DocumentClass), manuscript);
-    expect(serializeAcknowledgementState).toHaveBeenCalledWith(expect.any(DocumentClass), manuscript);
-    expect(serializeBodyState).toHaveBeenCalledWith(expect.any(DocumentClass), manuscript);
-    expect(serializeRelatedArticles).toHaveBeenCalledWith(expect.any(DocumentClass), manuscript);
-    expect(outputXML).toBe('<xml-tag>sample xml</xml-tag>')
+    expect(outputXml).toEqual(article.xml);
+  });
+
+  it('has no side-effects', () => {
+    const xml = readFileSync(resolve(join(__dirname, '../..', '/test-files/manuscript.xml'))).toString('utf8');
+    const article = {
+      articleId: "1",
+      datatype: "text/xml",
+      fileName: "manuscript.xml",
+      version: "1.0",
+      xml
+    };
+    const manuscript = getArticleManuscript(article);
+    const outputXml = serializeManuscript(article, manuscript);
+
+    const xmlDoc = parseXML(article.xml);
+    const outputXmlDoc = new xmldom.DOMParser().parseFromString(outputXml);
+    const serializer = new xmldom.XMLSerializer();
+
+    // when manuscript is serialized Prosemirror formats xml addiging more whitespaces
+    // deleting affected sections of manuscript will allow to check
+    deleteAllNodes(xmlDoc, 'body');
+    deleteAllNodes(xmlDoc, 'related-article');
+    deleteAllNodes(xmlDoc, 'abstract');
+    deleteAllNodes(xmlDoc, 'ack');
+    deleteAllNodes(outputXmlDoc, 'body');
+    deleteAllNodes(outputXmlDoc, 'related-article');
+    deleteAllNodes(outputXmlDoc, 'abstract');
+    deleteAllNodes(outputXmlDoc, 'ack');
+    expect(serializer.serializeToString(xmlDoc)).toEqual(serializer.serializeToString(outputXmlDoc));
   });
 });
 
@@ -103,3 +107,8 @@ describe('EditorState serializer', () => {
   });
 });
 
+function deleteAllNodes(doc: Document, nodeName: string) {
+  doc.querySelectorAll(nodeName).forEach(node => {
+    node.parentNode!.removeChild(node);
+  });
+}
