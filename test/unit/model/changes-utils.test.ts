@@ -14,6 +14,7 @@ import {ProsemirrorChange} from "../../../src/model/history/prosemirror-change";
 import {AddObjectChange} from "../../../src/model/history/add-object-change";
 import {DeleteObjectChange} from "../../../src/model/history/delete-object-change";
 import {UpdateObjectChange} from "../../../src/model/history/update-object-change";
+import {Person} from "../../../src/model/person";
 
 const textSchema = new Schema({
   nodes: {
@@ -408,6 +409,32 @@ describe('deserializeBackmatter', () => {
       "href": "111111"
     }));
   });
+
+  it('returns a Person object when passed authors backmatter JSON', () => {
+    const relatedArticle = deserializeBackmatter('authors', {
+      _id: 'author-3888',
+      firstName: 'Fred',
+      lastName: 'Atherden',
+      isAuthenticated: true,
+      orcid: '0000-0002-6048-1470',
+      email: 'fatherden@elifesciences.org',
+      isCorrespondingAuthor: true,
+      affiliations: ['aff2', 'aff3']
+    });
+    expect(relatedArticle).toBeInstanceOf(Person);
+    expect(relatedArticle).toEqual(expect.objectContaining({
+      _id: 'author-3888',
+      firstName: 'Fred',
+      lastName: 'Atherden',
+      isAuthenticated: true,
+      orcid: '0000-0002-6048-1470',
+      email: 'fatherden@elifesciences.org',
+      isCorrespondingAuthor: true,
+      affiliations: ['aff2', 'aff3']
+    }));
+  });
+
+
   it('throws correct error if passed invalid path', () => {
     expect(() => deserializeBackmatter('foo', {
       "bar" : "bar"
