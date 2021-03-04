@@ -14,6 +14,7 @@ import {ProsemirrorChange} from "../../../src/model/history/prosemirror-change";
 import {AddObjectChange} from "../../../src/model/history/add-object-change";
 import {DeleteObjectChange} from "../../../src/model/history/delete-object-change";
 import {UpdateObjectChange} from "../../../src/model/history/update-object-change";
+import {Person} from "../../../src/model/person";
 
 const textSchema = new Schema({
   nodes: {
@@ -410,16 +411,26 @@ describe('deserializeBackmatter', () => {
   });
 
   it('returns a Person object when passed authors backmatter JSON', () => {
-    const relatedArticle = deserializeBackmatter('relatedArticles', {
-      "_id": "ad319b14-c312-4627-a5a1-d07a548a6e7e",
-      "articleType": "article-reference",
-      "href": "111111"
+    const relatedArticle = deserializeBackmatter('authors', {
+      _id: 'author-3888',
+      firstName: 'Fred',
+      lastName: 'Atherden',
+      isAuthenticated: true,
+      orcid: '0000-0002-6048-1470',
+      email: 'fatherden@elifesciences.org',
+      isCorrespondingAuthor: true,
+      affiliations: ['aff2', 'aff3']
     });
-    expect(relatedArticle).toBeInstanceOf(RelatedArticle);
+    expect(relatedArticle).toBeInstanceOf(Person);
     expect(relatedArticle).toEqual(expect.objectContaining({
-      "_id": "ad319b14-c312-4627-a5a1-d07a548a6e7e",
-      "articleType": "article-reference",
-      "href": "111111"
+      _id: 'author-3888',
+      firstName: 'Fred',
+      lastName: 'Atherden',
+      isAuthenticated: true,
+      orcid: '0000-0002-6048-1470',
+      email: 'fatherden@elifesciences.org',
+      isCorrespondingAuthor: true,
+      affiliations: ['aff2', 'aff3']
     }));
   });
 
