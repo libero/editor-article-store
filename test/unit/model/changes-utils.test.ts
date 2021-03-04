@@ -148,6 +148,31 @@ const mockManuscript: Manuscript = {
   affiliations: []
 };
 
+const createProsemirrorChange = (path:string, value:string) => ({
+  "_id": "601927c84892502637b7dcf7",
+  "type": "prosemirror",
+  "timestamp": 1612261319184,
+  "path": path,
+  "transactionSteps": [
+    {
+      "stepType": "replace",
+      "from": 0,
+      "to": 0,
+      "slice": {
+        "content": [
+          {
+            text: value,
+            type: "text"
+          }
+        ]
+      }
+    }
+  ],
+  "user": "static-for-now",
+  "applied": false,
+  "articleId": "60263"
+});
+
 describe('manuscriptEntityToJson', () => {
   it('returns expected JSON object when passed object with EditorState values', () => {
     const testObject = {
@@ -390,8 +415,28 @@ describe('applyChangesToManuscript', () => {
 
   it('applies a prosemirror change on the body', () => {
     expect(mockManuscript.body.doc.textContent).toBe('');
-    const updatedManuscript = applyChangesToManuscript(mockManuscript, [mockProsemirrorChange]);
-    expect(updatedManuscript.body.doc.textContent).toBe('some new text');
+    const updatedManuscript = applyChangesToManuscript(mockManuscript, [createProsemirrorChange('body', 'some new body')]);
+    expect(updatedManuscript.body.doc.textContent).toBe('some new body');
+  });
+  it('applies a prosemirror change on the title', () => {
+    expect(mockManuscript.title.doc.textContent).toBe('');
+    const updatedManuscript = applyChangesToManuscript(mockManuscript, [createProsemirrorChange('title', 'some new title')]);
+    expect(updatedManuscript.title.doc.textContent).toBe('some new title');
+  });
+  it('applies a prosemirror change on the abstract', () => {
+    expect(mockManuscript.abstract.doc.textContent).toBe('');
+    const updatedManuscript = applyChangesToManuscript(mockManuscript, [createProsemirrorChange('abstract', 'some new abstract')]);
+    expect(updatedManuscript.abstract.doc.textContent).toBe('some new abstract');
+  });
+  it('applies a prosemirror change on the impactStatement', () => {
+    expect(mockManuscript.impactStatement.doc.textContent).toBe('');
+    const updatedManuscript = applyChangesToManuscript(mockManuscript, [createProsemirrorChange('impactStatement', 'some new impactStatement')]);
+    expect(updatedManuscript.impactStatement.doc.textContent).toBe('some new impactStatement');
+  });
+  it('applies a prosemirror change on the acknowledgements', () => {
+    expect(mockManuscript.acknowledgements.doc.textContent).toBe('');
+    const updatedManuscript = applyChangesToManuscript(mockManuscript, [createProsemirrorChange('acknowledgements', 'some new acknowledgements')]);
+    expect(updatedManuscript.acknowledgements.doc.textContent).toBe('some new acknowledgements');
   });
 });
 
