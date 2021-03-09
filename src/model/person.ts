@@ -1,11 +1,15 @@
 import {EditorState} from "prosemirror-state";
-import { get } from "lodash";
-import { DOMParser as ProseMirrorDOMParser } from 'prosemirror-model';
+import {get} from "lodash";
+import {DOMParser as ProseMirrorDOMParser} from 'prosemirror-model';
 
 import {BackmatterEntity} from "./backmatter-entity";
 import * as bioConfig from './config/author-bio.config';
-import { JSONObject } from "./types";
+import {JSONObject} from "./types";
 import {getTextContentFromPath, makeSchemaFromConfig} from "./utils";
+import {Manuscript} from "./manuscript";
+import {serializeManuscriptSection} from "../xml-exporter/manuscript-serializer";
+import {Affiliation} from "./affiliation";
+import {clearNode} from "../xml-exporter/xml-utils";
 
 export class Person extends BackmatterEntity {
 
@@ -52,7 +56,7 @@ export class Person extends BackmatterEntity {
     this.lastName = json.lastName as string || '';
     this.suffix = json.suffix as string || '';
     this.isAuthenticated = !!json.isAuthenticated;
-    this.orcid = json.orcid as string  || '';
+    this.orcid = json.orcid as string || '';
     this.bio = json.bio
       ? this.createBioEditorStateFromJSON(json.bio as JSONObject)
       : this.createBioEditorStateFromXml();
@@ -117,4 +121,81 @@ export class Person extends BackmatterEntity {
 
 export function createAuthorsState(authorsXml: Element[], notesXml?: Element | null): Person[] {
   return authorsXml.map((xml) => new Person(xml, notesXml));
+}
+
+export function serializeAuthors(xmlDoc: Document, manuscript: Manuscript) {
+  let authorsGroup = xmlDoc.querySelector('article-meta > contrib-group');
+  if(!authorsGroup) {
+    authorsGroup = xmlDoc.createElement('contrib-group');
+    xmlDoc.querySelector('article-meta')!.appendChild(authorsGroup);
+  } else {
+    clearNode(authorsGroup);
+  }
+
+  manuscript.authors.forEach((author: Person) => {
+    const authorXml = serializePerson(author, xmlDoc);
+    authorsGroup!.appendChild(authorXml);
+  });
+}
+
+function serializePerson(person: Person, xmlDoc: Document, affiliations: Affiliation[] = []): Element {
+  const contrib = xmlDoc.createElement('contrib');
+  contrib.setAttribute('contrib-type', 'author');
+  contrib.setAttribute('id', person.id);
+  if (person.isCorrespondingAuthor) {
+    contrib.setAttribute('corresp', 'yes');
+  }
+
+  const name = xmlDoc.createElement('name');
+  contrib.appendChild(name);
+  if (person.firstName) {
+    const firstName = xmlDoc.createElement('given-names');
+    firstName.appendChild(xmlDoc.createTextNode(person.firstName));
+    name.appendChild(firstName);
+  }
+
+  if (person.lastName) {
+    const lastName = xmlDoc.createElement('surname');
+    lastName.appendChild(xmlDoc.createTextNode(person.lastName));
+    name.appendChild(lastName);
+  }
+
+  if (person.suffix) {
+    const suffix = xmlDoc.createElement('suffix');
+    suffix.appendChild(xmlDoc.createTextNode(person.suffix));
+    name.appendChild(suffix);
+  }
+
+  if (person.orcid) {
+    const orcidEl = xmlDoc.createElement('contrib-id');
+    orcidEl.setAttribute('contrib-id-type', 'orcid');
+    orcidEl.setAttribute('authenticated', String(person.isAuthenticated));
+    orcidEl.appendChild(xmlDoc.createTextNode(`https://orcid.org/${person.orcid}`));
+    contrib.appendChild(orcidEl);
+  }
+
+  if (person.email) {
+    const emailEl = xmlDoc.createElement('email');
+    emailEl.appendChild(xmlDoc.createTextNode(person.email));
+    contrib.appendChild(emailEl);
+  }
+
+  if (person.bio) {
+    const bioXml = xmlDoc.createElement('bio');
+    bioXml.appendChild(serializeManuscriptSection(person.bio, xmlDoc));
+    contrib.appendChild(bioXml);
+  }
+
+  (person.affiliations || []).forEach((affId) => {
+    const affEl = xmlDoc.createElement('xref');
+    affEl.setAttribute('ref-type', 'aff');
+    affEl.setAttribute('rid', affId);
+    const affLabel = get(affiliations.find(aff => aff.id === affId), 'label');
+    if (affLabel) {
+      affEl.appendChild(xmlDoc.createTextNode(affLabel));
+      contrib.appendChild(affEl);
+    }
+  });
+
+  return contrib
 }
