@@ -1,3 +1,4 @@
+import { DOMParser as ProseMirrorDOMParser } from 'prosemirror-model';
 import * as keywordConfig from './config/keywords.config';
 import { BackmatterEntity } from './backmatter-entity';
 import { EditorState } from 'prosemirror-state';
@@ -15,7 +16,13 @@ export class Keyword extends BackmatterEntity {
       this.createEntity(data);
     }
   }
-  protected fromXML(xmlNode: Element): void {}
+  protected fromXML(xmlNode: Element): void {
+    const schema = makeSchemaFromConfig(keywordConfig.topNode, keywordConfig.nodes, keywordConfig.marks);
+    this.content = EditorState.create({
+      doc: ProseMirrorDOMParser.fromSchema(schema).parse(xmlNode),
+      schema,
+    });
+  }
   protected fromJSON(json: JSONObject): void {}
   protected createBlank(): void {
     this.content = this.createEmptyEditorState();
