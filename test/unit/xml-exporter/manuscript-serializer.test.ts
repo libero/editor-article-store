@@ -21,7 +21,7 @@ describe('serializeManuscript', () => {
       version: "1.0",
       xml: `<article>
         <title-group><article-title/></title-group>
-        <article-meta><abstract><p/></abstract><abstract abstract-type="toc"><p/></abstract></article-meta>
+        <article-meta><abstract><p/></abstract><abstract abstract-type="toc"><p/></abstract><contrib-group/></article-meta>
         <body><p/></body>
         <back><ack><title/><p/></ack></back>
       </article>`
@@ -48,16 +48,20 @@ describe('serializeManuscript', () => {
     const outputXmlDoc = new xmldom.DOMParser().parseFromString(outputXml);
     const serializer = new xmldom.XMLSerializer();
 
-    // when manuscript is serialized Prosemirror formats xml addiging more whitespaces
     // deleting affected sections of manuscript will allow to check
-    deleteAllNodes(xmlDoc, 'body');
-    deleteAllNodes(xmlDoc, 'related-article');
+    // when manuscript is serialized Prosemirror formats xml adding more whitespaces
     deleteAllNodes(xmlDoc, 'abstract');
     deleteAllNodes(xmlDoc, 'ack');
-    deleteAllNodes(outputXmlDoc, 'body');
-    deleteAllNodes(outputXmlDoc, 'related-article');
+    deleteAllNodes(xmlDoc, 'article-meta > contrib-group');
+    deleteAllNodes(xmlDoc, 'body');
+    deleteAllNodes(xmlDoc, 'related-article');
+
     deleteAllNodes(outputXmlDoc, 'abstract');
     deleteAllNodes(outputXmlDoc, 'ack');
+    deleteAllNodes(outputXmlDoc, 'article-meta > contrib-group');
+    deleteAllNodes(outputXmlDoc, 'body');
+    deleteAllNodes(outputXmlDoc, 'related-article');
+
     expect(serializer.serializeToString(xmlDoc)).toEqual(serializer.serializeToString(outputXmlDoc));
   });
 });

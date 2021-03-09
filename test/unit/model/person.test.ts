@@ -1,13 +1,36 @@
 import {cloneDeep} from "lodash";
 import {EditorState} from "prosemirror-state";
 
-import {createAuthorsState, Person} from "../../../src/model/person";
+import {createAuthorsState, Person, serializeAuthors} from "../../../src/model/person";
 import {JSONObject} from "../../../src/model/types";
 import {clearNode, parseXML} from "../../../src/xml-exporter/xml-utils";
+import {Manuscript} from "../../../src/model/manuscript";
+import {Schema} from "prosemirror-model";
+import {cloneManuscript} from "../../../src/model/changes.utils";
+import * as xmldom from "xmldom";
 
 jest.mock('uuid', () => ({
   v4: () => 'unique_id'
 }));
+
+const textSchema = new Schema({
+  nodes: {
+    text: {},
+    doc: {content: "text*"}
+  }
+});
+
+const mockManuscript: Manuscript = {
+  authors: [],
+  journalMeta: { publisherName: 'foo', issn: 'bar'},
+  title: EditorState.create({ schema: textSchema}),
+  abstract: EditorState.create({ schema: textSchema}),
+  impactStatement: EditorState.create({ schema: textSchema}),
+  body: EditorState.create({ schema: textSchema}),
+  acknowledgements: EditorState.create({ schema: textSchema}),
+  relatedArticles: [],
+  affiliations: []
+};
 
 const PERSON_JSON_DATA = {
   _id: 'author-3888',
@@ -330,6 +353,35 @@ describe('Person class', () => {
         isCorrespondingAuthor: true,
         affiliations: ['aff2']
       }));
+    });
+  });
+
+  describe('Serialization to XML', () => {
+    const xmlSerializer = new xmldom.XMLSerializer();
+
+    it('serializes an empty Person object to XML', () => {
+      const xmlDoc = parseXML('<article><article-meta></article-meta></article>');
+
+      const manuscript = cloneManuscript(mockManuscript);
+      manuscript.authors = [new Person()];
+      serializeAuthors(xmlDoc, manuscript);
+      expect(xmlSerializer.serializeToString(xmlDoc))
+        .toBe(`<article><article-meta><contrib-group><contrib contrib-type=\"author\" id=\"unique_id\"><name/><bio><p/></bio></contrib></contrib-group></article-meta></article>`);
+    });
+
+    it('serializes a Person object to XML', () => {
+      const xmlDoc = parseXML('<article><article-meta></article-meta></article>');
+
+      const manuscript = cloneManuscript(mockManuscript);
+      manuscript.authors = [new Person(PERSON_JSON_DATA)];
+      serializeAuthors(xmlDoc, manuscript);
+      expect(xmlSerializer.serializeToString(xmlDoc)).toMatchSnapshot();
+    });
+
+    it('handles an empty authors list correctly', () => {
+      const xmlDoc = parseXML('<article><article-meta></article-meta></article>');
+      serializeAuthors(xmlDoc, mockManuscript);
+      expect(xmlSerializer.serializeToString(xmlDoc)).toBe('<article><article-meta><contrib-group/></article-meta></article>');
     });
   });
 });
