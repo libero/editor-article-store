@@ -16,6 +16,7 @@ export class Keyword extends BackmatterEntity {
       this.createEntity(data);
     }
   }
+
   protected fromXML(xmlNode: Element): void {
     const schema = makeSchemaFromConfig(keywordConfig.topNode, keywordConfig.nodes, keywordConfig.marks);
     this.content = EditorState.create({
@@ -23,6 +24,7 @@ export class Keyword extends BackmatterEntity {
       schema,
     });
   }
+
   protected fromJSON(json: JSONObject): void {}
   protected createBlank(): void {
     this.content = this.createEmptyEditorState();
