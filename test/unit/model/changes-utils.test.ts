@@ -15,6 +15,7 @@ import {AddObjectChange} from "../../../src/model/history/add-object-change";
 import {DeleteObjectChange} from "../../../src/model/history/delete-object-change";
 import {UpdateObjectChange} from "../../../src/model/history/update-object-change";
 import {Person} from "../../../src/model/person";
+import { Keyword } from "../../../src/model/keyword";
 
 const textSchema = new Schema({
   nodes: {
@@ -478,7 +479,67 @@ describe('deserializeBackmatter', () => {
       affiliations: ['aff2', 'aff3']
     }));
   });
-
+  it('returns a Keyword object when passed keywordGroup backmatter JSON', () => {
+    const relatedArticle = deserializeBackmatter('keywordGroups.kwdGroup.keywords',      
+    {"_id": "some_preset_id",
+      "content": {
+        "doc": {
+          "content": [
+            {
+              "text": "A",
+              "type": "text",
+            },
+            {
+              "marks": [
+                {
+                  "type": "italic",
+                },
+              ],
+              "text": "Puppy",
+              "type": "text",
+            },
+          ],
+          "type": "keyword",
+        },
+        "selection": {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+    });
+    expect(relatedArticle).toBeInstanceOf(Keyword);
+    expect(relatedArticle).toMatchInlineSnapshot(`
+    Keyword {
+      "_id": "some_preset_id",
+      "content": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "A",
+              "type": "text",
+            },
+            Object {
+              "marks": Array [
+                Object {
+                  "type": "italic",
+                },
+              ],
+              "text": "Puppy",
+              "type": "text",
+            },
+          ],
+          "type": "keyword",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+    }
+    `);
+  });
 
   it('throws correct error if passed invalid path', () => {
     expect(() => deserializeBackmatter('foo', {

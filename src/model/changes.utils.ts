@@ -11,6 +11,7 @@ import { JSONObject } from "./types";
 import { RelatedArticle } from './related-article';
 import {UpdateObjectChange} from "./history/update-object-change";
 import {Person} from "./person";
+import { Keyword } from './keyword';
 
 export function manuscriptEntityToJson<T>(object: T): JSONObject {
   return cloneDeepWith(object, (value) => {
@@ -61,9 +62,9 @@ export function deserializeBackmatter(path: string, json: JSONObject): Backmatte
     return new RelatedArticle(json);
   }
 
-  // if (path.match(/keywordGroups\.[^.]+\.keywords/)) {
-  //   return new Keyword(json);
-  // }
+  if (path.match(/keywordGroups\.[^.]+\.keywords/)) {
+    return new Keyword(json);
+  }
   throw new Error(`deserialization of backmatter entity for ${path} is not implemented or provided path is invalid`);
 }
 
