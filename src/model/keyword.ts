@@ -25,7 +25,15 @@ export class Keyword extends BackmatterEntity {
     });
   }
 
-  protected fromJSON(json: JSONObject): void {}
+  protected fromJSON(json: JSONObject): void {
+    this._id = (json._id as string) || this._id;
+    const blankState = this.createEmptyEditorState();
+    this.content = EditorState.fromJSON(
+      { schema: blankState.schema,  },
+      json.content as JSONObject
+    );
+  }
+
   protected createBlank(): void {
     this.content = this.createEmptyEditorState();
   }
