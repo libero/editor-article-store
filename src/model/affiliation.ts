@@ -1,6 +1,8 @@
-import { BackmatterEntity } from "./backmatter-entity";
-import { JSONObject } from "./types";
-import { getTextContentFromPath } from "./utils";
+import {BackmatterEntity} from "./backmatter-entity";
+import {JSONObject} from "./types";
+import {getTextContentFromPath} from "./utils";
+import {Manuscript} from "./manuscript";
+import {get} from "lodash";
 
 export class Affiliation extends BackmatterEntity {
   label: string | undefined;
@@ -16,8 +18,8 @@ export class Affiliation extends BackmatterEntity {
   protected createBlank(): void {
     this.label = '';
     this.country = '';
-    this.institution = { name: '' };
-    this.address = { city: '' };
+    this.institution = {name: ''};
+    this.address = {city: ''};
   }
 
   protected fromXML(xml: Element): void {
@@ -42,11 +44,49 @@ export class Affiliation extends BackmatterEntity {
     this._id = (json._id as string) || this.id;
     this.label = json.label as string || '';
     this.country = json.country as string || '';
-    this.institution = json.institution as { name: string } || { name: '' };
-    this.address = json.address as { city: string } || { city: '' };
+    this.institution = json.institution as { name: string } || {name: ''};
+    this.address = json.address as { city: string } || {city: ''};
   }
 }
 
 export function createAffiliationsState(affiliationsXml: Element[]): Affiliation[] {
   return affiliationsXml.map((xml) => new Affiliation(xml));
+}
+
+export function serializeAffiliations(xmlDoc: Document, manuscript: Manuscript) {
+  let authorsGroup = xmlDoc.querySelector('article-meta > contrib-group');
+  if (!authorsGroup) {
+    authorsGroup = xmlDoc.createElement('contrib-group');
+    xmlDoc.querySelector('article-meta')!.appendChild(authorsGroup);
+  }
+
+  manuscript.affiliations.forEach((affiliation) => {
+    authorsGroup!.appendChild(affiliationToXml(xmlDoc, affiliation));
+  });
+}
+
+function affiliationToXml(xmlDoc: Document, aff: Affiliation): Element {
+  const affEl = xmlDoc.createElement('aff');
+  affEl.setAttribute('id', aff.id);
+
+  const label = xmlDoc.createElement('label');
+  label.appendChild(xmlDoc.createTextNode(aff.label || ''));
+  affEl.appendChild(label);
+
+  const department = xmlDoc.createElement('institution');
+  department.appendChild(xmlDoc.createTextNode(get(aff, 'institution.name', '')));
+  affEl.appendChild(department);
+
+  const addressLine = xmlDoc.createElement('addr-line');
+  const city = xmlDoc.createElement('named-content');
+  city.setAttribute('content-type', 'city');
+  city.appendChild(xmlDoc.createTextNode(aff.address?.city || ''));
+  addressLine.appendChild(city);
+  affEl.appendChild(addressLine);
+
+  const country = xmlDoc.createElement('country');
+  country.appendChild(xmlDoc.createTextNode(aff.country || ''));
+  affEl.appendChild(country);
+
+  return affEl;
 }
