@@ -192,7 +192,7 @@ describe('Keyword', () => {
 });
 
 describe('createKeywordGroupsState', () => {
-  it('', () => {
+  it('creates a keywordGroup from array of xml elements', () => {
     const kwdContainer = document.createElement('div');
     kwdContainer.innerHTML = `<kwd-group kwd-group-type="author-keywords">
         <kwd>cerebellum</kwd>
