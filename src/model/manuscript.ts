@@ -3,7 +3,7 @@ import { Affiliation } from './affiliation';
 import { Person } from './person';
 // import { Reference } from 'app/models/reference';
 import {RelatedArticle} from './related-article';
-// import { ArticleInformation } from 'app/models/article-information';
+import {ArticleInformation} from "./article-information";
 // import { KeywordGroup, KeywordGroups } from 'app/models/keyword';
 
 interface JournalMeta {
@@ -14,7 +14,7 @@ interface JournalMeta {
 export type Manuscript = {
   journalMeta: JournalMeta;
   title: EditorState;
-  // articleInfo: ArticleInformation;
+  articleInfo: ArticleInformation;
   authors: Person[];
   affiliations: Affiliation[];
   abstract: EditorState;
