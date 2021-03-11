@@ -4,7 +4,7 @@ import { Person } from './person';
 // import { Reference } from 'app/models/reference';
 import {RelatedArticle} from './related-article';
 // import { ArticleInformation } from 'app/models/article-information';
-// import { KeywordGroup, KeywordGroups } from 'app/models/keyword';
+import { KeywordGroups } from './keyword';
 
 interface JournalMeta {
   publisherName: string;
@@ -21,7 +21,7 @@ export type Manuscript = {
   impactStatement: EditorState;
   body: EditorState;
   acknowledgements: EditorState;
-  // keywordGroups: KeywordGroups;
+  keywordGroups: KeywordGroups;
   // references: Reference[];
   relatedArticles: RelatedArticle[];
 };

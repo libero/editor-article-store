@@ -4,6 +4,7 @@ import { BackmatterEntity } from './backmatter-entity';
 import { EditorState } from 'prosemirror-state';
 import { JSONObject } from './types';
 import { makeSchemaFromConfig } from './utils';
+import { set } from 'lodash';
 
 export class Keyword extends BackmatterEntity {
   content: EditorState | undefined;
@@ -45,4 +46,33 @@ export class Keyword extends BackmatterEntity {
       schema
     });
   }
+}
+
+export interface KeywordGroup {
+  title: string | undefined;
+  keywords: Keyword[];
+  newKeyword: Keyword;
+}
+
+export interface KeywordGroups {
+  [keywordType: string]: KeywordGroup;
+}
+
+export function createKeywordGroupsState(keywordGroupsXml: Element[]): KeywordGroups {
+  return keywordGroupsXml.reduce((acc, kwdGroup) => {
+    const kwdGroupType = kwdGroup.getAttribute('kwd-group-type') || 'keywords-1';
+    const groupTitle = kwdGroup.querySelector('title');
+    const moreKeywords = Array.from(kwdGroup.querySelectorAll('kwd')).map(
+      (keywordEl: Element, _) => new Keyword(keywordEl)
+    );
+    set(acc, 
+      kwdGroupType,
+      {
+        title: groupTitle ? groupTitle.textContent : undefined,
+        keywords: moreKeywords,
+        newKeyword: new Keyword()
+      });
+
+    return acc;
+  }, {});
 }

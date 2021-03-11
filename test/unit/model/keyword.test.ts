@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import { Keyword } from '../../../src/model/keyword';
+import { Keyword, createKeywordGroupsState } from '../../../src/model/keyword';
 
 jest.mock('uuid', () => ({
   v4: () => 'unique_id'
@@ -188,5 +188,118 @@ describe('Keyword', () => {
       }
       `);
     });
+  });
+});
+
+describe('createKeywordGroupsState', () => {
+  it('', () => {
+    const kwdContainer = document.createElement('div');
+    kwdContainer.innerHTML = `<kwd-group kwd-group-type="author-keywords">
+        <kwd>cerebellum</kwd>
+        <kwd>climbing fiber</kwd>
+      </kwd-group>
+      <kwd-group kwd-group-type="research-organism">
+        <title>Research organism</title>
+        <kwd>Mouse</kwd>
+      </kwd-group>`;
+
+    const editorState = createKeywordGroupsState(Array.from(kwdContainer.querySelectorAll('kwd-group')));
+    expect(editorState).toMatchInlineSnapshot(`
+    Object {
+      "author-keywords": Object {
+        "keywords": Array [
+          Keyword {
+            "_id": "unique_id",
+            "content": Object {
+              "doc": Object {
+                "content": Array [
+                  Object {
+                    "text": "cerebellum",
+                    "type": "text",
+                  },
+                ],
+                "type": "keyword",
+              },
+              "selection": Object {
+                "anchor": 0,
+                "head": 0,
+                "type": "text",
+              },
+            },
+          },
+          Keyword {
+            "_id": "unique_id",
+            "content": Object {
+              "doc": Object {
+                "content": Array [
+                  Object {
+                    "text": "climbing fiber",
+                    "type": "text",
+                  },
+                ],
+                "type": "keyword",
+              },
+              "selection": Object {
+                "anchor": 0,
+                "head": 0,
+                "type": "text",
+              },
+            },
+          },
+        ],
+        "newKeyword": Keyword {
+          "_id": "unique_id",
+          "content": Object {
+            "doc": Object {
+              "type": "keyword",
+            },
+            "selection": Object {
+              "anchor": 0,
+              "head": 0,
+              "type": "text",
+            },
+          },
+        },
+        "title": undefined,
+      },
+      "research-organism": Object {
+        "keywords": Array [
+          Keyword {
+            "_id": "unique_id",
+            "content": Object {
+              "doc": Object {
+                "content": Array [
+                  Object {
+                    "text": "Mouse",
+                    "type": "text",
+                  },
+                ],
+                "type": "keyword",
+              },
+              "selection": Object {
+                "anchor": 0,
+                "head": 0,
+                "type": "text",
+              },
+            },
+          },
+        ],
+        "newKeyword": Keyword {
+          "_id": "unique_id",
+          "content": Object {
+            "doc": Object {
+              "type": "keyword",
+            },
+            "selection": Object {
+              "anchor": 0,
+              "head": 0,
+              "type": "text",
+            },
+          },
+        },
+        "title": "Research organism",
+      },
+    }
+    `);
   });
 });
