@@ -7,6 +7,7 @@ import {EditorState} from "prosemirror-state";
 import {parseXML} from "../../../src/xml-exporter/xml-utils";
 import {cloneManuscript} from "../../../src/model/changes.utils";
 import {Manuscript} from "../../../src/model/manuscript";
+import {ArticleInformation} from "../../../src/model/article-information";
 
 jest.mock('uuid', () => ({
   v4: () => 'unique_id'
@@ -141,6 +142,7 @@ describe('Serialize to XML', () => {
   const xmlSerializer = new xmldom.XMLSerializer();
 
   const mockManuscript: Manuscript = {
+    articleInfo: new ArticleInformation(),
     authors: [],
     journalMeta: { publisherName: 'foo', issn: 'bar'},
     title: new EditorState(),
