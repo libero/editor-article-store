@@ -9,13 +9,14 @@ import { parseXML } from "./xml-utils";
 import {createRelatedArticleState} from "../model/related-article";
 import { createAffiliationsState } from "../model/affiliation";
 import { createAuthorsState } from "../model/person";
+import { createKeywordGroupsState } from '../model/keyword';
 import {ArticleInformation} from "../model/article-information";
 
 export function getArticleManuscript(article: Article): Manuscript {
   const xmlDoc = parseXML(article.xml);
 
   const title = xmlDoc.querySelector('title-group article-title') as Element;
-  // // const keywordGroups = doc.querySelectorAll('kwd-group');
+  const keywordGroups = xmlDoc.querySelectorAll('kwd-group');
   const abstract: Element | undefined = Array.from(xmlDoc.querySelectorAll('abstract'))
     .find((el: Element) => !el.hasAttribute('abstract-type'));
 
@@ -41,8 +42,7 @@ export function getArticleManuscript(article: Article): Manuscript {
     impactStatement: createImpactStatementState(impactStatement),
     acknowledgements: createAcknowledgementsState(acknowledgements),
     body: createBodyState(body),
-
-    // keywordGroups: createKeywordGroupsState(Array.from(keywordGroups)),
+    keywordGroups: createKeywordGroupsState(Array.from(keywordGroups)),
     authors: authorsState,
     affiliations: createAffiliationsState(Array.from(affiliations)),
     // references: createReferencesState(Array.from(references)),

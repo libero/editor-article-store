@@ -147,6 +147,7 @@ const mockManuscript: Manuscript = {
   impactStatement: EditorState.create({ schema: textSchema}),
   body: EditorState.create({ schema: textSchema}),
   acknowledgements: EditorState.create({ schema: textSchema}),
+  keywordGroups: {},
   relatedArticles: [],
   affiliations: []
 };
