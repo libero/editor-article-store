@@ -62,7 +62,7 @@ describe('ArticleInformation', () => {
         elocationId: "e00104",
         licenseText: {
           "doc": {
-            "content": [{"type": "paragraph"}],
+            "content": [{"type": "paragraph", content: [{ type: 'text', text: 'Three miles long EULA' }]}],
             "type": "doc",
           },
           "selection": {
@@ -93,7 +93,7 @@ describe('ArticleInformation', () => {
         volume: "8"
       }));
 
-      expect(articleInfo.licenseText!.doc.textContent).toBe('');
+      expect(articleInfo.licenseText!.doc.textContent).toBe('Three miles long EULA');
     });
 
     it('Creates an empty ArticleInformation from XML', () => {
