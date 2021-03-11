@@ -1,7 +1,17 @@
 /**
  * @jest-environment jsdom
  */
-import { Affiliation, createAffiliationsState } from '../../../src/model/affiliation';
+import {Affiliation, createAffiliationsState, serializeAffiliations} from '../../../src/model/affiliation';
+import * as xmldom from "xmldom";
+import {EditorState} from "prosemirror-state";
+import {parseXML} from "../../../src/xml-exporter/xml-utils";
+import {cloneManuscript} from "../../../src/model/changes.utils";
+import {Manuscript} from "../../../src/model/manuscript";
+import {ArticleInformation} from "../../../src/model/article-information";
+
+jest.mock('uuid', () => ({
+  v4: () => 'unique_id'
+}));
 
 const mockJSONData = {
   label: 'label',
@@ -125,5 +135,74 @@ describe('createAffiliationsState', () => {
       },
       country: 'Country'
     }));
+  })
+});
+
+describe('Serialize to XML', () => {
+  const xmlSerializer = new xmldom.XMLSerializer();
+
+  const mockManuscript: Manuscript = {
+    articleInfo: new ArticleInformation(),
+    authors: [],
+    journalMeta: { publisherName: 'foo', issn: 'bar'},
+    title: new EditorState(),
+    abstract: new EditorState(),
+    impactStatement: new EditorState(),
+    body: new EditorState(),
+    acknowledgements: new EditorState(),
+    relatedArticles: [],
+    affiliations: []
+  };
+
+  it('serializes an empty Affiliation to XML', () => {
+    const xmlDoc = parseXML('<article><article-meta><contrib-group/></article-meta></article>');
+    const manuscript = cloneManuscript(mockManuscript);
+    manuscript.affiliations = [new Affiliation()];
+
+    serializeAffiliations(xmlDoc, manuscript);
+
+    expect(xmlSerializer.serializeToString(xmlDoc)).toBe('<article><article-meta>' +
+      '<contrib-group>' +
+        '<aff id="unique_id">' +
+        '<label></label>' +
+        '<institution></institution>' +
+        '<addr-line><named-content content-type="city"></named-content></addr-line>' +
+        '<country></country>' +
+      '</aff>' +
+      '</contrib-group>' +
+      '</article-meta>' +
+      '</article>');
+  });
+
+  it('serializes an Affiliation to XML', () => {
+    const xmlDoc = parseXML('<article><article-meta><contrib-group/></article-meta></article>');
+    const manuscript = cloneManuscript(mockManuscript);
+    manuscript.affiliations = [new Affiliation(mockJSONData)];
+
+    serializeAffiliations(xmlDoc, manuscript);
+
+    expect(xmlSerializer.serializeToString(xmlDoc)).toBe('<article><article-meta>' +
+      '<contrib-group>' +
+        '<aff id="unique_id">' +
+        '<label>label</label>' +
+        '<institution>Tech Department, eLife Sciences</institution>' +
+        '<addr-line><named-content content-type="city">Cambridge</named-content></addr-line>' +
+        '<country>United Kingdom</country>' +
+      '</aff>' +
+      '</contrib-group>' +
+      '</article-meta>' +
+      '</article>');
+  });
+
+  it('handles an empty affiliations list', () => {
+    const xmlDoc = parseXML('<article><article-meta><contrib-group/></article-meta></article>');
+    const manuscript = cloneManuscript(mockManuscript);
+
+    serializeAffiliations(xmlDoc, manuscript);
+
+    expect(xmlSerializer.serializeToString(xmlDoc)).toBe('<article><article-meta>' +
+      '<contrib-group/>' +
+      '</article-meta>' +
+      '</article>');
   })
 });

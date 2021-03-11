@@ -16,6 +16,7 @@ import {DeleteObjectChange} from "../../../src/model/history/delete-object-chang
 import {UpdateObjectChange} from "../../../src/model/history/update-object-change";
 import {Person} from "../../../src/model/person";
 import { Keyword } from "../../../src/model/keyword";
+import {ArticleInformation} from "../../../src/model/article-information";
 
 const textSchema = new Schema({
   nodes: {
@@ -139,6 +140,7 @@ const mockUpdateObjectChange = {
 
 const mockManuscript: Manuscript = {
   authors: [],
+  articleInfo: new ArticleInformation(),
   journalMeta: { publisherName: 'foo', issn: 'bar'},
   title: EditorState.create({ schema: textSchema}),
   abstract: EditorState.create({ schema: textSchema}),

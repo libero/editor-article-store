@@ -10,6 +10,7 @@ import {createRelatedArticleState} from "../model/related-article";
 import { createAffiliationsState } from "../model/affiliation";
 import { createAuthorsState } from "../model/person";
 import { createKeywordGroupsState } from '../model/keyword';
+import {ArticleInformation} from "../model/article-information";
 
 export function getArticleManuscript(article: Article): Manuscript {
   const xmlDoc = parseXML(article.xml);
@@ -33,19 +34,20 @@ export function getArticleManuscript(article: Article): Manuscript {
   const acknowledgements: Element | null = xmlDoc.querySelector('ack');
   const body = xmlDoc.querySelector('body') as Element;
 
+  const authorsState = createAuthorsState(authorsXml, authorNotesXml);
+
   return {
     title: createTitleState(title),
     abstract: createAbstractState(abstract),
     impactStatement: createImpactStatementState(impactStatement),
     acknowledgements: createAcknowledgementsState(acknowledgements),
     body: createBodyState(body),
-
     keywordGroups: createKeywordGroupsState(Array.from(keywordGroups)),
-    authors: createAuthorsState(authorsXml, authorNotesXml),
+    authors: authorsState,
     affiliations: createAffiliationsState(Array.from(affiliations)),
     // references: createReferencesState(Array.from(references)),
     relatedArticles: createRelatedArticleState(Array.from(relatedArticles)),
-    // articleInfo: new ArticleInformation(doc.documentElement, authorsState),
+    articleInfo: new ArticleInformation(xmlDoc.documentElement, authorsState),
     // journalMeta: {
   //   //   publisherName: getTextContentFromPath(doc, 'journal-meta publisher publisher-name'),
   //   //   issn: getTextContentFromPath(doc, 'journal-meta issn')

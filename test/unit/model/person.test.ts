@@ -8,6 +8,7 @@ import {Manuscript} from "../../../src/model/manuscript";
 import {Schema} from "prosemirror-model";
 import {cloneManuscript} from "../../../src/model/changes.utils";
 import * as xmldom from "xmldom";
+import {ArticleInformation} from "../../../src/model/article-information";
 
 jest.mock('uuid', () => ({
   v4: () => 'unique_id'
@@ -21,6 +22,7 @@ const textSchema = new Schema({
 });
 
 const mockManuscript: Manuscript = {
+  articleInfo: new ArticleInformation(),
   authors: [],
   journalMeta: { publisherName: 'foo', issn: 'bar'},
   title: EditorState.create({ schema: textSchema}),
