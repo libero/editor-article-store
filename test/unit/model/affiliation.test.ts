@@ -150,6 +150,7 @@ describe('Serialize to XML', () => {
     impactStatement: new EditorState(),
     body: new EditorState(),
     acknowledgements: new EditorState(),
+    keywordGroups: {},
     relatedArticles: [],
     affiliations: []
   };
