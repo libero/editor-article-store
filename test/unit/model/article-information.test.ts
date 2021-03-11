@@ -17,7 +17,10 @@ const ARTICLE_XML = `
       <day>30</day> <month>11</month> <year>2019</year>
     </pub-date>
     <permissions>
-      <license xlink:href="http://creativecommons.org/licenses/by/4.0/" />
+      <license xlink:href="http://creativecommons.org/licenses/by/4.0/">
+      <license-p>Three miles long EULA</license-p>
+      </license>
+</license>
     </permissions>
     <elocation-id>e00104</elocation-id>
     <article-categories>
@@ -44,12 +47,53 @@ describe('ArticleInformation', () => {
         "publicationDate": "",
         "publisherId": "",
         "subjects": [],
-        "volume": "",
+        "volume": ""
       });
+
+      expect(articleInfo.licenseText!.doc.textContent).toBe('');
     });
 
     it('Creates an ArticleInformation from JSON', () => {
-      const articleInfo = new ArticleInformation({});
+      const articleInfo = new ArticleInformation({
+        articleDOI: "10.7554/eLife.00104",
+        articleType: "Insight",
+        copyrightStatement: "",
+        dtd: "1.2",
+        elocationId: "e00104",
+        licenseText: {
+          "doc": {
+            "content": [{"type": "paragraph"}],
+            "type": "doc",
+          },
+          "selection": {
+            "anchor": 0,
+            "head": 0,
+            "type": "text",
+          }
+        },
+        licenseType: "CC-BY-4",
+        publicationDate: "2019-11-30",
+        publisherId: "00104",
+        subjects: ['Cell Biology', 'Genetics and Genomics'],
+        volume: "8",
+      });
+
+      expect(articleInfo).toStrictEqual(expect.objectContaining({
+        _id: 'unique_id',
+        articleDOI: "10.7554/eLife.00104",
+        articleType: "Insight",
+        copyrightStatement: "",
+        dtd: "1.2",
+        elocationId: "e00104",
+        licenseText: expect.any(EditorState),
+        licenseType: "CC-BY-4",
+        publicationDate: "2019-11-30",
+        publisherId: "00104",
+        subjects: ['Cell Biology', 'Genetics and Genomics'],
+        volume: "8"
+      }));
+
+      expect(articleInfo.licenseText!.doc.textContent).toBe('');
     });
 
     it('Creates an empty ArticleInformation from XML', () => {
@@ -69,6 +113,8 @@ describe('ArticleInformation', () => {
         subjects: ['Cell Biology', 'Genetics and Genomics'],
         volume: "8",
       });
+
+      expect(articleInfo.licenseText!.doc.textContent).toBe('Three miles long EULA');
     });
 
     it('Creates an ArticleInformation from XML with CC0', () => {

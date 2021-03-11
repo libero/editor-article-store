@@ -65,7 +65,18 @@ export class ArticleInformation extends BackmatterEntity {
   }
 
   protected fromJSON(json: JSONObject): void {
-    console.log('From JSON is not implemented for ArticleInformation class');
+    this.articleType = json.articleType as string;
+    this.dtd = json.dtd as string;
+    this.articleDOI = json.articleDOI as string;
+    this.elocationId = json.elocationId as string;
+    this.volume = json.volume as string;
+    this.publisherId = json.publisherId as string;
+    this.subjects = (json.subjects as string[]) || [];
+
+    this.licenseType = json.licenseType as string;
+    this.publicationDate = json.publicationDate as string;
+    const schema = makeSchemaFromConfig(licenseTextConfig.topNode, licenseTextConfig.nodes, licenseTextConfig.marks);
+    this.licenseText = EditorState.fromJSON({ schema }, json.licenseText as JSONObject);
   }
 
   protected fromXML(xmlNode: Element): void {
