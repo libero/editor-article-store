@@ -9,6 +9,7 @@ import {Schema} from "prosemirror-model";
 import {cloneManuscript} from "../../../src/model/changes.utils";
 import * as xmldom from "xmldom";
 import {ArticleInformation} from "../../../src/model/article-information";
+import { Affiliation } from "../../../src/model/affiliation";
 
 jest.mock('uuid', () => ({
   v4: () => 'unique_id'
@@ -35,13 +36,13 @@ const mockManuscript: Manuscript = {
   affiliations: []
 };
 
-const PERSON_JSON_DATA = {
+const mockJsonData = {
   _id: 'author-3888',
-  firstName: 'Siu Sylvia',
-  lastName: 'Lee',
+  firstName: 'Joseph',
+  lastName: 'Bloggs',
   isAuthenticated: true,
   orcid: '0000-0001-5225-4203',
-  email: 'sylvia.lee@cornell.edu',
+  email: 'example@example.com',
   bio: {
     doc: {
       type: 'doc',
@@ -49,7 +50,7 @@ const PERSON_JSON_DATA = {
         {
           type: 'paragraph',
           content: [
-            {type: 'text', marks: [{type: 'bold'}], text: 'Siu Sylvia Lee'},
+            {type: 'text', marks: [{type: 'bold'}], text: 'Joseph Bloggs'},
             {
               type: 'text',
               text:
@@ -65,7 +66,7 @@ const PERSON_JSON_DATA = {
   affiliations: ['aff2']
 } as JSONObject;
 
-const PERSON_XML_DATA = `
+const mockXmlData = `
   <contrib corresp="yes">
     <name><surname>Atherden</surname><given-names>Fred</given-names><suffix>Capt.</suffix></name>
     <contrib-id authenticated="true" contrib-id-type="orcid">https://orcid.org/0000-0002-6048-1470</contrib-id>
@@ -76,7 +77,7 @@ const PERSON_XML_DATA = `
   </contrib>
 `;
 
-const AUTHOR_NOTES_XML = `<author-notes>
+const authorNotesXml = `<author-notes>
     <fn fn-type="COI-statement" id="con1">
       <p>Is an employee of eLife. No other competing interests exist</p>
     </fn>
@@ -102,39 +103,39 @@ describe('Person class', () => {
       expect(author.bio).toBeInstanceOf(EditorState);
       expect(author.bio!.doc.textContent).toBe('');
     });
-    describe('Person instance from JSON', () => {
+    describe('fromJSON', () => {
       it('creates author from JSON', () => {
-        const author = new Person(PERSON_JSON_DATA);
+        const author = new Person(mockJsonData);
         expect(author).toStrictEqual(expect.objectContaining({
           _id: 'author-3888',
-          firstName: 'Siu Sylvia',
-          lastName: 'Lee',
+          firstName: 'Joseph',
+          lastName: 'Bloggs',
           isAuthenticated: true,
           orcid: '0000-0001-5225-4203',
-          email: 'sylvia.lee@cornell.edu',
+          email: 'example@example.com',
           isCorrespondingAuthor: true,
           affiliations: ['aff2']
         }));
 
-        expect(author.bio!.doc.textContent).toBe('Siu Sylvia Lee is in the Department of Molecular Biology and Genetics, Cornell University, Ithaca, United States')
+        expect(author.bio!.doc.textContent).toBe('Joseph Bloggs is in the Department of Molecular Biology and Genetics, Cornell University, Ithaca, United States')
       });
 
       it('creates author from JSON and assigns a unique ID if JSON does not have any', () => {
-        const jsonData = cloneDeep(PERSON_JSON_DATA);
+        const jsonData = cloneDeep(mockJsonData);
         jsonData._id = undefined;
         const author = new Person(jsonData);
         expect(author).toStrictEqual(expect.objectContaining({
           _id: 'unique_id',
-          firstName: 'Siu Sylvia',
-          lastName: 'Lee',
+          firstName: 'Joseph',
+          lastName: 'Bloggs',
           isAuthenticated: true,
           orcid: '0000-0001-5225-4203',
-          email: 'sylvia.lee@cornell.edu',
+          email: 'example@example.com',
           isCorrespondingAuthor: true,
           affiliations: ['aff2']
         }));
 
-        expect(author.bio!.doc.textContent).toBe('Siu Sylvia Lee is in the Department of Molecular Biology and Genetics, Cornell University, Ithaca, United States')
+        expect(author.bio!.doc.textContent).toBe('Joseph Bloggs is in the Department of Molecular Biology and Genetics, Cornell University, Ithaca, United States')
       });
 
       it('ignores non-array values of affiliations field ', () => {
@@ -154,11 +155,9 @@ describe('Person class', () => {
       });
     });
 
-    describe('Person instance from XML', () => {
+    describe('fromXML', () => {
       it('creates author from XML', () => {
-
-        const authorXml = parseXML(PERSON_XML_DATA);
-
+        const authorXml = parseXML(mockXmlData);
         const author = new Person(authorXml.querySelector('contrib')!);
         expect(author).toStrictEqual(expect.objectContaining({
           _id: 'unique_id',
@@ -170,12 +169,11 @@ describe('Person class', () => {
           isCorrespondingAuthor: true,
           affiliations: ['aff2', 'aff3']
         }));
-
         expect(author.bio!.doc.textContent).toBe('Jeanine Smith III is in the Department, University, City, Country')
       });
 
       it('correctly assigns the authenticated flag attribute from XML', () => {
-        const authorXml = parseXML(PERSON_XML_DATA).querySelector('contrib')!;
+        const authorXml = parseXML(mockXmlData).querySelector('contrib')!;
 
         expect(new Person(authorXml).isAuthenticated).toBe(true);
 
@@ -191,16 +189,13 @@ describe('Person class', () => {
       });
 
       it('correctly assigns orcid from XML', () => {
-        const authorXml = parseXML(PERSON_XML_DATA).querySelector('contrib')!;
-
+        const authorXml = parseXML(mockXmlData).querySelector('contrib')!;
         expect(new Person(authorXml).orcid).toBe('0000-0002-6048-1470');
-
         setNodeTextContent(
           authorXml.querySelector('contrib-id')!,
           'https://www.google.com/search?q=codswallop'
         );
         expect(new Person(authorXml).orcid).toBe('');
-
         setNodeTextContent(authorXml.querySelector('contrib-id')!, '');
         expect(new Person(authorXml).orcid).toBe('');
 
@@ -210,7 +205,7 @@ describe('Person class', () => {
       });
 
       it('correctly assigns corresponding author flag from XML', () => {
-        const authorXml = parseXML(PERSON_XML_DATA).querySelector('contrib')!;
+        const authorXml = parseXML(mockXmlData).querySelector('contrib')!;
 
         expect(new Person(authorXml).isCorrespondingAuthor).toBe(true);
 
@@ -222,7 +217,7 @@ describe('Person class', () => {
       });
 
       it('correctly parses bio from XML', () => {
-        const authorXml = parseXML(PERSON_XML_DATA).querySelector('contrib')!;
+        const authorXml = parseXML(mockXmlData).querySelector('contrib')!;
 
         expect(new Person(authorXml).bio!.doc.textContent)
           .toBe('Jeanine Smith III is in the Department, University, City, Country');
@@ -233,7 +228,7 @@ describe('Person class', () => {
       });
 
       it('correctly parses linked affiliations from XML', () => {
-        const authorXml = parseXML(PERSON_XML_DATA).querySelector('contrib')!;
+        const authorXml = parseXML(mockXmlData).querySelector('contrib')!;
 
         const linkedAffiliations = authorXml.querySelectorAll('xref[ref-type="aff"]');
         expect(new Person(authorXml).affiliations).toEqual(['aff2', 'aff3']);
@@ -244,25 +239,57 @@ describe('Person class', () => {
         authorXml.removeChild(linkedAffiliations[1]);
         expect(new Person(authorXml).affiliations).toEqual([]);
       });
-    });
-
-    describe('creates author with competing interests', () => {
       it('creates an author with competing interests', () => {
-        const notesXml = parseXML(AUTHOR_NOTES_XML).querySelector('author-notes')!;
-        const authorXml = parseXML(PERSON_XML_DATA).querySelector('contrib')!;
-
+        const notesXml = parseXML(authorNotesXml).querySelector('author-notes')!;
+        const authorXml = parseXML(mockXmlData).querySelector('contrib')!;
+  
         const author1 = new Person(authorXml, notesXml);
         expect(author1.hasCompetingInterest).toBe(false);
         expect(author1.competingInterestStatement).toBe('');
-
+  
         const competingInterestRef = authorXml.ownerDocument.createElement('xref');
         competingInterestRef.setAttribute('ref-type', 'fn');
         competingInterestRef.setAttribute('rid', 'con1');
         authorXml.appendChild(competingInterestRef);
-
+  
         const author2 = new Person(authorXml, notesXml);
         expect(author2.hasCompetingInterest).toBe(true);
         expect(author2.competingInterestStatement).toBe('Is an employee of eLife. No other competing interests exist');
+      });
+    });
+    describe('toXml', () => {
+      const xmlSerializer = new xmldom.XMLSerializer();
+      it('serializes an empty Person to XML', () => {
+        const person = new Person();
+        expect(xmlSerializer.serializeToString(person.toXml())).toBe(
+          '<contrib contrib-type="author" id="unique_id">' +
+            '<name/>' +
+            '<bio>' +
+              '<p/>' +
+            '</bio>' +
+          '</contrib>');
+      });
+      it('serializes an populated Person to XML', () => {
+        const person = new Person(mockJsonData);
+        expect(xmlSerializer.serializeToString(person.toXml())).toBe(
+          '<contrib contrib-type="author" id="author-3888" corresp="yes">' +
+            '<name><given-names>Joseph</given-names><surname>Bloggs</surname></name>' +
+            '<contrib-id contrib-id-type="orcid" authenticated="true">https://orcid.org/0000-0001-5225-4203</contrib-id>' + 
+            '<email>example@example.com</email>' +
+            '<bio><p><bold>Joseph Bloggs</bold> is in the Department of Molecular Biology and Genetics, Cornell University, Ithaca, United States</p></bio>' +
+          '</contrib>');
+      });
+      it('serializes an populated Person to XML with affiliation label mapped', () => {
+        const person = new Person(mockJsonData);
+        const affiliations = [new Affiliation({_id: 'aff2', label: 'Some Affiliation Label'})]
+        expect(xmlSerializer.serializeToString(person.toXml(affiliations))).toBe(
+          '<contrib contrib-type="author" id="author-3888" corresp="yes">' +
+            '<name><given-names>Joseph</given-names><surname>Bloggs</surname></name>' +
+            '<contrib-id contrib-id-type="orcid" authenticated="true">https://orcid.org/0000-0001-5225-4203</contrib-id>' + 
+            '<email>example@example.com</email>' +
+            '<bio><p><bold>Joseph Bloggs</bold> is in the Department of Molecular Biology and Genetics, Cornell University, Ithaca, United States</p></bio>' +
+            '<xref ref-type=\"aff\" rid=\"aff2\">Some Affiliation Label</xref>' +
+          '</contrib>');
       });
     });
   });
@@ -273,13 +300,13 @@ describe('Person class', () => {
     });
 
     it('creates an empty authors state without notes', () => {
-      const author1Xml = parseXML(PERSON_XML_DATA).querySelector('contrib')!;
+      const author1Xml = parseXML(mockXmlData).querySelector('contrib')!;
       author1Xml.setAttribute('id', 'author-3888');
 
       const author2Xml = parseXML(`<contrib corresp="yes">
-        <name><surname>Lee</surname><given-names>Siu Sylvia</given-names></name>
+        <name><surname>Bloggs</surname><given-names>Joseph</given-names></name>
         <contrib-id authenticated="true" contrib-id-type="orcid">https://orcid.org0000-0001-5225-4203</contrib-id>
-        <email>sylvia.lee@cornell.edu</email>
+        <email>example@example.com</email>
         <xref ref-type="aff" rid="aff2">2</xref>
       </contrib>`).querySelector('contrib')!;
       author2Xml.setAttribute('id', 'author-3889');
@@ -299,18 +326,18 @@ describe('Person class', () => {
 
       expect(state[1]).toStrictEqual(expect.objectContaining({
         _id: 'author-3889',
-        firstName: 'Siu Sylvia',
-        lastName: 'Lee',
+        firstName: 'Joseph',
+        lastName: 'Bloggs',
         isAuthenticated: true,
         orcid: '0000-0001-5225-4203',
-        email: 'sylvia.lee@cornell.edu',
+        email: 'example@example.com',
         isCorrespondingAuthor: true,
         affiliations: ['aff2']
       }));
     });
 
     it('creates an empty authors state with notes', () => {
-      const author1Xml = parseXML(PERSON_XML_DATA).querySelector('contrib')!;
+      const author1Xml = parseXML(mockXmlData).querySelector('contrib')!;
       author1Xml.setAttribute('id', 'author-3888');
 
       const competingInterestRef = author1Xml.ownerDocument.createElement('xref');
@@ -319,14 +346,14 @@ describe('Person class', () => {
       author1Xml.appendChild(competingInterestRef);
 
       const author2Xml = parseXML(`<contrib corresp="yes">
-        <name><surname>Lee</surname><given-names>Siu Sylvia</given-names></name>
+        <name><surname>Bloggs</surname><given-names>Joseph</given-names></name>
         <contrib-id authenticated="true" contrib-id-type="orcid">https://orcid.org0000-0001-5225-4203</contrib-id>
-        <email>sylvia.lee@cornell.edu</email>
+        <email>example@example.com</email>
         <xref ref-type="aff" rid="aff2">2</xref>
       </contrib>`).querySelector('contrib')!;
       author2Xml.setAttribute('id', 'author-3889');
 
-      const notesXml = parseXML(AUTHOR_NOTES_XML).querySelector('author-notes')!;
+      const notesXml = parseXML(authorNotesXml).querySelector('author-notes')!;
 
       const state = createAuthorsState([author1Xml, author2Xml], notesXml);
       expect(state.length).toBe(2);
@@ -346,13 +373,13 @@ describe('Person class', () => {
 
       expect(state[1]).toStrictEqual(expect.objectContaining({
         _id: 'author-3889',
-        firstName: 'Siu Sylvia',
-        lastName: 'Lee',
+        firstName: 'Joseph',
+        lastName: 'Bloggs',
         isAuthenticated: true,
         hasCompetingInterest: false,
         competingInterestStatement: '',
         orcid: '0000-0001-5225-4203',
-        email: 'sylvia.lee@cornell.edu',
+        email: 'example@example.com',
         isCorrespondingAuthor: true,
         affiliations: ['aff2']
       }));
@@ -376,9 +403,17 @@ describe('Person class', () => {
       const xmlDoc = parseXML('<article><article-meta></article-meta></article>');
 
       const manuscript = cloneManuscript(mockManuscript);
-      manuscript.authors = [new Person(PERSON_JSON_DATA)];
+      manuscript.authors = [new Person(mockJsonData)];
       serializeAuthors(xmlDoc, manuscript);
-      expect(xmlSerializer.serializeToString(xmlDoc)).toMatchSnapshot();
+      expect(xmlSerializer.serializeToString(xmlDoc)).toBe(
+        '<article><article-meta><contrib-group>' +
+          '<contrib contrib-type="author" id="author-3888" corresp="yes">' +
+            '<name><given-names>Joseph</given-names><surname>Bloggs</surname></name>' +
+            '<contrib-id contrib-id-type="orcid" authenticated="true">https://orcid.org/0000-0001-5225-4203</contrib-id>' +
+            '<email>example@example.com</email>' +
+            '<bio><p><bold>Joseph Bloggs</bold> is in the Department of Molecular Biology and Genetics, Cornell University, Ithaca, United States</p></bio>' +
+          '</contrib>' +
+        '</contrib-group></article-meta></article>');
     });
 
     it('handles an empty authors list correctly', () => {

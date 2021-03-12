@@ -1,6 +1,7 @@
 import {EditorState} from "prosemirror-state";
 import {get} from "lodash";
 import {DOMParser as ProseMirrorDOMParser} from 'prosemirror-model';
+import { DOMImplementation } from "xmldom";
 
 import {BackmatterEntity} from "./backmatter-entity";
 import * as bioConfig from './config/author-bio.config';
@@ -31,6 +32,69 @@ export class Person extends BackmatterEntity {
     if (get(data, 'ownerDocument') && get(notesXml, 'ownerDocument')) {
       this.setCompetingInterests(data as Element, notesXml as Element);
     }
+  }
+
+  public toXml(affiliations: Affiliation[] = []): Element {
+    const xmlDoc = new DOMImplementation().createDocument(null, null);
+    const contrib = xmlDoc.createElement('contrib');
+    contrib.setAttribute('contrib-type', 'author');
+    contrib.setAttribute('id', this.id);
+    if (this.isCorrespondingAuthor) {
+      contrib.setAttribute('corresp', 'yes');
+    }
+  
+    const name = xmlDoc.createElement('name');
+    contrib.appendChild(name);
+    if (this.firstName) {
+      const firstName = xmlDoc.createElement('given-names');
+      firstName.appendChild(xmlDoc.createTextNode(this.firstName));
+      name.appendChild(firstName);
+    }
+  
+    if (this.lastName) {
+      const lastName = xmlDoc.createElement('surname');
+      lastName.appendChild(xmlDoc.createTextNode(this.lastName));
+      name.appendChild(lastName);
+    }
+  
+    if (this.suffix) {
+      const suffix = xmlDoc.createElement('suffix');
+      suffix.appendChild(xmlDoc.createTextNode(this.suffix));
+      name.appendChild(suffix);
+    }
+  
+    if (this.orcid) {
+      const orcidEl = xmlDoc.createElement('contrib-id');
+      orcidEl.setAttribute('contrib-id-type', 'orcid');
+      orcidEl.setAttribute('authenticated', String(this.isAuthenticated));
+      orcidEl.appendChild(xmlDoc.createTextNode(`https://orcid.org/${this.orcid}`));
+      contrib.appendChild(orcidEl);
+    }
+  
+    if (this.email) {
+      const emailEl = xmlDoc.createElement('email');
+      emailEl.appendChild(xmlDoc.createTextNode(this.email));
+      contrib.appendChild(emailEl);
+    }
+  
+    if (this.bio) {
+      const bioXml = xmlDoc.createElement('bio');
+      bioXml.appendChild(serializeManuscriptSection(this.bio, xmlDoc));
+      contrib.appendChild(bioXml);
+    }
+  
+    (this.affiliations || []).forEach((affId) => {
+      const affEl = xmlDoc.createElement('xref');
+      affEl.setAttribute('ref-type', 'aff');
+      affEl.setAttribute('rid', affId);
+      const affLabel = get(affiliations.find(aff => aff.id === affId), 'label');
+      if (affLabel) {
+        affEl.appendChild(xmlDoc.createTextNode(affLabel));
+        contrib.appendChild(affEl);
+      }
+    });
+  
+    return contrib
   }
 
   protected fromXML(xml: Element): void {
@@ -133,69 +197,6 @@ export function serializeAuthors(xmlDoc: Document, manuscript: Manuscript) {
   }
 
   manuscript.authors.forEach((author: Person) => {
-    const authorXml = serializePerson(author, xmlDoc);
-    authorsGroup!.appendChild(authorXml);
+    authorsGroup!.appendChild(author.toXml());
   });
-}
-
-function serializePerson(person: Person, xmlDoc: Document, affiliations: Affiliation[] = []): Element {
-  const contrib = xmlDoc.createElement('contrib');
-  contrib.setAttribute('contrib-type', 'author');
-  contrib.setAttribute('id', person.id);
-  if (person.isCorrespondingAuthor) {
-    contrib.setAttribute('corresp', 'yes');
-  }
-
-  const name = xmlDoc.createElement('name');
-  contrib.appendChild(name);
-  if (person.firstName) {
-    const firstName = xmlDoc.createElement('given-names');
-    firstName.appendChild(xmlDoc.createTextNode(person.firstName));
-    name.appendChild(firstName);
-  }
-
-  if (person.lastName) {
-    const lastName = xmlDoc.createElement('surname');
-    lastName.appendChild(xmlDoc.createTextNode(person.lastName));
-    name.appendChild(lastName);
-  }
-
-  if (person.suffix) {
-    const suffix = xmlDoc.createElement('suffix');
-    suffix.appendChild(xmlDoc.createTextNode(person.suffix));
-    name.appendChild(suffix);
-  }
-
-  if (person.orcid) {
-    const orcidEl = xmlDoc.createElement('contrib-id');
-    orcidEl.setAttribute('contrib-id-type', 'orcid');
-    orcidEl.setAttribute('authenticated', String(person.isAuthenticated));
-    orcidEl.appendChild(xmlDoc.createTextNode(`https://orcid.org/${person.orcid}`));
-    contrib.appendChild(orcidEl);
-  }
-
-  if (person.email) {
-    const emailEl = xmlDoc.createElement('email');
-    emailEl.appendChild(xmlDoc.createTextNode(person.email));
-    contrib.appendChild(emailEl);
-  }
-
-  if (person.bio) {
-    const bioXml = xmlDoc.createElement('bio');
-    bioXml.appendChild(serializeManuscriptSection(person.bio, xmlDoc));
-    contrib.appendChild(bioXml);
-  }
-
-  (person.affiliations || []).forEach((affId) => {
-    const affEl = xmlDoc.createElement('xref');
-    affEl.setAttribute('ref-type', 'aff');
-    affEl.setAttribute('rid', affId);
-    const affLabel = get(affiliations.find(aff => aff.id === affId), 'label');
-    if (affLabel) {
-      affEl.appendChild(xmlDoc.createTextNode(affLabel));
-      contrib.appendChild(affEl);
-    }
-  });
-
-  return contrib
 }
