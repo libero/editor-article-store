@@ -24,6 +24,18 @@ const mockJSONData = {
   country: 'United Kingdom'
 };
 
+const mockJSONData2 = {
+  _id: 'aff2',
+  label: '2',
+  institution: {
+    name: 'Department, University'
+  },
+  address: {
+    city: 'City'
+  },
+  country: 'Country'
+};
+
 const mockXMLData = document.createElement('aff');
 mockXMLData.setAttribute("id", "aff1");
 mockXMLData.innerHTML = `<label>label</label>
@@ -86,6 +98,30 @@ describe('Affiliation', () => {
       expect(affiliation).toStrictEqual(expect.objectContaining(mockJSONData));
     });
   });
+  describe('toXml', () => {
+    const xmlSerializer = new xmldom.XMLSerializer();
+    it('serializes an empty Affiliation to XML', () => {
+      const affiliation = new Affiliation();
+      expect(xmlSerializer.serializeToString(affiliation.toXml())).toBe(
+        '<aff id="unique_id">' +
+          '<label></label>' +
+          '<institution></institution>' +
+          '<addr-line><named-content content-type="city"></named-content></addr-line>' +
+          '<country></country>' +
+        '</aff>');
+    });
+  
+    it('serializes a populated Affiliation to XML', () => {
+      const affiliation = new Affiliation(mockJSONData);
+      expect(xmlSerializer.serializeToString(affiliation.toXml())).toBe(
+        '<aff id="unique_id">' +
+          '<label>label</label>' +
+          '<institution>Tech Department, eLife Sciences</institution>' +
+          '<addr-line><named-content content-type="city">Cambridge</named-content></addr-line>' +
+          '<country>United Kingdom</country>' +
+        '</aff>');
+    });
+  });
 });
 
 describe('createAffiliationsState', () => {
@@ -93,7 +129,7 @@ describe('createAffiliationsState', () => {
     expect(createAffiliationsState([])).toStrictEqual([]);
   });
   it('returns an Affiliation instance for each affiliation xml element', () => {
-    const xmlWrapper = document.createElement('div');
+    const xmlWrapper = document.createElement('contrib-group');
     xmlWrapper.innerHTML = `<aff id="aff1">
         <label>label</label>
         <institution content-type="dept">Tech Department</institution>
@@ -124,21 +160,11 @@ describe('createAffiliationsState', () => {
       },
       country: 'United Kingdom'
     }));
-    expect(affiliations).toContainEqual(expect.objectContaining({
-      _id: 'aff2',
-      label: '2',
-      institution: {
-        name: 'Department, University'
-      },
-      address: {
-        city: 'City'
-      },
-      country: 'Country'
-    }));
+    expect(affiliations).toContainEqual(expect.objectContaining(mockJSONData2));
   })
 });
 
-describe('Serialize to XML', () => {
+describe('serializeAffiliations', () => {
   const xmlSerializer = new xmldom.XMLSerializer();
 
   const mockManuscript: Manuscript = {
@@ -155,55 +181,38 @@ describe('Serialize to XML', () => {
     affiliations: []
   };
 
-  it('serializes an empty Affiliation to XML', () => {
-    const xmlDoc = parseXML('<article><article-meta><contrib-group/></article-meta></article>');
-    const manuscript = cloneManuscript(mockManuscript);
-    manuscript.affiliations = [new Affiliation()];
-
-    serializeAffiliations(xmlDoc, manuscript);
-
-    expect(xmlSerializer.serializeToString(xmlDoc)).toBe('<article><article-meta>' +
-      '<contrib-group>' +
-        '<aff id="unique_id">' +
-        '<label></label>' +
-        '<institution></institution>' +
-        '<addr-line><named-content content-type="city"></named-content></addr-line>' +
-        '<country></country>' +
-      '</aff>' +
-      '</contrib-group>' +
-      '</article-meta>' +
-      '</article>');
-  });
-
-  it('serializes an Affiliation to XML', () => {
-    const xmlDoc = parseXML('<article><article-meta><contrib-group/></article-meta></article>');
-    const manuscript = cloneManuscript(mockManuscript);
-    manuscript.affiliations = [new Affiliation(mockJSONData)];
-
-    serializeAffiliations(xmlDoc, manuscript);
-
-    expect(xmlSerializer.serializeToString(xmlDoc)).toBe('<article><article-meta>' +
-      '<contrib-group>' +
-        '<aff id="unique_id">' +
-        '<label>label</label>' +
-        '<institution>Tech Department, eLife Sciences</institution>' +
-        '<addr-line><named-content content-type="city">Cambridge</named-content></addr-line>' +
-        '<country>United Kingdom</country>' +
-      '</aff>' +
-      '</contrib-group>' +
-      '</article-meta>' +
-      '</article>');
-  });
-
   it('handles an empty affiliations list', () => {
     const xmlDoc = parseXML('<article><article-meta><contrib-group/></article-meta></article>');
     const manuscript = cloneManuscript(mockManuscript);
-
     serializeAffiliations(xmlDoc, manuscript);
-
     expect(xmlSerializer.serializeToString(xmlDoc)).toBe('<article><article-meta>' +
       '<contrib-group/>' +
       '</article-meta>' +
       '</article>');
+  });
+  it('handles an multiple affiliations in a list', () => {
+    const xmlDoc = parseXML('<article><article-meta><contrib-group/></article-meta></article>');
+    const manuscript = cloneManuscript(mockManuscript);
+    manuscript.affiliations = [new Affiliation(mockJSONData), new Affiliation(mockJSONData2)]
+    serializeAffiliations(xmlDoc, manuscript);
+    expect(xmlSerializer.serializeToString(xmlDoc)).toBe(
+    '<article>' +
+      '<article-meta>' +
+        '<contrib-group>' +
+          '<aff id="unique_id">' +
+            '<label>label</label>' +
+            '<institution>Tech Department, eLife Sciences</institution>' +
+            '<addr-line><named-content content-type="city">Cambridge</named-content></addr-line>' +
+            '<country>United Kingdom</country>' +
+          '</aff>' +
+          '<aff id="aff2">' +
+            '<label>2</label>' +
+            '<institution>Department, University</institution>' +
+            '<addr-line><named-content content-type="city">City</named-content></addr-line>' +
+            '<country>Country</country>' +
+          '</aff>' +
+        '</contrib-group>' +
+      '</article-meta>' +
+    '</article>');
   })
 });
