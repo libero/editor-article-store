@@ -7,6 +7,8 @@ import {
   serializeRelatedArticles,
 } from "../../../src/model/related-article";
 import { Manuscript } from "../../../src/model/manuscript";
+import {parseXML} from "../../../src/xml-exporter/xml-utils";
+import xmldom from "xmldom";
 
 jest.mock("uuid", () => ({
   v4: () => "unique_id",
@@ -45,6 +47,13 @@ describe("Related Article model", () => {
       expect(clonedArticle).not.toBe(article);
       expect(clonedArticle).toEqual(article);
     });
+    describe('toXml', () => {
+      const xmlSerializer = new xmldom.XMLSerializer();
+      it('serializes an empty relatedArticle to xml', () => {
+        const relatedArticle = new RelatedArticle();
+        expect(xmlSerializer.serializeToString(relatedArticle.toXml())).toBe('<related-article ext-link-type="doi" id="unique_id" related-article-type="" xlink:href=""/>')
+      });
+    });
   });
 
   describe("Related articles state", () => {
@@ -71,7 +80,16 @@ describe("Related Article model", () => {
   });
 
   describe("Related articles XML", () => {
-    it("serializes related articles to XML", () => {
+    const xmlSerializer = new xmldom.XMLSerializer();
+    it('serializes an empty relatedArticles array', () => {
+      const xmlDoc = parseXML('<article><article-meta/></article>');
+      serializeRelatedArticles(xmlDoc, ({
+        relatedArticles: []
+      } as unknown) as Manuscript);
+
+      expect(xmlSerializer.serializeToString(xmlDoc)).toBe('<article><article-meta/></article>');
+    });
+    it('serializes a populated relatedArticles array', () => {
       const relatedArticles = [
         new RelatedArticle({ articleType: "SOME_ARTICLE_TYPE", href: "URL1" }),
         new RelatedArticle({
@@ -79,104 +97,49 @@ describe("Related Article model", () => {
           href: "URL2",
         }),
       ];
-      document.body.appendChild(document.createElement("article-meta"));
-      serializeRelatedArticles(document, ({
-        relatedArticles,
+      const xmlDoc = parseXML('<article><article-meta/></article>');
+      serializeRelatedArticles(xmlDoc, ({
+        relatedArticles
       } as unknown) as Manuscript);
-      expect(document.querySelector("article-meta")).toMatchInlineSnapshot(`
-        <article-meta>
-          <related-article
-            ext-link-type="doi"
-            id="unique_id"
-            related-article-type="SOME_ARTICLE_TYPE"
-            xlink:href="URL1"
-          />
-          <related-article
-            ext-link-type="doi"
-            id="unique_id"
-            related-article-type="SOME_OTHER_ARTICLE_TYPE"
-            xlink:href="URL2"
-          />
-        </article-meta>
-      `);
+
+      expect(xmlSerializer.serializeToString(xmlDoc)).toBe(
+        '<article>' +
+          '<article-meta>' +
+            '<related-article ext-link-type="doi" id="unique_id" related-article-type="SOME_ARTICLE_TYPE" xlink:href="URL1"/>' +
+            '<related-article ext-link-type="doi" id="unique_id" related-article-type="SOME_OTHER_ARTICLE_TYPE" xlink:href="URL2"/>' +
+          '</article-meta>' +
+        '</article>'
+      );
     });
-
-    it("removes old related articles serializes related articles to XML", () => {
-      const relatedArticles = [
-        new RelatedArticle({ articleType: "SOME_ARTICLE_TYPE", href: "URL1" }),
-        new RelatedArticle({
-          articleType: "SOME_OTHER_ARTICLE_TYPE",
-          href: "URL2",
-        }),
-      ];
-      document.body.innerHTML = `<article-meta><related-article ext-link-type="doi" id="old-article" related-article-type="SOME_ARTICLE_TYPE" xlink:href="URL0" /></article-meta>`;
-
-      serializeRelatedArticles(document, ({
-        relatedArticles,
-      } as unknown) as Manuscript);
-      expect(document.querySelector("article-meta")).toMatchInlineSnapshot(`
-        <article-meta>
-          <related-article
-            ext-link-type="doi"
-            id="unique_id"
-            related-article-type="SOME_ARTICLE_TYPE"
-            xlink:href="URL1"
-          />
-          <related-article
-            ext-link-type="doi"
-            id="unique_id"
-            related-article-type="SOME_OTHER_ARTICLE_TYPE"
-            xlink:href="URL2"
-          />
-        </article-meta>
-      `);
-    });
-
-    it("removes old related articles serializes related articles to XML", () => {
-      const relatedArticles = [
-        new RelatedArticle({ articleType: "SOME_ARTICLE_TYPE", href: "URL1" }),
-        new RelatedArticle({
-          articleType: "SOME_OTHER_ARTICLE_TYPE",
-          href: "URL2",
-        }),
-      ];
-      document.body.innerHTML = `<article-meta><related-article ext-link-type="doi" id="old-article" related-article-type="SOME_ARTICLE_TYPE" xlink:href="URL0" /></article-meta>`;
-
-      serializeRelatedArticles(document, ({
-        relatedArticles,
-      } as unknown) as Manuscript);
-      expect(document.querySelector("article-meta")).toMatchInlineSnapshot(`
-        <article-meta>
-          <related-article
-            ext-link-type="doi"
-            id="unique_id"
-            related-article-type="SOME_ARTICLE_TYPE"
-            xlink:href="URL1"
-          />
-          <related-article
-            ext-link-type="doi"
-            id="unique_id"
-            related-article-type="SOME_OTHER_ARTICLE_TYPE"
-            xlink:href="URL2"
-          />
-        </article-meta>
-      `);
-    });
-
     it("removes related articles if list is empty", () => {
-      const relatedArticles: RelatedArticle[] = [];
-      document.body.innerHTML = `<article-meta><other-element>Other content</other-element><related-article ext-link-type="doi" id="old-article" related-article-type="SOME_ARTICLE_TYPE" xlink:href="URL0" /></article-meta>`;
-
-      serializeRelatedArticles(document, ({
-        relatedArticles,
+      const xmlDoc = parseXML('<article><article-meta><related-article ext-link-type="doi" id="old-article" related-article-type="SOME_ARTICLE_TYPE" xlink:href="URL0" /></article-meta></article>');
+      serializeRelatedArticles(xmlDoc, ({
+        relatedArticles: []
       } as unknown) as Manuscript);
-      expect(document.querySelector("article-meta")).toMatchInlineSnapshot(`
-        <article-meta>
-          <other-element>
-            Other content
-          </other-element>
-        </article-meta>
-      `);
+
+      expect(xmlSerializer.serializeToString(xmlDoc)).toBe('<article><article-meta/></article>');
+    });
+    it('replaces related articles with manuscript relatedArticles', () => {
+      const xmlDoc = parseXML('<article><article-meta><related-article ext-link-type="doi" id="old-article" related-article-type="SOME_ARTICLE_TYPE" xlink:href="URL0" /></article-meta></article>');
+      const relatedArticles = [
+        new RelatedArticle({ articleType: "SOME_ARTICLE_TYPE", href: "URL1" }),
+        new RelatedArticle({
+          articleType: "SOME_OTHER_ARTICLE_TYPE",
+          href: "URL2",
+        }),
+      ];
+      serializeRelatedArticles(xmlDoc, ({
+        relatedArticles
+      } as unknown) as Manuscript);
+
+      expect(xmlSerializer.serializeToString(xmlDoc)).toBe(
+        '<article>' +
+          '<article-meta>' +
+            '<related-article ext-link-type="doi" id="unique_id" related-article-type="SOME_ARTICLE_TYPE" xlink:href="URL1"/>' +
+            '<related-article ext-link-type="doi" id="unique_id" related-article-type="SOME_OTHER_ARTICLE_TYPE" xlink:href="URL2"/>' +
+          '</article-meta>' +
+        '</article>'
+      );    
     });
   });
 });
