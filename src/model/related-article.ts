@@ -58,7 +58,6 @@ export function serializeRelatedArticles(xmlDoc: Document, manuscript: Manuscrip
 
   const articleMeta = xmlDoc.querySelector('article-meta');
   manuscript.relatedArticles.forEach((article: RelatedArticle) => {
-    console.log(article.toXml())
     articleMeta!.appendChild(article.toXml())
   })
 }
