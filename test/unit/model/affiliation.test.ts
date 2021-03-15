@@ -106,7 +106,7 @@ describe('Affiliation', () => {
         '<aff id="unique_id">' +
           '<label></label>' +
           '<institution></institution>' +
-          '<addr-line><named-content content-type="city"></named-content></addr-line>' +
+          '<city></city>' +
           '<country></country>' +
         '</aff>');
     });
@@ -117,7 +117,7 @@ describe('Affiliation', () => {
         '<aff id="unique_id">' +
           '<label>label</label>' +
           '<institution>Tech Department, eLife Sciences</institution>' +
-          '<addr-line><named-content content-type="city">Cambridge</named-content></addr-line>' +
+          '<city>Cambridge</city>' +
           '<country>United Kingdom</country>' +
         '</aff>');
     });
@@ -202,13 +202,13 @@ describe('serializeAffiliations', () => {
           '<aff id="unique_id">' +
             '<label>label</label>' +
             '<institution>Tech Department, eLife Sciences</institution>' +
-            '<addr-line><named-content content-type="city">Cambridge</named-content></addr-line>' +
+            '<city>Cambridge</city>' +
             '<country>United Kingdom</country>' +
           '</aff>' +
           '<aff id="aff2">' +
             '<label>2</label>' +
             '<institution>Department, University</institution>' +
-            '<addr-line><named-content content-type="city">City</named-content></addr-line>' +
+            '<city>City</city>' +
             '<country>Country</country>' +
           '</aff>' +
         '</contrib-group>' +

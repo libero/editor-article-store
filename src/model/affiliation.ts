@@ -62,12 +62,9 @@ export class Affiliation extends BackmatterEntity {
     department.appendChild(xmlDoc.createTextNode(get(this, 'institution.name', '')));
     affEl.appendChild(department);
   
-    const addressLine = xmlDoc.createElement('addr-line');
-    const city = xmlDoc.createElement('named-content');
-    city.setAttribute('content-type', 'city');
+    const city = xmlDoc.createElement('city');
     city.appendChild(xmlDoc.createTextNode(this.address?.city || ''));
-    addressLine.appendChild(city);
-    affEl.appendChild(addressLine);
+    affEl.appendChild(city);
   
     const country = xmlDoc.createElement('country');
     country.appendChild(xmlDoc.createTextNode(this.country || ''));
