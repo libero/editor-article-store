@@ -1,6 +1,7 @@
 import { BackmatterEntity } from './backmatter-entity';
 import {JSONObject} from "./types";
 import {Manuscript} from "../model/manuscript";
+import { DOMImplementation } from "xmldom";
 
 export class RelatedArticle extends BackmatterEntity {
   public articleType: string = '';
@@ -17,6 +18,16 @@ export class RelatedArticle extends BackmatterEntity {
     newArticle.articleType = this.articleType;
     newArticle.href = this.href;
     return newArticle;
+  }
+
+  public toXml(): Element {
+    const xmlDoc = new DOMImplementation().createDocument(null, null); 
+    const articleXml = xmlDoc.createElement('related-article');
+    articleXml.setAttribute('ext-link-type', 'doi');
+    articleXml.setAttribute('id', this.id);
+    articleXml.setAttribute('related-article-type', this.articleType);
+    articleXml.setAttribute('xlink:href', this.href);
+    return articleXml;
   }
 
   protected fromXML(xmlNode: Element): void {
@@ -47,12 +58,6 @@ export function serializeRelatedArticles(xmlDoc: Document, manuscript: Manuscrip
 
   const articleMeta = xmlDoc.querySelector('article-meta');
   manuscript.relatedArticles.forEach((article: RelatedArticle) => {
-    const articleXml = xmlDoc.createElement('related-article');
-    articleXml.setAttribute('ext-link-type', 'doi');
-    articleXml.setAttribute('id', article.id);
-    articleXml.setAttribute('related-article-type', article.articleType);
-    articleXml.setAttribute('xlink:href', article.href);
-
-    articleMeta!.appendChild(articleXml)
+    articleMeta!.appendChild(article.toXml())
   })
 }

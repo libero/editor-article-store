@@ -1,3 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`Person class Serialization to XML serializes a Person object to XML 1`] = `"<article><article-meta><contrib-group><contrib contrib-type=\\"author\\" id=\\"author-3888\\" corresp=\\"yes\\"><name><given-names>Siu Sylvia</given-names><surname>Lee</surname></name><contrib-id contrib-id-type=\\"orcid\\" authenticated=\\"true\\">https://orcid.org/0000-0001-5225-4203</contrib-id><email>sylvia.lee@cornell.edu</email><bio><p><bold>Siu Sylvia Lee</bold> is in the Department of Molecular Biology and Genetics, Cornell University, Ithaca, United States</p></bio></contrib></contrib-group></article-meta></article>"`;
