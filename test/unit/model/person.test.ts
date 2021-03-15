@@ -69,7 +69,7 @@ const mockJsonData = {
 const mockXmlData = `
   <contrib corresp="yes">
     <name><surname>Atherden</surname><given-names>Fred</given-names><suffix>Capt.</suffix></name>
-    <contrib-id authenticated="true" contrib-id-type="orcid">https://orcid.org/0000-0002-6048-1470</contrib-id>
+    <contrib-id authenticated="true" contrib-id-type="orcid">0000-0002-6048-1470</contrib-id>
     <email>fatherden@elifesciences.org</email>
     <bio><p><bold>Jeanine Smith III</bold> is in the Department, University, City, Country</p></bio>
     <xref ref-type="aff" rid="aff2">2</xref>
@@ -274,7 +274,7 @@ describe('Person class', () => {
         expect(xmlSerializer.serializeToString(person.toXml())).toBe(
           '<contrib contrib-type="author" id="author-3888" corresp="yes">' +
             '<name><given-names>Joseph</given-names><surname>Bloggs</surname></name>' +
-            '<contrib-id contrib-id-type="orcid" authenticated="true">https://orcid.org/0000-0001-5225-4203</contrib-id>' + 
+            '<contrib-id contrib-id-type="orcid" authenticated="true">0000-0001-5225-4203</contrib-id>' + 
             '<email>example@example.com</email>' +
             '<bio><p><bold>Joseph Bloggs</bold> is in the Department of Molecular Biology and Genetics, Cornell University, Ithaca, United States</p></bio>' +
           '</contrib>');
@@ -285,7 +285,7 @@ describe('Person class', () => {
         expect(xmlSerializer.serializeToString(person.toXml(affiliations))).toBe(
           '<contrib contrib-type="author" id="author-3888" corresp="yes">' +
             '<name><given-names>Joseph</given-names><surname>Bloggs</surname></name>' +
-            '<contrib-id contrib-id-type="orcid" authenticated="true">https://orcid.org/0000-0001-5225-4203</contrib-id>' + 
+            '<contrib-id contrib-id-type="orcid" authenticated="true">0000-0001-5225-4203</contrib-id>' + 
             '<email>example@example.com</email>' +
             '<bio><p><bold>Joseph Bloggs</bold> is in the Department of Molecular Biology and Genetics, Cornell University, Ithaca, United States</p></bio>' +
             '<xref ref-type=\"aff\" rid=\"aff2\">Some Affiliation Label</xref>' +
@@ -409,7 +409,7 @@ describe('Person class', () => {
         '<article><article-meta><contrib-group>' +
           '<contrib contrib-type="author" id="author-3888" corresp="yes">' +
             '<name><given-names>Joseph</given-names><surname>Bloggs</surname></name>' +
-            '<contrib-id contrib-id-type="orcid" authenticated="true">https://orcid.org/0000-0001-5225-4203</contrib-id>' +
+            '<contrib-id contrib-id-type="orcid" authenticated="true">0000-0001-5225-4203</contrib-id>' +
             '<email>example@example.com</email>' +
             '<bio><p><bold>Joseph Bloggs</bold> is in the Department of Molecular Biology and Genetics, Cornell University, Ithaca, United States</p></bio>' +
           '</contrib>' +
