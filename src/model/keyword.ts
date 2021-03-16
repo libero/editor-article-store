@@ -5,6 +5,9 @@ import { EditorState } from 'prosemirror-state';
 import { JSONObject } from './types';
 import { makeSchemaFromConfig } from './utils';
 import { set } from 'lodash';
+import { DOMImplementation } from "xmldom";
+import { serializeManuscriptSection } from '../xml-exporter/manuscript-serializer';
+import { Manuscript } from './manuscript';
 
 export class Keyword extends BackmatterEntity {
   content: EditorState | undefined;
@@ -18,6 +21,13 @@ export class Keyword extends BackmatterEntity {
     }
   }
 
+  public toXml(): Element {
+    const xmlDoc = new DOMImplementation().createDocument(null, null); 
+    const kwdEle = xmlDoc.createElement('kwd');
+    const kwdXml = serializeManuscriptSection(this.content as EditorState, xmlDoc);
+    kwdEle.appendChild(kwdXml);
+    return kwdEle;
+  }
   protected fromXML(xmlNode: Element): void {
     const schema = makeSchemaFromConfig(keywordConfig.topNode, keywordConfig.nodes, keywordConfig.marks);
     this.content = EditorState.create({
@@ -75,4 +85,24 @@ export function createKeywordGroupsState(keywordGroupsXml: Element[]): KeywordGr
 
     return acc;
   }, {});
+}
+
+export function serializeKeywordGroups(xmlDoc: Document, manuscript: Manuscript) {
+  xmlDoc.querySelectorAll('article-meta > kwd-group')
+  .forEach((el: Element) => el.parentNode!.removeChild(el));
+  const articleMeta = xmlDoc.querySelector('article-meta');
+
+  for (const [key, value] of Object.entries(manuscript.keywordGroups)) {
+    const kwdGroupEle = xmlDoc.createElement('kwd-group');
+    kwdGroupEle.setAttribute('kwd-group-type', key);
+    if (value.title) {
+      const titleEle = xmlDoc.createElement('title');
+      titleEle.textContent = value.title;
+      kwdGroupEle.appendChild(titleEle);
+    }
+    value.keywords.forEach(kwd => {
+      kwdGroupEle.appendChild(kwd.toXml());
+    });
+    articleMeta?.appendChild(kwdGroupEle);
+  }
 }
