@@ -80,11 +80,12 @@ describe('ArticleParser', function () {
     expect(get(manuscript, 'keywordGroups.author-keywords.keywords.4.content.doc.textContent')).toBe('Purkinje cells');
     expect(get(manuscript, 'keywordGroups.research-organism.keywords.0.content.doc.textContent')).toBe('Mouse');
 
-    expect(manuscript.authors).toEqual(expect.objectContaining([{
+    expect(manuscript.authors.length).toBe(5);
+    expect(manuscript.authors[0]).toStrictEqual(expect.objectContaining({
       _id: 'unique_id',
       firstName: 'Fred',
       lastName: 'Atherden',
-      suffix: undefined,
+      suffix: '',
       isAuthenticated: true,
       orcid: '0000-0002-6048-1470',
       bio: expect.any(EditorState),
@@ -93,7 +94,9 @@ describe('ArticleParser', function () {
       affiliations: ['aff1', 'aff2'],
       hasCompetingInterest: true,
       competingInterestStatement: 'Is an employee of eLife. No other competing interests exist'
-    }, {
+    }));
+
+    expect(manuscript.authors[1]).toStrictEqual(expect.objectContaining({
       _id: 'unique_id',
       firstName: 'Jeanine',
       lastName: 'Smith',
@@ -101,12 +104,14 @@ describe('ArticleParser', function () {
       isAuthenticated: false,
       orcid: '',
       bio: expect.any(EditorState),
-      email: undefined,
+      email: '',
       isCorrespondingAuthor: false,
       affiliations: ['aff2'],
       hasCompetingInterest: true,
       competingInterestStatement: 'No competing interests declared'
-    }, {
+    }));
+
+    expect(manuscript.authors[2]).toStrictEqual(expect.objectContaining({
       _id: 'unique_id',
       firstName: 'Jack',
       lastName: 'London',
@@ -114,12 +119,14 @@ describe('ArticleParser', function () {
       isAuthenticated: false,
       orcid: '',
       bio: expect.any(EditorState),
-      email: undefined,
+      email: '',
       isCorrespondingAuthor: false,
       affiliations: ['aff2'],
       hasCompetingInterest: false,
       competingInterestStatement: ''
-    }, {
+    }));
+
+    expect(manuscript.authors[3]).toStrictEqual(expect.objectContaining({
       _id: 'unique_id',
       firstName: 'Mark',
       lastName: 'Twain',
@@ -127,12 +134,14 @@ describe('ArticleParser', function () {
       isAuthenticated: false,
       orcid: '',
       bio: expect.any(EditorState),
-      email: undefined,
+      email: '',
       isCorrespondingAuthor: false,
       affiliations: ['aff2'],
       hasCompetingInterest: false,
       competingInterestStatement: ''
-    }, {
+    }));
+
+    expect(manuscript.authors[4]).toStrictEqual(expect.objectContaining({
       _id: 'unique_id',
       firstName: 'Alexandr',
       lastName: 'Solzhenitsin',
@@ -140,12 +149,12 @@ describe('ArticleParser', function () {
       isAuthenticated: false,
       orcid: '',
       bio: expect.any(EditorState),
-      email: undefined,
+      email: '',
       isCorrespondingAuthor: false,
       affiliations: ['aff2'],
       hasCompetingInterest: true,
       competingInterestStatement: 'No competing interests declared'
-    }]));
+    }));
 
     expect(get(manuscript, 'authors.0.bio.doc.textContent'))
       .toBe('Fred Atherden is in the Production Department, eLife Sciences, Cambridge, United Kingdoms Creative Commons Attribution License');

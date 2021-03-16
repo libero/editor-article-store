@@ -80,7 +80,7 @@ export class ArticleInformation extends BackmatterEntity {
   }
 
   protected fromXML(xmlNode: Element): void {
-    this.articleType = getTextContentFromPath(xmlNode, 'article-meta subj-group[subj-group-type="heading"]').trim();
+    this.articleType = getTextContentFromPath(xmlNode, 'article-meta subj-group[subj-group-type="heading"]');
     const articleEl = xmlNode.ownerDocument.querySelector('article');
     this.dtd = articleEl ? articleEl.getAttribute('dtd-version') || '' : '';
     this.articleDOI = getTextContentFromPath(xmlNode, 'article-meta article-id[pub-id-type="doi"]');
