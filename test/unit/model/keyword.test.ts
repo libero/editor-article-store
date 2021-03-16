@@ -1,7 +1,11 @@
 /**
  * @jest-environment jsdom
  */
-import { Keyword, createKeywordGroupsState } from '../../../src/model/keyword';
+import { Keyword, createKeywordGroupsState, serializeKeywordGroups } from '../../../src/model/keyword';
+import * as xmldom from "xmldom";
+import { parseXML } from '../../../src/xml-exporter/xml-utils';
+import { Manuscript } from '../../../src/model/manuscript';
+const xmlSerializer = new xmldom.XMLSerializer();
 
 jest.mock('uuid', () => ({
   v4: () => 'unique_id'
@@ -28,6 +32,22 @@ describe('Keyword', () => {
     const keyword = new Keyword();
     expect(keyword).toMatchInlineSnapshot(emptyKywordSnapshot);
   });
+  describe('toXml', () => {
+    it('serializes an empty keyword object to XML', () => {
+      const keyword = new Keyword();
+      expect(xmlSerializer.serializeToString(keyword.toXml())).toBe('<kwd/>')
+    });
+    it('serializes a populated keyword', () => {
+      const element = document.createElement('kwd')
+      element.innerHTML = `A<sub>Poodle</sub><italic>Puppy</italic><sup>Dog</sup>`;
+      const keyword = new Keyword(element);
+      expect(xmlSerializer.serializeToString(keyword.toXml())).toBe(
+        '<kwd>' + 
+          'A<sub>Poodle</sub><italic>Puppy</italic><sup>Dog</sup>' +
+        '</kwd>'
+        )
+    });
+  })
   describe('fromXml', () => {
     it('returns empty Keyword when called with empty aff xml fragment', () => {
       const keyword = new Keyword(document.createElement('kwd-group'));
@@ -303,3 +323,54 @@ describe('createKeywordGroupsState', () => {
     `);
   });
 });
+
+describe('serializeKeywordGroups', () => {
+  it('returns article-meta unchanged if it has no keywordGroups and manuscript keywordGroups is empty', () => {
+    const articleXmlString = '<article><article-meta><some-other-tag/></article-meta></article>'
+    const xmlDoc = parseXML(articleXmlString);
+    serializeKeywordGroups(xmlDoc, ({ keywordGroups: [] } as unknown)as Manuscript);
+    expect(xmlSerializer.serializeToString(xmlDoc)).toBe(articleXmlString);
+  });
+  it('clears down article-meta keywordGroups if the Manuscript keywordGroups is empty', () => {
+    const articleXmlString = '<article><article-meta>' +
+    `<kwd-group kwd-group-type="author-keywords">
+      <kwd>transgenerational inheritance</kwd>
+      <kwd>epigenetics</kwd>
+      <kwd>aging</kwd>
+      <kwd>chromatin</kwd>
+    </kwd-group>` +
+    '</article-meta></article>';
+    const xmlDoc = parseXML(articleXmlString);
+    serializeKeywordGroups(xmlDoc, ({ keywordGroups: [] } as unknown)as Manuscript);
+    expect(xmlSerializer.serializeToString(xmlDoc)).toBe('<article><article-meta/></article>');
+  });
+
+  it('replaces article-meta keywordGroups if the Manuscript keywordGroups', () => {
+    const articleXmlString = '<article><article-meta>' +
+    `<kwd-group kwd-group-type="author-keywords">
+      <kwd>transgenerational inheritance</kwd>
+      <kwd>epigenetics</kwd>
+      <kwd>aging</kwd>
+      <kwd>chromatin</kwd>
+    </kwd-group>` +
+    '</article-meta></article>';
+    const kwdContainer = document.createElement('div');
+    kwdContainer.innerHTML = `<kwd-group kwd-group-type="author-keywords">
+        <kwd>cerebellum</kwd>
+        <kwd>climbing fiber</kwd>
+      </kwd-group>
+      <kwd-group kwd-group-type="research-organism">
+        <title>Research organism</title>
+        <kwd>Mouse</kwd>
+      </kwd-group>`;
+
+    const xmlDoc = parseXML(articleXmlString);
+    const keywordGroups = createKeywordGroupsState(Array.from(kwdContainer.querySelectorAll('kwd-group')));
+    serializeKeywordGroups(xmlDoc, ({ keywordGroups } as unknown)as Manuscript);
+    expect(xmlSerializer.serializeToString(xmlDoc)).toBe(
+      '<article><article-meta>' +
+          '<kwd-group kwd-group-type="author-keywords"><kwd>cerebellum</kwd><kwd>climbing fiber</kwd></kwd-group>' +
+          '<kwd-group kwd-group-type="research-organism"><title>Research organism</title><kwd>Mouse</kwd></kwd-group>' +
+      '</article-meta></article>');
+  });
+})

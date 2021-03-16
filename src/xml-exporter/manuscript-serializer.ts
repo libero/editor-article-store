@@ -12,6 +12,7 @@ import {serializeBodyState} from "../model/body";
 import {serializeRelatedArticles} from "../model/related-article";
 import {serializeAuthors} from "../model/person";
 import {serializeAffiliations} from "../model/affiliation";
+import { serializeKeywordGroups } from '../model/keyword';
 
 export function createXmlDomSerializer(editorState: EditorState): DOMSerializer {
   return DOMSerializer.fromSchema(editorState.schema);
@@ -33,6 +34,7 @@ export function serializeManuscript(article: Article, manuscript: Manuscript): s
   serializeRelatedArticles(xmlDoc, manuscript);
   serializeAuthors(xmlDoc, manuscript);
   serializeAffiliations(xmlDoc, manuscript);
+  serializeKeywordGroups(xmlDoc, manuscript);
 
   // // // const keywordGroups = doc.querySelectorAll('kwd-group');
   // const abstract = doc.querySelector('abstract:not([abstract-type])') as Element;
