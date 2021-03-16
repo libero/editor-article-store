@@ -1,3 +1,6 @@
+jest.mock('uuid', () => ({
+  v4: () => 'unique_id'
+}));
 import {DOMSerializer} from "prosemirror-model";
 import xmldom from "xmldom";
 import {readFileSync} from "fs";
@@ -14,22 +17,18 @@ import {parseXML} from "../../../src/xml-exporter/xml-utils";
 
 describe('serializeManuscript', () => {
   it('serializes manuscript', () => {
+    const xml = readFileSync(resolve(join(__dirname, '../..', '/test-files/manuscript.xml'))).toString('utf8');
     const article = {
       articleId: "1",
       datatype: "text/xml",
       fileName: "manuscript.xml",
       version: "1.0",
-      xml: `<article>
-        <title-group><article-title/></title-group>
-        <article-meta><abstract><p/></abstract><abstract abstract-type="toc"><p/></abstract><contrib-group/></article-meta>
-        <body><p/></body>
-        <back><ack><title/><p/></ack></back>
-      </article>`
+      xml
     };
     const manuscript = getArticleManuscript(article);
     const outputXml = serializeManuscript(article, manuscript);
 
-    expect(outputXml).toEqual(article.xml);
+    expect(outputXml).toMatchSnapshot();
   });
 
   it('has no side-effects', () => {
@@ -55,12 +54,14 @@ describe('serializeManuscript', () => {
     deleteAllNodes(xmlDoc, 'article-meta > contrib-group');
     deleteAllNodes(xmlDoc, 'body');
     deleteAllNodes(xmlDoc, 'related-article');
+    deleteAllNodes(xmlDoc, 'kwd-group');
 
     deleteAllNodes(outputXmlDoc, 'abstract');
     deleteAllNodes(outputXmlDoc, 'ack');
     deleteAllNodes(outputXmlDoc, 'article-meta > contrib-group');
     deleteAllNodes(outputXmlDoc, 'body');
     deleteAllNodes(outputXmlDoc, 'related-article');
+    deleteAllNodes(outputXmlDoc, 'kwd-group');
 
     expect(serializer.serializeToString(xmlDoc)).toEqual(serializer.serializeToString(outputXmlDoc));
   });
