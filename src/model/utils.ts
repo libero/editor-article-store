@@ -16,5 +16,5 @@ export function makeSchemaFromConfig(topNode: string, nodeNames: string[], markN
 }
 
 export function getTextContentFromPath(el: ParentNode, path: string): string {
-  return get(el.querySelector(path), 'textContent') as string;
+  return (get(el.querySelector(path), 'textContent', '') as string).trim();
 }
