@@ -17,6 +17,7 @@ import {UpdateObjectChange} from "../../../src/model/history/update-object-chang
 import {Person} from "../../../src/model/person";
 import { Keyword } from "../../../src/model/keyword";
 import {ArticleInformation} from "../../../src/model/article-information";
+import { Affiliation } from "../../../src/model/affiliation";
 
 const textSchema = new Schema({
   nodes: {
@@ -540,6 +541,35 @@ describe('deserializeBackmatter', () => {
           "type": "text",
         },
       },
+    }
+    `);
+  });
+
+  it('returns a Affiliation object when passed affiliation backmatter JSON', () => {
+    const affiliation = deserializeBackmatter('affiliations',      
+    {
+      "_id": "some_preset_id",
+      "label": "label",
+      "institution": {
+        "name": "Tech Department, eLife Sciences"
+      },
+      "address": {
+        "city": "Cambridge"
+      },
+      "country": "United Kingdom"
+    });
+    expect(affiliation).toBeInstanceOf(Affiliation);
+    expect(affiliation).toMatchInlineSnapshot(`
+    Affiliation {
+      "_id": "some_preset_id",
+      "address": Object {
+        "city": "Cambridge",
+      },
+      "country": "United Kingdom",
+      "institution": Object {
+        "name": "Tech Department, eLife Sciences",
+      },
+      "label": "label",
     }
     `);
   });
