@@ -1,4 +1,4 @@
-import {Reference} from "../../../src/model/reference";
+import {Reference} from "../../../../src/model/reference";
 
 jest.mock("uuid", () => ({
   v4: () => "unique_id",
