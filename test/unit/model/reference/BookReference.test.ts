@@ -95,9 +95,9 @@ describe('BookReference', () => {
     });
 
     it('creates an BookReference with specified data and ID', () => {
-      const affiliation = new BookReference({...populatedBookRefJSON, _id: 'SOME_ID' });
-      expect(affiliation.id).toBe('SOME_ID');
-      expect(affiliation).toStrictEqual(expect.objectContaining(populatedBookRefJSON));
+      const bookRef = new BookReference({...populatedBookRefJSON, _id: 'SOME_ID' });
+      expect(bookRef.id).toBe('SOME_ID');
+      expect(bookRef).toStrictEqual(expect.objectContaining(populatedBookRefJSON));
     });
   });
   describe('fromXml', () => {
