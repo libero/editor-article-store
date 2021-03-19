@@ -1,24 +1,25 @@
-/**
- * @jest-environment jsdom
- */
 import { createReferencePersonList, createReferenceAnnotatedValue, deserializeReferenceAnnotatedValue } from '../../../../src/model/reference/reference.utils';
+import { parseXML } from '../../../../src/xml-exporter/xml-utils';
 
 describe('createReferencePersonList', () => {
   it('returns empty xml if no persongroup xml is present', () => {
-    const element = document.createElement('some-element')
-    expect(createReferencePersonList(element, 'someGroupType')).toEqual([]);
+    const element = parseXML('<article></article>')
+    expect(createReferencePersonList(element.querySelector('article') as Element, 'someGroupType')).toEqual([]);
   });
   it('returns empty xml if no persongroup with passed groupType is present', () => {
-    const element = document.createElement('some-element');
-    element.innerHTML = `<person-group person-group-type="author"><name>
-      <surname>Katz</surname>
-      <given-names>DJ</given-names>
-    </name></person-group>`;
-    expect(createReferencePersonList(element, 'someGroupType')).toEqual([]);
+    const element = parseXML(`
+    <article>
+      <person-group person-group-type="author"><name>
+        <surname>Katz</surname>
+        <given-names>DJ</given-names>
+      </name></person-group>
+    </article>`)
+    expect(createReferencePersonList(element.querySelector('article') as Element, 'someGroupType')).toEqual([]);
   });
   it('returns expected array of objects when passed persongroup xml', () => {
-    const element = document.createElement('some-element');
-    element.innerHTML = `<person-group person-group-type="author">
+    const element = parseXML(`
+    <article>
+      <person-group person-group-type="author">
       <name>
         <surname>Katz</surname>
         <given-names>DJ</given-names>
@@ -33,8 +34,9 @@ describe('createReferencePersonList', () => {
         I'm some text content
       </some-other-element>
       <self-closing-element />
-    </person-group>`;
-    expect(createReferencePersonList(element, 'author')).toEqual([
+    </person-group>
+    </article>`);
+    expect(createReferencePersonList(element.querySelector('article') as Element, 'author')).toEqual([
       {
         firstName: 'DJ',
         lastName: 'Katz'
@@ -73,9 +75,11 @@ describe('createReferenceAnnotatedValue', () => {
     `);
   });
   it('returns populated EditorState when passed Element', () => {
-    const element = document.createElement('p');
-    element.innerHTML = 'I <bold>am</bold><italic>some</italic><sub>styled</sub><sup>HTML</sup>';
-    expect(createReferenceAnnotatedValue(element)).toMatchInlineSnapshot(`
+    const element = parseXML(`
+    <article><p>
+    I <bold>am</bold><italic>some</italic><sub>styled</sub><sup>HTML</sup>
+    </p></article>`);
+    expect(createReferenceAnnotatedValue(element.querySelector('p'))).toMatchInlineSnapshot(`
     Object {
       "doc": Object {
         "content": Array [

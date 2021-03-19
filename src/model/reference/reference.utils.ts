@@ -18,7 +18,7 @@ export function createReferencePersonList(referenceXml: Element, groupType: stri
     return [];
   }
 
-  return Array.from(contributors.children || []).map((contributorXml) => {
+  return Array.from(contributors.children).map((contributorXml) => {
     if (contributorXml.nodeName.toLowerCase() === 'name') {
       return {
         firstName: getTextContentFromPath(contributorXml, 'given-names') || '',

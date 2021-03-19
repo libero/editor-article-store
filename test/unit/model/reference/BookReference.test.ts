@@ -107,14 +107,14 @@ describe('BookReference', () => {
   });
   describe('fromXml', () => {
     it('returns empty BookReference when called with empty XML fragment', () => {
-      const xmlWrapper = parseXML(`<article><element-citation></article>`);
+      const xmlWrapper = parseXML(`<article><element-citation /></article>`);
       const bookRef = new BookReference(xmlWrapper.querySelector('element-citation') as Element);
       expect(bookRef).toEqual(expect.objectContaining(emptyBookRefJSON));
       expect(bookRef.chapterTitle.doc.textContent).toBe("");
       expect(bookRef.source.doc.textContent).toBe("");
       expect(bookRef.id).toBe("unique_id");
     });
-    it.only('returns BookReference when called with populated XML fragment', () => {
+    it('returns BookReference when called with populated XML fragment', () => {
       const xmlWrapper = parseXML(`<article><element-citation><year iso-8601-date="2010">2010</year>
       <chapter-title>A chapter Title</chapter-title>
       <source>A source Title</source>

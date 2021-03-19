@@ -35,6 +35,14 @@ export function parseXML(xml: string) {
     return nwmatcher({document: xmlDoc}).select(selectors, this);
   };
 
+  function childrenGetter(this: Node) {
+    return Array.from(this.childNodes).filter((node: ChildNode) => node.nodeType === 1);
+  }
+  Object.defineProperty(Element.prototype, 'children', {
+    configurable: true,
+    get: childrenGetter
+  });
+
   return xmlDoc;
 }
 
