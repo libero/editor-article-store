@@ -4,10 +4,8 @@ import {JSONObject} from "../types";
 import {getTextContentFromPath} from "../utils";
 import {
   createReferenceAnnotatedValue,
-  createReferencePersonList,
   deserializeReferenceAnnotatedValue
 } from "./reference.utils";
-import {ReferenceContributor} from "./types";
 
 export class JournalReference extends BackmatterEntity {
   year!: string;
