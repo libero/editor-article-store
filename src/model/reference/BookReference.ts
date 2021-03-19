@@ -26,7 +26,7 @@ export class BookReference extends BackmatterEntity {
     this.createEntity(data);
   }
   
-  fromJSON(json: JSONObject) {
+  protected fromJSON(json: JSONObject) {
     this._id = (json._id as string) || this.id;
     this.chapterTitle = json.chapterTitle ? deserializeReferenceAnnotatedValue(json.chapterTitle as JSONObject) : createReferenceAnnotatedValue();
     this.edition = json.edition as string || '';
@@ -44,7 +44,7 @@ export class BookReference extends BackmatterEntity {
     this.source = json.source ? deserializeReferenceAnnotatedValue(json.source as JSONObject) : createReferenceAnnotatedValue();
   }
 
-  fromXML(referenceXml: Element) {
+  protected fromXML(referenceXml: Element) {
     const editors: ReferenceContributor[] = createReferencePersonList(referenceXml, 'editor');
     this.year = getTextContentFromPath(referenceXml, 'year') || '';
     this.chapterTitle = createReferenceAnnotatedValue(referenceXml.querySelector('chapter-title'));
@@ -62,7 +62,7 @@ export class BookReference extends BackmatterEntity {
     this.volume = getTextContentFromPath(referenceXml, 'volume') || '';
   }
 
-  createBlank() {
+  protected createBlank() {
     this.chapterTitle = createReferenceAnnotatedValue();
     this.edition = '';
     this.editors = [];
