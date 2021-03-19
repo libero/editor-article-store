@@ -32,22 +32,22 @@ const populatedDataRefXML = `<article><element-citation specific-use="analyzed">
 </element-citation></article>`;
 describe('DataReference', () => {
   it('creates a blank DataReference when passed no constructor args', () => {
-    const bookRef = new DataReference();
-    expect(bookRef).toEqual(expect.objectContaining(emptyDataRefJSON));
-    expect(bookRef.dataTitle.doc.textContent).toBe("");
-    expect(bookRef.source.doc.textContent).toBe("");
-    expect(bookRef.id).toBe("unique_id");
+    const dataRef = new DataReference();
+    expect(dataRef).toEqual(expect.objectContaining(emptyDataRefJSON));
+    expect(dataRef.dataTitle.doc.textContent).toBe("");
+    expect(dataRef.source.doc.textContent).toBe("");
+    expect(dataRef.id).toBe("unique_id");
   });
   describe('fromJSON', () => {
     it('returns empty DataReference when called with empty data object', () => {
-      const bookRef = new DataReference({});
-      expect(bookRef).toEqual(expect.objectContaining(emptyDataRefJSON));
-      expect(bookRef.dataTitle.doc.textContent).toBe("");
-      expect(bookRef.source.doc.textContent).toBe("");
-      expect(bookRef.id).toBe("unique_id");
+      const dataRef = new DataReference({});
+      expect(dataRef).toEqual(expect.objectContaining(emptyDataRefJSON));
+      expect(dataRef.dataTitle.doc.textContent).toBe("");
+      expect(dataRef.source.doc.textContent).toBe("");
+      expect(dataRef.id).toBe("unique_id");
     });
     it('returns DataReference when called with populated data object ', () => {
-      const bookRef = new DataReference({ ...populatedDataRefJSON,   
+      const dataRef = new DataReference({ ...populatedDataRefJSON,   
       "dataTitle": {
         "doc": {
           "content": [
@@ -80,35 +80,35 @@ describe('DataReference', () => {
           "type": "text",
         },
       }});
-      expect(bookRef).toEqual(expect.objectContaining(populatedDataRefJSON));
-      expect(bookRef.dataTitle.doc.textContent).toBe("I am dataTitle text");
-      expect(bookRef.source.doc.textContent).toBe("I am source text");
-      expect(bookRef.id).toBe("unique_id");
+      expect(dataRef).toEqual(expect.objectContaining(populatedDataRefJSON));
+      expect(dataRef.dataTitle.doc.textContent).toBe("I am dataTitle text");
+      expect(dataRef.source.doc.textContent).toBe("I am source text");
+      expect(dataRef.id).toBe("unique_id");
     });
 
-    it('creates an BookReference with specified data and ID', () => {
+    it('creates an dataReference with specified data and ID', () => {
       const affiliation = new DataReference({...populatedDataRefJSON, _id: 'SOME_ID' });
       expect(affiliation.id).toBe('SOME_ID');
       expect(affiliation).toStrictEqual(expect.objectContaining(populatedDataRefJSON));
     });
   });
   describe('fromXml', () => {
-    it('returns empty BookReference when called with empty XML fragment', () => {
+    it('returns empty dataReference when called with empty XML fragment', () => {
       const xmlWrapper = parseXML(`<article><element-citation /></article>`);
-      const bookRef = new DataReference(xmlWrapper.querySelector('element-citation') as Element);
-      expect(bookRef).toEqual(expect.objectContaining(emptyDataRefJSON));
-      expect(bookRef.dataTitle.doc.textContent).toBe("");
-      expect(bookRef.source.doc.textContent).toBe("");
-      expect(bookRef.id).toBe("unique_id");
+      const dataRef = new DataReference(xmlWrapper.querySelector('element-citation') as Element);
+      expect(dataRef).toEqual(expect.objectContaining(emptyDataRefJSON));
+      expect(dataRef.dataTitle.doc.textContent).toBe("");
+      expect(dataRef.source.doc.textContent).toBe("");
+      expect(dataRef.id).toBe("unique_id");
     });
     it('returns DataReference when called with populated XML fragment', () => {
       const xmlWrapper = parseXML(populatedDataRefXML);
 
-      const bookRef = new DataReference(xmlWrapper.querySelector('element-citation') as Element);
-      expect(bookRef).toEqual(expect.objectContaining(populatedDataRefJSON));
-      expect(bookRef.dataTitle.doc.textContent).toBe("Mus musculus T-box 2 (Tbx2), mRNA");
-      expect(bookRef.source.doc.textContent).toBe("NCBI Nucleotide");
-      expect(bookRef.id).toBe("unique_id");
+      const dataRef = new DataReference(xmlWrapper.querySelector('element-citation') as Element);
+      expect(dataRef).toEqual(expect.objectContaining(populatedDataRefJSON));
+      expect(dataRef.dataTitle.doc.textContent).toBe("Mus musculus T-box 2 (Tbx2), mRNA");
+      expect(dataRef.source.doc.textContent).toBe("NCBI Nucleotide");
+      expect(dataRef.id).toBe("unique_id");
     });
     it('has specificUse property only with given specific-use attrib values', () => {
       const xmlWrapper = parseXML(`<article><element-citation specific-use="analyzed"/></article>`);
