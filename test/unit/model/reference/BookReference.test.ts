@@ -1,6 +1,3 @@
-/**
- * @jest-environment jsdom
- */
 import { BookReference } from '../../../../src/model/reference/BookReference';
 import { parseXML } from '../../../../src/xml-exporter/xml-utils';
 
