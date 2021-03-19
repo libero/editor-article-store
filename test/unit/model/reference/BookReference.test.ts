@@ -37,9 +37,7 @@ const populatedBookRefJSON = {
   "volume": "volume",
   "year": "year",
 };
-/**
- * @jest-environment jsdom
- */
+
 describe('BookReference', () => {
   it('creates a blank BookReference when passed no constructor args', () => {
     const bookRef = new BookReference();
