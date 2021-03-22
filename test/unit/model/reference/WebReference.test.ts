@@ -108,7 +108,7 @@ describe('WebReference', () => {
       expect(webReference.id).toBe("unique_id");
     });
 
-    it('returns WebReference when called with populated XML fragment', () => {
+    it('returns WebReference when called with populated XML fragment and empty date-in-citation', () => {
       const xmlWrapper = parseXML(`<article><element-citation>
         <year iso-8601-date="1994">1994</year>
         <article-title>Solar System Live</article-title>
