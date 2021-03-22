@@ -28,7 +28,7 @@ export class WebReference extends BackmatterEntity {
     this.source = createReferenceAnnotatedValue(referenceXml.querySelector('source'));
     this.articleTitle = createReferenceAnnotatedValue(referenceXml.querySelector('article-title'));
     this.extLink = getTextContentFromPath(referenceXml, 'ext-link') || '';
-    const dateInCitationEl = referenceXml.querySelector('date-in-citation')
+    const dateInCitationEl = referenceXml.querySelector('date-in-citation');
     this.dateInCitation = dateInCitationEl ? dateInCitationEl.getAttribute('iso-8601-date') || '' : '';
   }
   protected createBlank() {

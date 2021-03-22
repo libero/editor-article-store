@@ -107,5 +107,26 @@ describe('WebReference', () => {
       expect(webReference.source.doc.textContent).toBe("The Washington Post");
       expect(webReference.id).toBe("unique_id");
     });
+
+    it('returns WebReference when called with populated XML fragment', () => {
+      const xmlWrapper = parseXML(`<article><element-citation>
+        <year iso-8601-date="1994">1994</year>
+        <article-title>Solar System Live</article-title>
+        <source>The Washington Post</source>
+        <ext-link ext-link-type="uri" xlink:href="https://www.fourmilab.ch/solar/">https://www.fourmilab.ch/solar/</ext-link>
+        <date-in-citation></date-in-citation>
+      </element-citation></article>`);
+
+      const webReference = new WebReference(xmlWrapper.querySelector('element-citation') as Element);
+      expect(webReference).toEqual(expect.objectContaining({
+        year: '1994',
+        dateInCitation: '',
+        extLink: 'https://www.fourmilab.ch/solar/'
+      }));
+
+      expect(webReference.articleTitle.doc.textContent).toBe("Solar System Live");
+      expect(webReference.source.doc.textContent).toBe("The Washington Post");
+      expect(webReference.id).toBe("unique_id");
+    });
   });
 });
