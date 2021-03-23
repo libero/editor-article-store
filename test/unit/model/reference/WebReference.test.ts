@@ -1,5 +1,7 @@
-import { WebReference } from '../../../../src/model/reference/WebReference';
-import { parseXML } from '../../../../src/xml-exporter/xml-utils';
+import {WebReference} from '../../../../src/model/reference/WebReference';
+import {parseXML} from '../../../../src/xml-exporter/xml-utils';
+import * as xmldom from "xmldom";
+
 jest.mock('uuid', () => ({
   v4: () => 'unique_id'
 }));
@@ -12,7 +14,7 @@ const emptyWebRefJSON = {
 
 const populatedWebRefJSON = {
   year: 'year',
-  dateInCitation: 'dateInCitation',
+  dateInCitation: '2011-10-10',
   extLink: 'extLink'
 };
 
@@ -127,6 +129,65 @@ describe('WebReference', () => {
       expect(webReference.articleTitle.doc.textContent).toBe("Solar System Live");
       expect(webReference.source.doc.textContent).toBe("The Washington Post");
       expect(webReference.id).toBe("unique_id");
+    });
+  });
+
+  describe('toXml', () => {
+    const xmlSerializer = new xmldom.XMLSerializer();
+    it('should serialize a empty web reference', () => {
+      const reference = new WebReference(emptyWebRefJSON);
+      const xmlString = xmlSerializer.serializeToString(reference.toXml());
+      expect(xmlString).toBe('<year iso-8601-date=""></year><ext-link ext-link-type="uri" xlink:href=""></ext-link><article-title/><source/>');
+    });
+
+    it('should serialize a populated web reference', () => {
+      const reference = new WebReference({ ...populatedWebRefJSON,
+        "articleTitle": {
+          "doc": {
+            "content": [
+              {
+                "text": "I am articleTitle text",
+                "type": "text",
+              },
+            ],
+            "type": "annotatedReferenceInfoDoc",
+          },
+          "selection": {
+            "anchor": 0,
+            "head": 0,
+            "type": "text",
+          },
+        },
+        "source": {
+          "doc": {
+            "content": [
+              {
+                "text": "I am source text",
+                "type": "text",
+              },
+            ],
+            "type": "annotatedReferenceInfoDoc",
+          },
+          "selection": {
+            "anchor": 0,
+            "head": 0,
+            "type": "text",
+          },
+        }});
+
+      const xmlString = xmlSerializer.serializeToString(reference.toXml());
+      expect(xmlString)
+        .toBe(`<year iso-8601-date="year">year</year><ext-link ext-link-type="uri" xlink:href="extLink">extLink</ext-link><article-title>I am articleTitle text</article-title><source>I am source text</source><date-in-citation iso-8601-date="2011-10-10">October 10, 2011</date-in-citation>`);
+    });
+
+    it('should not include date-in-citation if the value is empty', () => {
+      const reference = new WebReference({ ...populatedWebRefJSON,
+        dateInCitation: '',
+      });
+
+      const xmlString = xmlSerializer.serializeToString(reference.toXml());
+      expect(xmlString)
+        .toBe('<year iso-8601-date="year">year</year><ext-link ext-link-type="uri" xlink:href="extLink">extLink</ext-link><article-title/><source/>');
     });
   });
 });
