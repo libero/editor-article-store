@@ -1,5 +1,6 @@
 import { DataReference } from '../../../../src/model/reference/DataReference';
 import { parseXML } from '../../../../src/xml-exporter/xml-utils';
+import * as xmldom from "xmldom";
 
 jest.mock('uuid', () => ({
   v4: () => 'unique_id'
@@ -133,6 +134,63 @@ describe('DataReference', () => {
     it('leaves extLink empty if ext-link and pub-id[pub-id-type="accession"] xlink:href are not defined', () => {
       const xmlWrapper = parseXML(`<article><element-citation><pub-id pub-id-type="accession">00000</pub-id></element-citation></article>`);
       expect(new DataReference(xmlWrapper.querySelector('element-citation') as Element).extLink).toBe('');
+    });
+  });
+
+  describe('toXml', () => {
+    const xmlSerializer = new xmldom.XMLSerializer();
+
+    it('should serialize an empty data reference', () => {
+      const reference = new DataReference(emptyDataRefJSON);
+      const xmlString = xmlSerializer.serializeToString(reference.toXml());
+      expect(xmlString)
+        .toBe('<element-citation><year iso-8601-date=""></year><ext-link ext-link-type="uri" xlink:href=""></ext-link><data-title/><source/><pub-id pub-id-type="doi" xlink:href=""></pub-id><version></version></element-citation>');
+    });
+
+    it('should serialize a populated data reference', () => {
+      const reference = new DataReference({ ...populatedDataRefJSON,
+        "dataTitle": {
+          "doc": {
+            "content": [
+              {
+                "text": "I am dataTitle text",
+                "type": "text",
+              },
+            ],
+            "type": "annotatedReferenceInfoDoc",
+          },
+          "selection": {
+            "anchor": 0,
+            "head": 0,
+            "type": "text",
+          },
+        },
+        "source": {
+          "doc": {
+            "content": [
+              {
+                "text": "I am source text",
+                "type": "text",
+              },
+            ],
+            "type": "annotatedReferenceInfoDoc",
+          },
+          "selection": {
+            "anchor": 0,
+            "head": 0,
+            "type": "text",
+          },
+        }});
+      const xmlString = xmlSerializer.serializeToString(reference.toXml());
+      expect(xmlString)
+        .toBe('<element-citation specific-use="analyzed"><year iso-8601-date="2014">2014</year><ext-link ext-link-type="uri" xlink:href="http://www.ncbi.nlm.nih.gov/nuccore/120407038">http://www.ncbi.nlm.nih.gov/nuccore/120407038</ext-link><data-title>I am dataTitle text</data-title><source>I am source text</source><pub-id pub-id-type="doi" xlink:href="00000">00000</pub-id><version>NM_009324.2</version><pub-id pub-id-type="accession">NM_009324</pub-id></element-citation>');
+    });
+
+    it('should exclude accession id if empty' , () => {
+      const reference = new DataReference({ ...populatedDataRefJSON, accessionId: ''});
+      const xmlString = xmlSerializer.serializeToString(reference.toXml());
+      expect(xmlString)
+        .toBe('<element-citation specific-use="analyzed"><year iso-8601-date="2014">2014</year><ext-link ext-link-type="uri" xlink:href="http://www.ncbi.nlm.nih.gov/nuccore/120407038">http://www.ncbi.nlm.nih.gov/nuccore/120407038</ext-link><data-title/><source/><pub-id pub-id-type="doi" xlink:href="00000">00000</pub-id><version>NM_009324.2</version></element-citation>');
     });
   });
 })

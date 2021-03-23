@@ -19,9 +19,9 @@ export class WebReference extends BackmatterEntity {
     this.createEntity(data)
   }
 
-  toXml(): DocumentFragment {
+  toXml(): Element {
     const xmlDoc = new DOMImplementation().createDocument(null, null);
-    const xml = xmlDoc.createDocumentFragment();
+    const xml = xmlDoc.createElement('element-citation');
 
     const year = xmlDoc.createElement('year');
     year.setAttribute('iso-8601-date', this.year);
