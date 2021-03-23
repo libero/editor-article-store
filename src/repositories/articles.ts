@@ -6,7 +6,7 @@ const MAX_PAGE_SIZE = 100;
 export type ArticleRepository = {
   insert: (article: Article) => Promise<string>;
   getByArticleId: (articleId: string) => Promise<Article>;
-  get: (page?: number) => Promise<Array<Article>>
+  get: (page?: number) => Promise<{ articles: Array<Article>, total: number }>
 }
 
 export default function articleRepository(db: Db): ArticleRepository {
@@ -26,8 +26,10 @@ export default function articleRepository(db: Db): ArticleRepository {
     },
     get: async(page = 0) => {
       const skip = page * MAX_PAGE_SIZE;
-      const articles = await db.collection('articles').find().skip(skip).limit(MAX_PAGE_SIZE).toArray();
-      return articles as Array<Article>;
+      const articlesCursor = db.collection('articles').find() .sort({ created: 1 }).skip(skip).limit(MAX_PAGE_SIZE);
+      const articles = await articlesCursor.toArray() as Array<Article>;
+      const total = await articlesCursor.count();
+      return { articles, total };
     }
   };
 }
