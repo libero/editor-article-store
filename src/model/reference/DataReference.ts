@@ -46,7 +46,6 @@ export class DataReference extends BackmatterEntity {
 
     const doi = xmlDoc.createElement('pub-id');
     doi.setAttribute('pub-id-type', 'doi');
-    doi.setAttribute('xlink:href', this.doi);
     doi.appendChild(xmlDoc.createTextNode(this.doi));
     xml.appendChild(doi);
 
