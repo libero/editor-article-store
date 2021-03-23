@@ -57,9 +57,10 @@ describe("articleService", () => {
   });
 
   test("Returns empty array if no articles", async () => {
-    getArticlesMock.mockImplementation(() => []);
+    getArticlesMock.mockImplementation(() => ({ articles: [], total: 0 }));
     const articles = await articleService(mockArticleRepo, mockChangesRepo).getArticles(0);
-    expect(articles.length).toBe(0);
+    expect(articles.articles.length).toBe(0);
+    expect(articles.total).toBe(0);
     expect(getArticlesMock).toBeCalledWith(0);
   });
 
@@ -70,10 +71,11 @@ describe("articleService", () => {
       articleId: "12345",
       fileName: "main.xml",
     };
-    getArticlesMock.mockImplementation(() => [data]);
+    getArticlesMock.mockImplementation(() => ({ articles: [data], total: 1 }));
     const articles = await articleService(mockArticleRepo, mockChangesRepo).getArticles(0);
-    expect(articles.length).toBe(1);
-    expect(articles[0]).toEqual({ ...data });
+    expect(articles.articles.length).toBe(1);
+    expect(articles.articles[0]).toEqual({ ...data });
+    expect(articles.total).toBe(1);
     expect(getArticlesMock).toBeCalledWith(0);
   });
 });

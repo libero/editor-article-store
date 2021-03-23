@@ -52,7 +52,8 @@ describe("articleRepository", () => {
 
   test("Returns empty array if no articles", async () => {
     const articles = await articleRepository(db).get(0);
-    expect(articles.length).toBe(0);
+    expect(articles.total).toBe(0);
+    expect(articles.articles).toHaveLength(0);
   });
 
   test("Returns article array if articles", async () => {
@@ -65,8 +66,8 @@ describe("articleRepository", () => {
     };
     const { insertedId } = await db.collection("articles").insertOne(data);
     const articles = await articleRepository(db).get(0);
-    expect(articles.length).toBe(1);
-    expect(articles[0]).toEqual({ _id: insertedId, ...data });
+    expect(articles.total).toBe(1);
+    expect(articles.articles[0]).toEqual({ _id: insertedId, ...data });
   });
 
   test("Returns array of all articles", async () => {
@@ -79,28 +80,38 @@ describe("articleRepository", () => {
     };
     const { insertedId } = await db.collection("articles").insertOne(data);
     const articles = await articleRepository(db).get(0);
-    expect(articles.length).toBe(1);
-    expect(articles[0]).toEqual({ _id: insertedId, ...data });
+    expect(articles.total).toBe(1);
+    expect(articles.articles[0]).toEqual({ _id: insertedId, ...data });
   });
 
   test("limits return to 100 per page", async () => {
     await db.collection("articles").insertMany(largeArticleCollection);
     const returnedArticles = await articleRepository(db).get(0);
-    expect(returnedArticles.length).toBe(100);
-    expect(returnedArticles[0].articleId).toBe("10000");
+    expect(returnedArticles.total).toBe(101);
+    expect(returnedArticles.articles).toHaveLength(50);
+    expect(returnedArticles.articles[0].articleId).toBe("10000");
+    expect(returnedArticles.articles[49].articleId).toBe("10049");
   });
 
   test("gets first page by default", async () => {
     await db.collection("articles").insertMany(largeArticleCollection);
     const returnedArticles = await articleRepository(db).get();
-    expect(returnedArticles.length).toBe(100);
-    expect(returnedArticles[0].articleId).toBe("10000");
+    expect(returnedArticles.total).toBe(101);
+    expect(returnedArticles.articles).toHaveLength(50);
+    expect(returnedArticles.articles[0].articleId).toBe("10000");
+    expect(returnedArticles.articles[49].articleId).toBe("10049");
   })
   test("gets specifid page", async () => {
     await db.collection("articles").insertMany(largeArticleCollection);
-    const returnedArticles = await articleRepository(db).get(1);
-    expect(returnedArticles.length).toBe(1);
-    expect(returnedArticles[0].articleId).toBe("10100");
+    const returnedArticles1 = await articleRepository(db).get(1);
+    expect(returnedArticles1.total).toBe(101);
+    expect(returnedArticles1.articles).toHaveLength(50);
+    expect(returnedArticles1.articles[0].articleId).toBe("10050");
+    expect(returnedArticles1.articles[49].articleId).toBe("10099");
+    const returnedArticles2 = await articleRepository(db).get(2);
+    expect(returnedArticles2.total).toBe(101);
+    expect(returnedArticles2.articles).toHaveLength(1);
+    expect(returnedArticles2.articles[0].articleId).toBe("10100");
   })
 
   test("Inserting should return id", async () => {

@@ -7,7 +7,7 @@ import {serializeManuscript} from "../xml-exporter/manuscript-serializer";
 import {JSONObject} from "../model/types";
 
 export type ArticleService = {
-  getArticles: (page: number) => Promise<Array<Article>>;
+  getArticles: (page: number) => Promise<{ articles: Array<Article>, total: number }>;
   findByArticleId: (articleId: string) => Promise<Article>;
   exportXml: (articleId: string) => Promise<string | null>;
 }
