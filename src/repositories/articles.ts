@@ -1,7 +1,7 @@
 import { Db } from "mongodb";
 import { Article } from "../types/article";
 
-const MAX_PAGE_SIZE = 100;
+const MAX_PAGE_SIZE = 50;
 
 export type ArticleRepository = {
   insert: (article: Article) => Promise<string>;
@@ -26,7 +26,7 @@ export default function articleRepository(db: Db): ArticleRepository {
     },
     get: async(page = 0) => {
       const skip = page * MAX_PAGE_SIZE;
-      const articlesCursor = db.collection('articles').find() .sort({ created: 1 }).skip(skip).limit(MAX_PAGE_SIZE);
+      const articlesCursor = db.collection('articles').find().sort({ articleId: 1 }).skip(skip).limit(MAX_PAGE_SIZE);
       const articles = await articlesCursor.toArray() as Array<Article>;
       const total = await articlesCursor.count();
       return { articles, total };
