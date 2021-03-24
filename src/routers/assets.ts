@@ -36,7 +36,7 @@ export default (assetService: AssetService): express.Router => {
     }
 
     if (!assetKey) {
-      console.log(`Asset Key not found for { articleId: ${articleId}, fileKey: ${fileKey}`);
+      console.log(`Asset Key not found for { articleId: ${articleId}, fileKey: ${fileKey} }`);
       res.sendStatus(404);
       return;
     }

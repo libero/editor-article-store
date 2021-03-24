@@ -1,3 +1,4 @@
+import xmldom from 'xmldom';
 import { ThesisReference } from '../../../../src/model/reference/ThesisReference';
 import { parseXML } from '../../../../src/xml-exporter/xml-utils';
 
@@ -99,6 +100,45 @@ describe('ThesisReference', () => {
 
       expect(bookRef.articleTitle.doc.textContent).toBe("Automated hypothesis generation based on mining scientific literature");
       expect(bookRef.id).toBe("unique_id");
+    });
+  });
+  describe('toXml', () => {
+    const xmlSerializer = new xmldom.XMLSerializer();
+
+    it('should serialize an empty data reference', () => {
+      const reference = new ThesisReference();
+      const xmlString = xmlSerializer.serializeToString(reference.toXml());
+      expect(xmlString)
+        .toBe('<element-citation publication-type="thesis"><year iso-8601-date=""></year><ext-link ext-link-type="uri" xlink:href=""></ext-link><data-title/><source/></element-citation>');
+    });
+
+    it('should serialize a populated data reference', () => {
+      const reference = new ThesisReference({ ...populatedThesisRefJSON,
+        "articleTitle": {
+          "doc": {
+            "content": [
+              {
+                "text": "I am articleTitle text",
+                "type": "text",
+              },
+            ],
+            "type": "annotatedReferenceInfoDoc",
+          },
+          "selection": {
+            "anchor": 0,
+            "head": 0,
+            "type": "text",
+          },
+        }
+      });
+      const xmlString = xmlSerializer.serializeToString(reference.toXml());
+      expect(xmlString)
+        .toBe('<element-citation publication-type="thesis">' +
+        '<year iso-8601-date="year">year</year>' +
+        '<article-title>I am articleTitle text</article-title>' +
+        '<publisher-name>publisherName</publisher-name>' +
+        '<ext-link ext-link-type="uri" xlink:href="extLink">extLink</ext-link>' +
+        '</element-citation>');
     });
   });
 });
