@@ -109,7 +109,7 @@ describe('ThesisReference', () => {
       const reference = new ThesisReference();
       const xmlString = xmlSerializer.serializeToString(reference.toXml());
       expect(xmlString)
-        .toBe('<element-citation publication-type="thesis"><year iso-8601-date=""></year><ext-link ext-link-type="uri" xlink:href=""></ext-link><data-title/><source/></element-citation>');
+        .toBe('<element-citation publication-type="thesis"><year iso-8601-date=""></year><article-title/><publisher-name></publisher-name><ext-link ext-link-type="uri" xlink:href=""></ext-link></element-citation>');
     });
 
     it('should serialize a populated data reference', () => {
