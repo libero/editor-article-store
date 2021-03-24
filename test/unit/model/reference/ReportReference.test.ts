@@ -131,7 +131,7 @@ describe('ReportReference', () => {
       const reference = new ReportReference(emptyReportRefJSON);
       const xmlString = xmlSerializer.serializeToString(reference.toXml());
       expect(xmlString)
-        .toBe('<element-citation><year iso-8601-date=""></year><ext-link ext-link-type="uri" xlink:href=""></ext-link><source/><publisher-name></publisher-name><publisher-loc></publisher-loc><volume></volume><pub-id pub-id-type="doi"></pub-id><pub-id pub-id-type="pmid"></pub-id><pub-id pub-id-type="isbn"></pub-id></element-citation>');
+        .toBe('<element-citation publication-type="report"><year iso-8601-date=""></year><ext-link ext-link-type="uri" xlink:href=""></ext-link><source/><publisher-name></publisher-name><publisher-loc></publisher-loc><volume></volume><pub-id pub-id-type="doi"></pub-id><pub-id pub-id-type="pmid"></pub-id><pub-id pub-id-type="isbn"></pub-id></element-citation>');
     });
 
     it('should serialize an empty report reference', () => {
@@ -170,7 +170,7 @@ describe('ReportReference', () => {
         }});
       const xmlString = xmlSerializer.serializeToString(reference.toXml());
       expect(xmlString)
-        .toBe('<element-citation><year iso-8601-date="year">year</year><ext-link ext-link-type="uri" xlink:href="extLink">extLink</ext-link><source>I am source text</source><publisher-name>publisherName</publisher-name><publisher-loc>publisherLocation</publisher-loc><volume>volume</volume><pub-id pub-id-type="doi">DOI</pub-id><pub-id pub-id-type="pmid">pmid</pub-id><pub-id pub-id-type="isbn">isbn</pub-id></element-citation>');
+        .toBe('<element-citation publication-type="report"><year iso-8601-date="year">year</year><ext-link ext-link-type="uri" xlink:href="extLink">extLink</ext-link><source>I am source text</source><publisher-name>publisherName</publisher-name><publisher-loc>publisherLocation</publisher-loc><volume>volume</volume><pub-id pub-id-type="doi">DOI</pub-id><pub-id pub-id-type="pmid">pmid</pub-id><pub-id pub-id-type="isbn">isbn</pub-id></element-citation>');
     });
   })
 });
