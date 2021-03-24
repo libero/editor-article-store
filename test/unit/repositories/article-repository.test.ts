@@ -33,7 +33,8 @@ describe("articleRepository", () => {
   });
 
   test("Returns null if article is not found", async () => {
-    const result = await articleRepository(db).getByArticleId("123");
+    const repo = await articleRepository(db);
+    const result = await repo.getByArticleId("123");
     expect(result).toBe(null);
   });
 
@@ -44,14 +45,16 @@ describe("articleRepository", () => {
       articleId: "12345",
       fileName: "main.xml",
     };
+    const repo = await articleRepository(db);
     const { insertedId } = await db.collection("articles").insertOne(data);
-    const result = await articleRepository(db).getByArticleId("12345");
+    const result = await repo.getByArticleId("12345");
     expect(result).toBeDefined();
     expect(result).toEqual({ _id: insertedId, ...data });
   });
 
   test("Returns empty array if no articles", async () => {
-    const articles = await articleRepository(db).get(0);
+    const repo = await articleRepository(db);
+    const articles = await repo.get(0);
     expect(articles.total).toBe(0);
     expect(articles.articles).toHaveLength(0);
   });
@@ -64,8 +67,9 @@ describe("articleRepository", () => {
       fileName: "main.xml",
       version: 'v1',
     };
+    const repo = await articleRepository(db);
     const { insertedId } = await db.collection("articles").insertOne(data);
-    const articles = await articleRepository(db).get(0);
+    const articles = await repo.get(0);
     expect(articles.total).toBe(1);
     expect(articles.articles[0]).toEqual({ _id: insertedId, ...data });
   });
@@ -78,15 +82,17 @@ describe("articleRepository", () => {
       fileName: "main.xml",
       version: 'v1',
     };
+    const repo = await articleRepository(db);
     const { insertedId } = await db.collection("articles").insertOne(data);
-    const articles = await articleRepository(db).get(0);
+    const articles = await repo.get(0);
     expect(articles.total).toBe(1);
     expect(articles.articles[0]).toEqual({ _id: insertedId, ...data });
   });
 
   test("limits return to 100 per page", async () => {
+    const repo = await articleRepository(db);
     await db.collection("articles").insertMany(largeArticleCollection);
-    const returnedArticles = await articleRepository(db).get(0);
+    const returnedArticles = await repo.get(0);
     expect(returnedArticles.total).toBe(101);
     expect(returnedArticles.articles).toHaveLength(50);
     expect(returnedArticles.articles[0].articleId).toBe("10000");
@@ -94,21 +100,23 @@ describe("articleRepository", () => {
   });
 
   test("gets first page by default", async () => {
+    const repo = await articleRepository(db);
     await db.collection("articles").insertMany(largeArticleCollection);
-    const returnedArticles = await articleRepository(db).get();
+    const returnedArticles = await repo.get();
     expect(returnedArticles.total).toBe(101);
     expect(returnedArticles.articles).toHaveLength(50);
     expect(returnedArticles.articles[0].articleId).toBe("10000");
     expect(returnedArticles.articles[49].articleId).toBe("10049");
   })
   test("gets specifid page", async () => {
+    const repo = await articleRepository(db);
     await db.collection("articles").insertMany(largeArticleCollection);
-    const returnedArticles1 = await articleRepository(db).get(1);
+    const returnedArticles1 = await repo.get(1);
     expect(returnedArticles1.total).toBe(101);
     expect(returnedArticles1.articles).toHaveLength(50);
     expect(returnedArticles1.articles[0].articleId).toBe("10050");
     expect(returnedArticles1.articles[49].articleId).toBe("10099");
-    const returnedArticles2 = await articleRepository(db).get(2);
+    const returnedArticles2 = await repo.get(2);
     expect(returnedArticles2.total).toBe(101);
     expect(returnedArticles2.articles).toHaveLength(1);
     expect(returnedArticles2.articles[0].articleId).toBe("10100");
@@ -122,7 +130,14 @@ describe("articleRepository", () => {
       fileName: "main.xml",
       version: 'v1',
     };
-    const insertedId = await articleRepository(db).insert(data);
+    const repo = await articleRepository(db);
+    const insertedId = await repo.insert(data);
     expect(insertedId).toBeDefined();
+  });
+
+  it('creates an index for articleId', async () => {
+    await articleRepository(db);
+    await expect(db.collection('articles').indexExists('articleId')).resolves.toBe(true);
+    await expect(db.collection('articles').indexInformation()).resolves.toEqual({"_id_": [["_id", 1]], "articleId": [["articleId", 1]]});
   });
 });
