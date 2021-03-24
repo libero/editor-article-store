@@ -1,4 +1,6 @@
 import { EditorState } from "prosemirror-state";
+import {DOMImplementation} from "xmldom";
+import { serializeManuscriptSection } from "../../xml-exporter/manuscript-serializer";
 import { BackmatterEntity } from "../backmatter-entity";
 import { JSONObject } from "../types";
 import { getTextContentFromPath } from "../utils";
@@ -16,6 +18,33 @@ export class ThesisReference extends BackmatterEntity {
   constructor(data?: JSONObject | Element) {
     super();
     this.createEntity(data);
+  }
+
+  public toXml(): Element {
+    const xmlDoc = new DOMImplementation().createDocument(null, null);
+    const xml = xmlDoc.createElement('element-citation');
+    xml.setAttribute('publication-type', 'thesis');
+
+    const year = xmlDoc.createElement('year');
+    year.setAttribute('iso-8601-date', this.year);
+    year.appendChild(xmlDoc.createTextNode(this.year));
+    xml.appendChild(year);
+
+    const articleTitle = xmlDoc.createElement('article-title');
+    articleTitle.appendChild(serializeManuscriptSection(this.articleTitle, xmlDoc));
+    xml.appendChild(articleTitle);
+
+    const publisherName = xmlDoc.createElement('publisher-name');
+    publisherName.appendChild(xmlDoc.createTextNode(this.publisherName));
+    xml.appendChild(publisherName);
+
+    const extLink = xmlDoc.createElement('ext-link');
+    extLink.setAttribute('ext-link-type', 'uri');
+    extLink.setAttribute('xlink:href', this.extLink);
+    extLink.appendChild(xmlDoc.createTextNode(this.extLink));
+    xml.appendChild(extLink);
+
+    return xml;
   }
   
   protected fromJSON(json: JSONObject) {
