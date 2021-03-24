@@ -144,7 +144,7 @@ describe('DataReference', () => {
       const reference = new DataReference(emptyDataRefJSON);
       const xmlString = xmlSerializer.serializeToString(reference.toXml());
       expect(xmlString)
-        .toBe('<element-citation><year iso-8601-date=""></year><ext-link ext-link-type="uri" xlink:href=""></ext-link><data-title/><source/><pub-id pub-id-type="doi" xlink:href=""></pub-id><version></version></element-citation>');
+        .toBe('<element-citation publication-type="data"><year iso-8601-date=""></year><ext-link ext-link-type="uri" xlink:href=""></ext-link><data-title/><source/><pub-id pub-id-type="doi" xlink:href=""></pub-id><version></version></element-citation>');
     });
 
     it('should serialize a populated data reference', () => {
@@ -183,14 +183,14 @@ describe('DataReference', () => {
         }});
       const xmlString = xmlSerializer.serializeToString(reference.toXml());
       expect(xmlString)
-        .toBe('<element-citation specific-use="analyzed"><year iso-8601-date="2014">2014</year><ext-link ext-link-type="uri" xlink:href="http://www.ncbi.nlm.nih.gov/nuccore/120407038">http://www.ncbi.nlm.nih.gov/nuccore/120407038</ext-link><data-title>I am dataTitle text</data-title><source>I am source text</source><pub-id pub-id-type="doi" xlink:href="00000">00000</pub-id><version>NM_009324.2</version><pub-id pub-id-type="accession">NM_009324</pub-id></element-citation>');
+        .toBe('<element-citation publication-type="data" specific-use="analyzed"><year iso-8601-date="2014">2014</year><ext-link ext-link-type="uri" xlink:href="http://www.ncbi.nlm.nih.gov/nuccore/120407038">http://www.ncbi.nlm.nih.gov/nuccore/120407038</ext-link><data-title>I am dataTitle text</data-title><source>I am source text</source><pub-id pub-id-type="doi" xlink:href="00000">00000</pub-id><version>NM_009324.2</version><pub-id pub-id-type="accession">NM_009324</pub-id></element-citation>');
     });
 
     it('should exclude accession id if empty' , () => {
       const reference = new DataReference({ ...populatedDataRefJSON, accessionId: ''});
       const xmlString = xmlSerializer.serializeToString(reference.toXml());
       expect(xmlString)
-        .toBe('<element-citation specific-use="analyzed"><year iso-8601-date="2014">2014</year><ext-link ext-link-type="uri" xlink:href="http://www.ncbi.nlm.nih.gov/nuccore/120407038">http://www.ncbi.nlm.nih.gov/nuccore/120407038</ext-link><data-title/><source/><pub-id pub-id-type="doi" xlink:href="00000">00000</pub-id><version>NM_009324.2</version></element-citation>');
+        .toBe('<element-citation publication-type="data" specific-use="analyzed"><year iso-8601-date="2014">2014</year><ext-link ext-link-type="uri" xlink:href="http://www.ncbi.nlm.nih.gov/nuccore/120407038">http://www.ncbi.nlm.nih.gov/nuccore/120407038</ext-link><data-title/><source/><pub-id pub-id-type="doi" xlink:href="00000">00000</pub-id><version>NM_009324.2</version></element-citation>');
     });
   });
 })
