@@ -3,7 +3,7 @@ import { Config } from "../types/config";
 // An initial default config
 export const defaultConfig: Config = {
   port: 8080,
-  awsRegion: "eu-west-1",
+  awsRegion: "us-east-1",
   awsAccessKey: "test",
   awsSecretAccessKey: "test",
   awsBucketInputEventQueueUrl: "http://localhost:4566/000000000000/KryiaUploadQueue",
