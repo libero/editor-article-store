@@ -1,5 +1,5 @@
 import { Db, MongoClient } from "mongodb";
-import articleRepository, { ArticleRepository } from "../../../src/repositories/articles";
+import articleRepository from "../../../src/repositories/articles";
 import { Article } from "../../../src/types/article";
 
 const largeArticleCollection = Array(101).fill({
