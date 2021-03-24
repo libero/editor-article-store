@@ -28,7 +28,7 @@ describe("changeRepository", () => {
   });
 
   it("should write change to the database", async () => {
-    const repo = changeRepository(db);
+    const repo = await changeRepository(db);
     const change: Change = {
       articleId: "1234",
       applied: false,
@@ -62,7 +62,7 @@ describe("changeRepository", () => {
   });
 
   it("should write change to the database", async () => {
-    const repo = changeRepository(db);
+    const repo = await changeRepository(db);
     const change: Change = {
       articleId: "1234",
       applied: false,
@@ -91,5 +91,11 @@ describe("changeRepository", () => {
     const changes = await repo.get("1234");
     changes.changes.forEach(element => delete element.created)
     expect(changes).toStrictEqual(expect.objectContaining({ total: 1, changes: [{ ...change, _id: insertedId }] }));
+  });
+
+  it('creates an index for articleId', async () => {
+    await changeRepository(db);
+    await expect(db.collection('changes').indexExists('articleId')).resolves.toBe(true);
+    await expect(db.collection('changes').indexInformation()).resolves.toEqual({"_id_": [["_id", 1]], "articleId": [["articleId", 1]]});
   });
 });
