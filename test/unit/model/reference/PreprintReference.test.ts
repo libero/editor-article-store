@@ -157,7 +157,7 @@ describe('PreprintReference', () => {
         }});
       const xmlString = xmlSerializer.serializeToString(reference.toXml());
       expect(xmlString)
-        giot.toBe('<element-citation publication-type="preprint"><year iso-8601-date="2014">2014</year><ext-link ext-link-type="uri" xlink:href="http://www.ncbi.nlm.nih.gov/nuccore/120407038">http://www.ncbi.nlm.nih.gov/nuccore/120407038</ext-link><article-title>I am articleTitle text</article-title><source>I am source text</source><pub-id pub-id-type="doi">00000</pub-id><pub-id pub-id-type="pmid">NM_009324</pub-id></element-citation>');
+        .toBe('<element-citation publication-type="preprint"><year iso-8601-date="2014">2014</year><ext-link ext-link-type="uri" xlink:href="http://www.ncbi.nlm.nih.gov/nuccore/120407038">http://www.ncbi.nlm.nih.gov/nuccore/120407038</ext-link><article-title>I am articleTitle text</article-title><source>I am source text</source><pub-id pub-id-type="doi">00000</pub-id><pub-id pub-id-type="pmid">NM_009324</pub-id></element-citation>');
     });
   });
 
