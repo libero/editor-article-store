@@ -15,10 +15,21 @@ export type ChangeRepository = {
   getAllRawChanges: (articleId: string) => Promise<JSONObject[]>;
 }
 
-export default function changeRepository(db: Db): ChangeRepository {
+export default async function changeRepository(db: Db): Promise<ChangeRepository> {
+  const changesCollection = db.collection("changes");
+
+  try {
+    console.log('Creating changes indexes...');
+    await changesCollection.createIndex({ articleId: 1 }, {
+      name: 'articleId'
+    });
+  } catch(error) {
+    throw new Error('Failed to create index for collection: changes - ' + error.message);
+  }
+
   return {
     insert: async (change: Change) => {
-      const { insertedId } = await db.collection("changes").insertOne({
+      const { insertedId } = await changesCollection.insertOne({
         ...change,
         created: new Date().toISOString()
       });
@@ -26,8 +37,7 @@ export default function changeRepository(db: Db): ChangeRepository {
     },
     get: async (articleId: string, page = 0) => {
       const skip = page * MAX_PAGE_SIZE;
-      const changesCursor = db
-        .collection("changes")
+      const changesCursor = changesCollection
         .find({ articleId })
         .sort({ timestamp: 1 })
         .skip(skip)
@@ -40,8 +50,7 @@ export default function changeRepository(db: Db): ChangeRepository {
     },
 
     getAllRawChanges: (articleId: string, page = 0) => {
-      const changesCursor = db
-        .collection("changes")
+      const changesCursor = changesCollection
         .find({ articleId })
         .sort({ timestamp: 1 });
 

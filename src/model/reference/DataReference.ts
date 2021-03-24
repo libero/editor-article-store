@@ -24,6 +24,7 @@ export class DataReference extends BackmatterEntity {
   toXml(): Element {
     const xmlDoc = new DOMImplementation().createDocument(null, null);
     const xml = xmlDoc.createElement('element-citation');
+    xml.setAttribute('publication-type', 'data');
 
     const year = xmlDoc.createElement('year');
     year.setAttribute('iso-8601-date', this.year);
@@ -46,6 +47,7 @@ export class DataReference extends BackmatterEntity {
 
     const doi = xmlDoc.createElement('pub-id');
     doi.setAttribute('pub-id-type', 'doi');
+    doi.setAttribute('xlink:href', this.doi);
     doi.appendChild(xmlDoc.createTextNode(this.doi));
     xml.appendChild(doi);
 

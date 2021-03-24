@@ -68,9 +68,9 @@ export default async function start() {
     s3ForcePathStyle: true,
   });
   // Initialize repositories
-  const assetRepository = AssetRepository(db);
-  const changeRepository = ChangesRepository(db)
-  const articleRepository = ArticleRepository(db);
+  const assetRepository = await AssetRepository(db);
+  const changeRepository = await ChangesRepository(db)
+  const articleRepository = await ArticleRepository(db);
   // Initialize services
   const articleService = ArticleService(articleRepository, changeRepository);
   const changesService = ChangesService(changeRepository);
