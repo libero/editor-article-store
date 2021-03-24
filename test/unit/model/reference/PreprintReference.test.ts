@@ -1,5 +1,6 @@
 import { PreprintReference } from '../../../../src/model/reference/PreprintReference';
 import { parseXML } from '../../../../src/xml-exporter/xml-utils';
+import * as xmldom from "xmldom";
 
 jest.mock('uuid', () => ({
   v4: () => 'unique_id'
@@ -19,7 +20,7 @@ const populatedPreprintRefJSON = {
   pmid: 'NM_009324'
 };
 
-const populatedDataRefXML = `<article><element-citation>
+const populatedPreprintRefXML = `<article><element-citation>
   <year iso-8601-date="2014">2014</year>
   <article-title>Mus musculus T-box 2 (Tbx2), mRNA</article-title>
   <source>NCBI Nucleotide</source>
@@ -101,7 +102,7 @@ describe('PreprintReference', () => {
     });
 
     it('returns PreprintReference when called with populated XML fragment', () => {
-      const xmlWrapper = parseXML(populatedDataRefXML);
+      const xmlWrapper = parseXML(populatedPreprintRefXML);
 
       const dataRef = new PreprintReference(xmlWrapper.querySelector('element-citation') as Element);
       expect(dataRef).toEqual(expect.objectContaining(populatedPreprintRefJSON));
@@ -110,4 +111,54 @@ describe('PreprintReference', () => {
       expect(dataRef.id).toBe("unique_id");
     });
   });
+  describe('toXml', () => {
+    const xmlSerializer = new xmldom.XMLSerializer();
+
+    it('should serialize an empty preprint reference', () => {
+      const reference = new PreprintReference(emptyPrepringRefJSON);
+      const xmlString = xmlSerializer.serializeToString(reference.toXml());
+      expect(xmlString)
+        .toBe('<element-citation publication-type="data"><year iso-8601-date=""></year><ext-link ext-link-type="uri" xlink:href=""></ext-link><article-title/><source/><pub-id pub-id-type="doi"></pub-id><pub-id pub-id-type="pmid"></pub-id></element-citation>');
+    });
+
+    it('should serialize a populated preprint reference', () => {
+      const reference = new PreprintReference({ ...populatedPreprintRefJSON,
+        "dataTitle": {
+          "doc": {
+            "content": [
+              {
+                "text": "I am dataTitle text",
+                "type": "text",
+              },
+            ],
+            "type": "annotatedReferenceInfoDoc",
+          },
+          "selection": {
+            "anchor": 0,
+            "head": 0,
+            "type": "text",
+          },
+        },
+        "source": {
+          "doc": {
+            "content": [
+              {
+                "text": "I am source text",
+                "type": "text",
+              },
+            ],
+            "type": "annotatedReferenceInfoDoc",
+          },
+          "selection": {
+            "anchor": 0,
+            "head": 0,
+            "type": "text",
+          },
+        }});
+      const xmlString = xmlSerializer.serializeToString(reference.toXml());
+      expect(xmlString)
+        .toBe('<element-citation publication-type="data"><year iso-8601-date="2014">2014</year><ext-link ext-link-type="uri" xlink:href="http://www.ncbi.nlm.nih.gov/nuccore/120407038">http://www.ncbi.nlm.nih.gov/nuccore/120407038</ext-link><article-title/><source>I am source text</source><pub-id pub-id-type="doi">00000</pub-id><pub-id pub-id-type="pmid">NM_009324</pub-id></element-citation>');
+    });
+  });
+
 })
