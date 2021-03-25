@@ -1,5 +1,11 @@
-import { createReferencePersonList, createReferenceAnnotatedValue, deserializeReferenceAnnotatedValue } from '../../../../src/model/reference/reference.utils';
+import {
+  createReferencePersonList,
+  createReferenceAnnotatedValue,
+  deserializeReferenceAnnotatedValue,
+  serializeReferenceContributorsList
+} from '../../../../src/model/reference/reference.utils';
 import { parseXML } from '../../../../src/xml-exporter/xml-utils';
+import { XMLSerializer } from 'xmldom';
 
 describe('createReferencePersonList', () => {
   it('returns empty xml if no persongroup xml is present', () => {
@@ -242,4 +248,30 @@ describe('deserializeReferenceAnnotatedValue', () => {
       },
     }
     `);
+});
+
+describe('serializeReferenceContributorsList', () => {
+  const xmlSerializer = new XMLSerializer();
+
+  it('should serialize an empty contributors list', () => {
+    const xml = serializeReferenceContributorsList('groupType', []);
+    expect(xmlSerializer.serializeToString(xml)).toBe('<person-group person-group-type="groupType"/>');
+  });
+
+
+  it('should serialize individual author', () => {
+    const xml = serializeReferenceContributorsList('author', [{firstName: 'John', lastName: 'Doe'}]);
+    expect(xmlSerializer.serializeToString(xml)).toBe('<person-group person-group-type="author"><name><given-names>John</given-names><surname>Doe</surname></name></person-group>');
+  });
+
+  it('should serialize group contributor', () => {
+    const xml = serializeReferenceContributorsList('author', [{groupName: 'Teenage mutant ninja turtles'}]);
+    expect(xmlSerializer.serializeToString(xml)).toBe('<person-group person-group-type="author"><collab>Teenage mutant ninja turtles</collab></person-group>');
+  });
+
+  it('should serialize mixed contributors list', () => {
+    const xml = serializeReferenceContributorsList('author', [{groupName: 'Teenage mutant ninja turtles'}, {firstName: 'John', lastName: 'Doe'}]);
+    expect(xmlSerializer.serializeToString(xml)).toBe('<person-group person-group-type="author"><collab>Teenage mutant ninja turtles</collab><name><given-names>John</given-names><surname>Doe</surname></name></person-group>');
+  });
+
 });

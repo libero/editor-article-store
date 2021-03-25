@@ -1,5 +1,6 @@
 import { BookReference } from '../../../../src/model/reference/BookReference';
 import { parseXML } from '../../../../src/xml-exporter/xml-utils';
+import * as xmldom from "xmldom";
 
 jest.mock('uuid', () => ({
   v4: () => 'unique_id'
@@ -47,14 +48,14 @@ describe('BookReference', () => {
     expect(bookRef.id).toBe("unique_id");
   });
   describe('fromJSON', () => {
-    it('returns empty BookReference when called with empty data object', () => {
+    it('returns empty BookReference when called with empty book object', () => {
       const bookRef = new BookReference({});
       expect(bookRef).toEqual(expect.objectContaining(emptyBookRefJSON));
       expect(bookRef.chapterTitle.doc.textContent).toBe("");
       expect(bookRef.source.doc.textContent).toBe("");
       expect(bookRef.id).toBe("unique_id");
     });
-    it('returns BookReference when called with populated data object ', () => {
+    it('returns BookReference when called with populated book object ', () => {
       const bookRef = new BookReference({ ...populatedBookRefJSON,   
       "chapterTitle": {
         "doc": {
@@ -154,6 +155,56 @@ describe('BookReference', () => {
       expect(bookRef.chapterTitle.doc.textContent).toBe("A chapter Title");
       expect(bookRef.source.doc.textContent).toBe("A source Title");
       expect(bookRef.id).toBe("unique_id");
+    });
+  });
+
+  describe('toXml', () => {
+    const xmlSerializer = new xmldom.XMLSerializer();
+
+    it('should serialize an empty book reference', () => {
+      const reference = new BookReference(emptyBookRefJSON);
+      const xmlString = xmlSerializer.serializeToString(reference.toXml());
+      expect(xmlString)
+        .toBe('<element-citation publication-type="book"><edition></edition><person-group person-group-type="editor"/><elocation-id></elocation-id><fpage></fpage><lpage></lpage><year iso-8601-date=""></year><chapter-title/><source/><pub-id pub-id-type="doi"></pub-id><pub-id pub-id-type="pmid"></pub-id><publisher-name></publisher-name><publisher-loc></publisher-loc><volume></volume></element-citation>');
+    });
+
+    it('should serialize a populated book reference', () => {
+      const reference = new BookReference({ ...populatedBookRefJSON,
+        "chapterTitle": {
+          "doc": {
+            "content": [
+              {
+                "text": "I am chapterTitle text",
+                "type": "text",
+              },
+            ],
+            "type": "annotatedReferenceInfoDoc",
+          },
+          "selection": {
+            "anchor": 0,
+            "head": 0,
+            "type": "text",
+          },
+        },
+        "source": {
+          "doc": {
+            "content": [
+              {
+                "text": "I am source text",
+                "type": "text",
+              },
+            ],
+            "type": "annotatedReferenceInfoDoc",
+          },
+          "selection": {
+            "anchor": 0,
+            "head": 0,
+            "type": "text",
+          },
+        }});
+      const xmlString = xmlSerializer.serializeToString(reference.toXml());
+      expect(xmlString)
+        .toBe('<element-citation publication-type="book"><edition>edition</edition><person-group person-group-type="editor"><name><given-names>DJ</given-names><surname>Katz</surname></name></person-group><elocation-id>elocationId</elocation-id><fpage>firstPage</fpage><lpage>lastPage</lpage><year iso-8601-date="year">year</year><chapter-title>I am chapterTitle text</chapter-title><source>I am source text</source><pub-id pub-id-type="doi">DOI</pub-id><pub-id pub-id-type="pmid">pmid</pub-id><publisher-name>publisherName</publisher-name><publisher-loc>publisherLocation</publisher-loc><volume>volume</volume></element-citation>');
     });
   });
 });
