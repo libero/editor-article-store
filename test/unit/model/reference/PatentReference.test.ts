@@ -1,3 +1,4 @@
+import xmldom from 'xmldom';
 import {PatentReference} from '../../../../src/model/reference/PatentReference';
 import {parseXML} from '../../../../src/xml-exporter/xml-utils';
 
@@ -7,29 +8,23 @@ jest.mock('uuid', () => ({
 
 const emptyPatentRefJSON = {
   year: '',
-  doi: '',
   patent: '',
   extLink: '',
-  publisherName: '',
 };
 
 const populatedPatentRefJSON = {
   year: '2014',
-  doi: '00000',
   patent: 'NM_009324.2',
   extLink: 'http://www.ncbi.nlm.nih.gov/nuccore/120407038',
-  publisherName: 'Publisher name'
 };
 
-const populatedPatentRefXML = `<article><element-citation specific-use="analyzed">
-  <year iso-8601-date="2014">2014</year>
-  <article-title>Imidazopyridine Derivative</article-title>
-  <source>World Intellectual Property Organization</source>
-  <publisher-name>Publisher name</publisher-name>
-  <patent country="Japan">NM_009324.2</patent>
-  <pub-id pub-id-type="doi">00000</pub-id>
-  <ext-link ext-link-type="uri">http://www.ncbi.nlm.nih.gov/nuccore/120407038</ext-link>
-</element-citation></article>`;
+const populatedPatentRefXML = '<element-citation publication-type="patent">' +
+  '<year iso-8601-date="2014">2014</year>' +
+  '<article-title>Imidazopyridine Derivative</article-title>' +
+  '<source>World Intellectual Property Organization</source>' +
+  '<patent>NM_009324.2</patent>' +
+  '<ext-link ext-link-type="uri" xlink:href="http://www.ncbi.nlm.nih.gov/nuccore/120407038">http://www.ncbi.nlm.nih.gov/nuccore/120407038</ext-link>' +
+'</element-citation>';
 
 describe('PatentReference', () => {
   it('creates a blank PatentReference when passed no constructor args', () => {
@@ -112,6 +107,56 @@ describe('PatentReference', () => {
       expect(patentReference.articleTitle.doc.textContent).toBe("Imidazopyridine Derivative");
       expect(patentReference.source.doc.textContent).toBe("World Intellectual Property Organization");
       expect(patentReference.id).toBe("unique_id");
+    });
+  });
+  describe('toXml', () => {
+    const xmlSerializer = new xmldom.XMLSerializer();
+
+    it('should serialize an empty Patent reference', () => {
+      const reference = new PatentReference();
+      const xmlString = xmlSerializer.serializeToString(reference.toXml());
+      expect(xmlString)
+        .toBe('<element-citation publication-type="patent"><year iso-8601-date=""></year><article-title/><source/><patent></patent><ext-link ext-link-type="uri" xlink:href=""></ext-link></element-citation>');
+    });
+
+    it('should serialize a populated Patent reference', () => {
+      const reference = new PatentReference({ ...populatedPatentRefJSON,
+        "articleTitle": {
+          "doc": {
+            "content": [
+              {
+                "text": "Imidazopyridine Derivative",
+                "type": "text",
+              },
+            ],
+            "type": "annotatedReferenceInfoDoc",
+          },
+          "selection": {
+            "anchor": 0,
+            "head": 0,
+            "type": "text",
+          },
+        },
+        "source": {
+          "doc": {
+            "content": [
+              {
+                "text": "World Intellectual Property Organization",
+                "type": "text",
+              },
+            ],
+            "type": "annotatedReferenceInfoDoc",
+          },
+          "selection": {
+            "anchor": 0,
+            "head": 0,
+            "type": "text",
+          },
+        }
+      });
+      const xmlString = xmlSerializer.serializeToString(reference.toXml());
+      expect(xmlString)
+        .toBe(populatedPatentRefXML);
     });
   });
 });
