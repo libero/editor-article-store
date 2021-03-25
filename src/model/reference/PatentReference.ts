@@ -1,4 +1,6 @@
 import { EditorState } from "prosemirror-state";
+import { DOMImplementation } from "xmldom";
+import { serializeManuscriptSection } from "../../xml-exporter/manuscript-serializer";
 import { BackmatterEntity } from "../backmatter-entity";
 import { JSONObject } from "../types";
 import { getTextContentFromPath } from "../utils";
@@ -8,14 +10,43 @@ export class PatentReference extends BackmatterEntity {
   year!: string;
   articleTitle!: EditorState;
   source!: EditorState;
-  doi!: string;
   patent!: string;
   extLink!: string;
-  publisherName!: string;
 
   constructor(data?: JSONObject | Element) {
     super();
     this.createEntity(data);
+  }
+
+  public toXml(): Element {
+    const xmlDoc = new DOMImplementation().createDocument(null, null);
+    const xml = xmlDoc.createElement('element-citation');
+    xml.setAttribute('publication-type', 'patent');
+
+    const year = xmlDoc.createElement('year');
+    year.setAttribute('iso-8601-date', this.year);
+    year.appendChild(xmlDoc.createTextNode(this.year));
+    xml.appendChild(year);
+
+    const articleTitle = xmlDoc.createElement('article-title');
+    articleTitle.appendChild(serializeManuscriptSection(this.articleTitle, xmlDoc));
+    xml.appendChild(articleTitle);
+
+    const source = xmlDoc.createElement('source');
+    source.appendChild(serializeManuscriptSection(this.source, xmlDoc));
+    xml.appendChild(source);
+
+    const patent = xmlDoc.createElement('patent');
+    patent.appendChild(xmlDoc.createTextNode(this.patent));
+    xml.appendChild(patent);
+
+    const extLink = xmlDoc.createElement('ext-link');
+    extLink.setAttribute('ext-link-type', 'uri');
+    extLink.setAttribute('xlink:href', this.extLink);
+    extLink.appendChild(xmlDoc.createTextNode(this.extLink));
+    xml.appendChild(extLink);
+
+    return xml;
   }
   
   fromJSON(json: JSONObject) {
@@ -23,30 +54,24 @@ export class PatentReference extends BackmatterEntity {
     this.year = json.year as string || '';
     this.articleTitle = json.articleTitle  ? deserializeReferenceAnnotatedValue(json.articleTitle as JSONObject) : createReferenceAnnotatedValue();
     this.source = json.source ? deserializeReferenceAnnotatedValue(json.source as JSONObject) : createReferenceAnnotatedValue();
-    this.doi = json.doi as string || '';
     this.extLink = json.extLink as string || '';
     this.patent = json.patent as string || '';
-    this.publisherName = json.publisherName as string || '';
   }
 
   fromXML(referenceXml: Element) {
     this.year = getTextContentFromPath(referenceXml, 'year') || '';
     this.source = createReferenceAnnotatedValue(referenceXml.querySelector('source'));
     this.articleTitle = createReferenceAnnotatedValue(referenceXml.querySelector('article-title'));
-    this.doi = getTextContentFromPath(referenceXml, 'pub-id[pub-id-type="doi"]') || '';
     this.patent = getTextContentFromPath(referenceXml, 'patent') || '';
     this.extLink = getTextContentFromPath(referenceXml, 'ext-link') || '';
-    this.publisherName = getTextContentFromPath(referenceXml, 'publisher-name') || '';
   }
 
   createBlank() {
     this.year = '';
     this.articleTitle = createReferenceAnnotatedValue();
     this.source = createReferenceAnnotatedValue();
-    this.doi = '';
     this.extLink = '';
     this.patent = '';
     this.extLink = '';
-    this.publisherName = '';
   }
 }
