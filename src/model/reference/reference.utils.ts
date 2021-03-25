@@ -39,14 +39,15 @@ export function serializeReferenceContributorsList(groupType: string, contributo
   contributorsXml.setAttribute('person-group-type', groupType);
 
   contributors.forEach((refContributor) => {
-    const name = xmlDoc.createElement('name');
+
 
     if (has(refContributor, 'groupName')) {
-      const groupName = xmlDoc.createElement('collab');
-      groupName.appendChild(xmlDoc.createTextNode(get(refContributor, 'groupName')));
-      name.appendChild(groupName);
+      const collab = xmlDoc.createElement('collab');
+      collab.appendChild(xmlDoc.createTextNode(get(refContributor, 'groupName')));
+      contributorsXml.appendChild(collab);
 
     } else {
+      const name = xmlDoc.createElement('name');
       const givenNames = xmlDoc.createElement('given-names');
       givenNames.appendChild(xmlDoc.createTextNode(get(refContributor, 'firstName')));
       name.appendChild(givenNames);
@@ -54,9 +55,9 @@ export function serializeReferenceContributorsList(groupType: string, contributo
       const surname = xmlDoc.createElement('surname');
       surname.appendChild(xmlDoc.createTextNode(get(refContributor, 'lastName')));
       name.appendChild(surname);
-    }
 
-    contributorsXml.appendChild(name);
+      contributorsXml.appendChild(name);
+    }
   });
 
   return contributorsXml;

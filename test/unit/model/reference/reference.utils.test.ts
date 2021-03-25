@@ -266,12 +266,12 @@ describe('serializeReferenceContributorsList', () => {
 
   it('should serialize group contributor', () => {
     const xml = serializeReferenceContributorsList('author', [{groupName: 'Teenage mutant ninja turtles'}]);
-    expect(xmlSerializer.serializeToString(xml)).toBe('<person-group person-group-type="author"><name><collab>Teenage mutant ninja turtles</collab></name></person-group>');
+    expect(xmlSerializer.serializeToString(xml)).toBe('<person-group person-group-type="author"><collab>Teenage mutant ninja turtles</collab></person-group>');
   });
 
   it('should serialize mixed contributors list', () => {
     const xml = serializeReferenceContributorsList('author', [{groupName: 'Teenage mutant ninja turtles'}, {firstName: 'John', lastName: 'Doe'}]);
-    expect(xmlSerializer.serializeToString(xml)).toBe('<person-group person-group-type="author"><name><collab>Teenage mutant ninja turtles</collab></name><name><given-names>John</given-names><surname>Doe</surname></name></person-group>');
+    expect(xmlSerializer.serializeToString(xml)).toBe('<person-group person-group-type="author"><collab>Teenage mutant ninja turtles</collab><name><given-names>John</given-names><surname>Doe</surname></name></person-group>');
   });
 
 });
