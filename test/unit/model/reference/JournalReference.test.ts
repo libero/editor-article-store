@@ -1,5 +1,6 @@
 import { JournalReference } from '../../../../src/model/reference/JournalReference';
 import { parseXML } from '../../../../src/xml-exporter/xml-utils';
+import * as xmldom from "xmldom";
 
 jest.mock('uuid', () => ({
   v4: () => 'unique_id'
@@ -129,6 +130,63 @@ describe('JournalReference', () => {
       expect(journalReference.articleTitle.doc.textContent).toBe("An article Title");
       expect(journalReference.source.doc.textContent).toBe("A source Title");
       expect(journalReference.id).toBe("unique_id");
+    });
+  });
+
+  describe('toXml', () => {
+    const xmlSerializer = new xmldom.XMLSerializer();
+
+    it('should serialize an empty journal reference', () => {
+      const reference = new JournalReference(emptyJournalRefJSON);
+      const xmlString = xmlSerializer.serializeToString(reference.toXml());
+      expect(xmlString)
+        .toBe('<element-citation publication-type="journal"><elocation-id></elocation-id><fpage></fpage><lpage></lpage><year iso-8601-date=""></year><article-title/><source/><pub-id pub-id-type="doi"></pub-id><pub-id pub-id-type="pmid"></pub-id><volume></volume></element-citation>');
+    });
+    
+    it('should serialize a populated journal reference', () => {
+      const reference = new JournalReference({ ...populatedJournalRefJSON,
+        "articleTitle": {
+          "doc": {
+            "content": [
+              {
+                "text": "I am articleTitle text",
+                "type": "text",
+              },
+            ],
+            "type": "annotatedReferenceInfoDoc",
+          },
+          "selection": {
+            "anchor": 0,
+            "head": 0,
+            "type": "text",
+          },
+        },
+        "source": {
+          "doc": {
+            "content": [
+              {
+                "text": "I am source text",
+                "type": "text",
+              },
+            ],
+            "type": "annotatedReferenceInfoDoc",
+          },
+          "selection": {
+            "anchor": 0,
+            "head": 0,
+            "type": "text",
+          },
+        }});
+      const xmlString = xmlSerializer.serializeToString(reference.toXml());
+      expect(xmlString)
+        .toBe('<element-citation publication-type="journal"><elocation-id>elocationId</elocation-id><fpage>firstPage</fpage><lpage>lastPage</lpage><year iso-8601-date="year">year</year><article-title>I am articleTitle text</article-title><source>I am source text</source><pub-id pub-id-type="doi">DOI</pub-id><pub-id pub-id-type="pmid">pmid</pub-id><volume>volume</volume><comment>In press</comment></element-citation>');
+    });
+
+    it('should exclude In press if flat is false' , () => {
+      const reference = new JournalReference({ ...populatedJournalRefJSON, inPress: false });
+      const xmlString = xmlSerializer.serializeToString(reference.toXml());
+      expect(xmlString)
+        .toBe('<element-citation publication-type="journal"><elocation-id>elocationId</elocation-id><fpage>firstPage</fpage><lpage>lastPage</lpage><year iso-8601-date="year">year</year><article-title/><source/><pub-id pub-id-type="doi">DOI</pub-id><pub-id pub-id-type="pmid">pmid</pub-id><volume>volume</volume></element-citation>');
     });
   });
 });
