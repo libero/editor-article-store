@@ -55,6 +55,8 @@ export function serializeReferenceContributorsList(groupType: string, contributo
       surname.appendChild(xmlDoc.createTextNode(get(refContributor, 'lastName')));
       name.appendChild(surname);
     }
+
+    contributorsXml.appendChild(name);
   });
 
   return contributorsXml;

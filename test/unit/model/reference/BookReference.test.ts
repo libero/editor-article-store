@@ -204,7 +204,7 @@ describe('BookReference', () => {
         }});
       const xmlString = xmlSerializer.serializeToString(reference.toXml());
       expect(xmlString)
-        .toBe('<element-citation publication-type="book"><edition>edition</edition><person-group person-group-type="editor"/><elocation-id>elocationId</elocation-id><fpage>firstPage</fpage><lpage>lastPage</lpage><year iso-8601-date="year">year</year><chapter-title>I am chapterTitle text</chapter-title><source>I am source text</source><pub-id pub-id-type="doi">DOI</pub-id><pub-id pub-id-type="pmid">pmid</pub-id><publisher-name>publisherName</publisher-name><publisher-loc>publisherLocation</publisher-loc><volume>volume</volume></element-citation>');
+        .toBe('<element-citation publication-type="book"><edition>edition</edition><person-group person-group-type="editor"><name><given-names>DJ</given-names><surname>Katz</surname></name></person-group><elocation-id>elocationId</elocation-id><fpage>firstPage</fpage><lpage>lastPage</lpage><year iso-8601-date="year">year</year><chapter-title>I am chapterTitle text</chapter-title><source>I am source text</source><pub-id pub-id-type="doi">DOI</pub-id><pub-id pub-id-type="pmid">pmid</pub-id><publisher-name>publisherName</publisher-name><publisher-loc>publisherLocation</publisher-loc><volume>volume</volume></element-citation>');
     });
   });
 });
