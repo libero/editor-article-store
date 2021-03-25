@@ -1,3 +1,4 @@
+import xmldom from 'xmldom';
 import { PeriodicalReference } from '../../../../src/model/reference/PeriodicalReference';
 import { parseXML } from '../../../../src/xml-exporter/xml-utils';
 jest.mock('uuid', () => ({
@@ -12,7 +13,7 @@ const emptyPeriodicalRefJSON = {
   extLink: ''
 };
 const populatedPeriodicalRefJSON = {
-  date: 'someDate',
+  date: '2016-10-03',
   volume: 'someVolume',
   firstPage: 'someFirstPage',
   lastPage: 'someLastPage',
@@ -91,10 +92,10 @@ describe('PeriodicalReference', () => {
     });
     it('returns PeriodicalReference when called with populated XML fragment', () => {
       const xmlWrapper = parseXML(`<article><element-citation>
-      <string-date>
+      <string-date iso-8601-date="1993-09-09">
         <month>September</month> 
         <day>9</day>, 
-        <year iso-8601-date="1993-09-09">1993</year>
+        <year>1993</year>
       </string-date>
       <volume>2854</volume>
       <article-title>Obesity affects economic, social status</article-title>
@@ -116,6 +117,64 @@ describe('PeriodicalReference', () => {
       expect(periodicalRef.articleTitle.doc.textContent).toBe("Obesity affects economic, social status");
       expect(periodicalRef.source.doc.textContent).toBe("The Washington Post");
       expect(periodicalRef.id).toBe("unique_id");
+    });
+  });
+  describe('toXml', () => {
+    const xmlSerializer = new xmldom.XMLSerializer();
+
+    it('should serialize an empty periodical reference', () => {
+      const reference = new PeriodicalReference();
+      const xmlString = xmlSerializer.serializeToString(reference.toXml());
+      expect(xmlString)
+        .toBe('<element-citation publication-type="periodical"><string-date iso-8601-date=""/><article-title/><source/><volume></volume><fpage></fpage><lpage></lpage><ext-link ext-link-type="uri" xlink:href=""></ext-link></element-citation>');
+    });
+
+    it('should serialize a populated periodical reference', () => {
+      const reference = new PeriodicalReference({ ...populatedPeriodicalRefJSON,
+        "articleTitle": {
+          "doc": {
+            "content": [
+              {
+                "text": "I am articleTitle text",
+                "type": "text",
+              },
+            ],
+            "type": "annotatedReferenceInfoDoc",
+          },
+          "selection": {
+            "anchor": 0,
+            "head": 0,
+            "type": "text",
+          },
+        },
+        "source": {
+          "doc": {
+            "content": [
+              {
+                "text": "I am source text",
+                "type": "text",
+              },
+            ],
+            "type": "annotatedReferenceInfoDoc",
+          },
+          "selection": {
+            "anchor": 0,
+            "head": 0,
+            "type": "text",
+          },
+        }
+      });
+      const xmlString = xmlSerializer.serializeToString(reference.toXml());
+      expect(xmlString)
+        .toBe('<element-citation publication-type="periodical">' +
+        '<string-date iso-8601-date="2016-10-03"><month>October</month><day>3</day>, <year>2016</year></string-date>' +
+        '<article-title>I am articleTitle text</article-title>' +
+        '<source>I am source text</source>' +
+        '<volume>someVolume</volume>' +
+        '<fpage>someFirstPage</fpage>' +
+        '<lpage>someLastPage</lpage>' +
+        '<ext-link ext-link-type="uri" xlink:href="someExternalLink">someExternalLink</ext-link>' +
+        '</element-citation>');
     });
   });
 });
