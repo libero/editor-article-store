@@ -48,14 +48,14 @@ describe('BookReference', () => {
     expect(bookRef.id).toBe("unique_id");
   });
   describe('fromJSON', () => {
-    it('returns empty BookReference when called with empty data object', () => {
+    it('returns empty BookReference when called with empty book object', () => {
       const bookRef = new BookReference({});
       expect(bookRef).toEqual(expect.objectContaining(emptyBookRefJSON));
       expect(bookRef.chapterTitle.doc.textContent).toBe("");
       expect(bookRef.source.doc.textContent).toBe("");
       expect(bookRef.id).toBe("unique_id");
     });
-    it('returns BookReference when called with populated data object ', () => {
+    it('returns BookReference when called with populated book object ', () => {
       const bookRef = new BookReference({ ...populatedBookRefJSON,   
       "chapterTitle": {
         "doc": {
@@ -161,14 +161,14 @@ describe('BookReference', () => {
   describe('toXml', () => {
     const xmlSerializer = new xmldom.XMLSerializer();
 
-    it('should serialize an empty data reference', () => {
+    it('should serialize an empty book reference', () => {
       const reference = new BookReference(emptyBookRefJSON);
       const xmlString = xmlSerializer.serializeToString(reference.toXml());
       expect(xmlString)
         .toBe('<element-citation publication-type="book"><edition></edition><person-group person-group-type="editor"/><elocation-id></elocation-id><fpage></fpage><lpage></lpage><year iso-8601-date=""></year><chapter-title/><source/><pub-id pub-id-type="doi"></pub-id><pub-id pub-id-type="pmid"></pub-id><publisher-name></publisher-name><publisher-loc></publisher-loc><volume></volume></element-citation>');
     });
 
-    it('should serialize a populated data reference', () => {
+    it('should serialize a populated book reference', () => {
       const reference = new BookReference({ ...populatedBookRefJSON,
         "chapterTitle": {
           "doc": {
