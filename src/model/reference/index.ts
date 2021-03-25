@@ -1,11 +1,39 @@
 import {BackmatterEntity} from "../backmatter-entity";
 import {JSONObject} from "../types";
 import { ReferenceContributor, ReferenceType } from "./types";
+import {JournalReference} from "./JournalReference";
+import {ConferenceReference} from "./ConferenceReference";
+import { BookReference } from "./BookReference";
+import {DataReference} from "./DataReference";
+import {PreprintReference} from "./PreprintReference";
+import {PeriodicalReference} from "./PeriodicalReference";
+import {ReportReference} from "./ReportReference";
+import {PatentReference} from "./PatentReference";
+import {SoftwareReference} from "./SoftwareReference";
+import {WebReference} from "./WebReference";
+import {ThesisReference} from "./ThesisReference";
+
+export type ReferenceInfoType =
+  | JournalReference
+  | BookReference
+  | ConferenceReference
+  | DataReference
+  | PeriodicalReference
+  | PreprintReference
+  | ReportReference
+  | PatentReference
+  | SoftwareReference
+  | WebReference
+  | ThesisReference;
 
 export class Reference extends BackmatterEntity {
-
   authors: Array<ReferenceContributor> = [];
-  // referenceInfo: ReferenceInfoType;
+  referenceInfo!: ReferenceInfoType;
+
+  constructor(data?: JSONObject | Element, notesXml?: Element | null) {
+    super();
+    this.createEntity(data);
+  }
 
   public get type(): ReferenceType {
     return this._type;
@@ -15,6 +43,7 @@ export class Reference extends BackmatterEntity {
   protected createBlank(): void {
     this._type = "journal";
     this.authors = [];
+    this.referenceInfo = this.createReferenceInfo();
   }
 
   protected fromJSON(json: JSONObject): void {
@@ -25,4 +54,21 @@ export class Reference extends BackmatterEntity {
     console.log('fromXML is not implemented');
   }
 
+  private createReferenceInfo(data?: JSONObject | Element): ReferenceInfoType {
+    const refInfoClass = {
+      journal: JournalReference,
+      book: BookReference,
+      periodical: PeriodicalReference,
+      report: ReportReference,
+      data: DataReference,
+      web: WebReference,
+      preprint: PreprintReference,
+      software: SoftwareReference,
+      confproc: ConferenceReference,
+      thesis: ThesisReference,
+      patent: PatentReference
+    }[this.type];
+
+    return new refInfoClass(data);
+  }
 }
