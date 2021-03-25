@@ -3,8 +3,9 @@ import {DOMParser as ProseMirrorDOMParser} from 'prosemirror-model';
 import { getTextContentFromPath, makeSchemaFromConfig } from "../utils";
 import { ReferenceContributor } from "./types";
 import * as referenceInfoConfig from '../config/reference-info.config';
-import xmldom from "xmldom";
+import xmldom, {DOMImplementation} from "xmldom";
 import { JSONObject } from "../types";
+import {get, has } from "lodash";
 
 const referenceInfoSchema = makeSchemaFromConfig(
   referenceInfoConfig.topNode,
@@ -30,6 +31,33 @@ export function createReferencePersonList(referenceXml: Element, groupType: stri
       };
     }
   });
+}
+
+export function serializeReferenceContributorsList(groupType: string, contributors: ReferenceContributor[]): Element {
+  const xmlDoc = new DOMImplementation().createDocument(null, null);
+  const contributorsXml = xmlDoc.createElement('person-group');
+  contributorsXml.setAttribute('person-group-type', groupType);
+
+  contributors.forEach((refContributor) => {
+    const name = xmlDoc.createElement('name');
+
+    if (has(refContributor, 'groupName')) {
+      const groupName = xmlDoc.createElement('collab');
+      groupName.appendChild(xmlDoc.createTextNode(get(refContributor, 'groupName')));
+      name.appendChild(groupName);
+
+    } else {
+      const givenNames = xmlDoc.createElement('given-names');
+      givenNames.appendChild(xmlDoc.createTextNode(get(refContributor, 'firstName')));
+      name.appendChild(givenNames);
+
+      const surname = xmlDoc.createElement('surname');
+      surname.appendChild(xmlDoc.createTextNode(get(refContributor, 'lastName')));
+      name.appendChild(surname);
+    }
+  });
+
+  return contributorsXml;
 }
 
 export function createReferenceAnnotatedValue(content?: Node | null): EditorState {
