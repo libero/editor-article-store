@@ -1,5 +1,6 @@
 import { ConferenceReference } from '../../../../src/model/reference/ConferenceReference';
 import { parseXML } from '../../../../src/xml-exporter/xml-utils';
+import * as xmldom from "xmldom";
 
 jest.mock('uuid', () => ({
   v4: () => 'unique_id'
@@ -131,6 +132,57 @@ describe('ConferenceReference', () => {
       expect(conferenceReference.articleTitle.doc.textContent).toBe("Automated hypothesis generation based on mining scientific literature");
       expect(conferenceReference.conferenceName.doc.textContent).toBe("Proceedings of the 20th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining");
       expect(conferenceReference.id).toBe("unique_id");
+    });
+  });
+
+
+  describe('toXml', () => {
+    const xmlSerializer = new xmldom.XMLSerializer();
+
+    it('should serialize an empty conference reference', () => {
+      const reference = new ConferenceReference(emptyConferenceRefJSON);
+      const xmlString = xmlSerializer.serializeToString(reference.toXml());
+      expect(xmlString)
+        .toBe('<element-citation publication-type="confproc"><elocation-id></elocation-id><conf-name/><conf-loc></conf-loc><conf-date></conf-date><fpage></fpage><lpage></lpage><year iso-8601-date=""></year><article-title/><pub-id pub-id-type="doi"></pub-id><ext-link ext-link-type="uri" xlink:href=""></ext-link><volume></volume></element-citation>');
+    });
+
+    it('should serialize a populated conference reference', () => {
+      const reference = new ConferenceReference({ ...populatedConferenceRefJSON,
+        "articleTitle": {
+          "doc": {
+            "content": [
+              {
+                "text": "I am articleTitle text",
+                "type": "text",
+              },
+            ],
+            "type": "annotatedReferenceInfoDoc",
+          },
+          "selection": {
+            "anchor": 0,
+            "head": 0,
+            "type": "text",
+          },
+        },
+        "conferenceName": {
+          "doc": {
+            "content": [
+              {
+                "text": "I am conferenceName text",
+                "type": "text",
+              },
+            ],
+            "type": "annotatedReferenceInfoDoc",
+          },
+          "selection": {
+            "anchor": 0,
+            "head": 0,
+            "type": "text",
+          },
+        }});
+      const xmlString = xmlSerializer.serializeToString(reference.toXml());
+      expect(xmlString)
+        .toBe('<element-citation publication-type="confproc"><elocation-id>elocationId</elocation-id><conf-name>I am conferenceName text</conf-name><conf-loc>conferenceLocation</conf-loc><conf-date>conferenceDate</conf-date><fpage>firstPage</fpage><lpage>lastPage</lpage><year iso-8601-date="year">year</year><article-title>I am articleTitle text</article-title><pub-id pub-id-type="doi">doi</pub-id><ext-link ext-link-type="uri" xlink:href="extLink">extLink</ext-link><volume>volume</volume></element-citation>');
     });
   });
 });
