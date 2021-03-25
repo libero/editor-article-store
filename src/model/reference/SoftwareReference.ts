@@ -1,8 +1,10 @@
-import { EditorState } from "prosemirror-state";
-import { BackmatterEntity } from "../backmatter-entity";
-import { JSONObject } from "../types";
-import { getTextContentFromPath } from "../utils";
-import { createReferenceAnnotatedValue, deserializeReferenceAnnotatedValue } from "./reference.utils";
+import {EditorState} from "prosemirror-state";
+import {BackmatterEntity} from "../backmatter-entity";
+import {JSONObject} from "../types";
+import {getTextContentFromPath} from "../utils";
+import {createReferenceAnnotatedValue, deserializeReferenceAnnotatedValue} from "./reference.utils";
+import {DOMImplementation} from "xmldom";
+import {serializeManuscriptSection} from "../../xml-exporter/manuscript-serializer";
 
 export class SoftwareReference extends BackmatterEntity {
   year!: string;
@@ -18,6 +20,51 @@ export class SoftwareReference extends BackmatterEntity {
     super();
     this.createEntity(data)
   }
+
+  toXml(): Element {
+    const xmlDoc = new DOMImplementation().createDocument(null, null);
+    const xml = xmlDoc.createElement('element-citation');
+    xml.setAttribute('publication-type', 'software');
+
+    const year = xmlDoc.createElement('year');
+    year.setAttribute('iso-8601-date', this.year);
+    year.appendChild(xmlDoc.createTextNode(this.year));
+    xml.appendChild(year);
+
+    const extLink = xmlDoc.createElement('ext-link');
+    extLink.setAttribute('ext-link-type', 'uri');
+    extLink.setAttribute('xlink:href', this.extLink);
+    extLink.appendChild(xmlDoc.createTextNode(this.extLink));
+    xml.appendChild(extLink);
+
+    const articleTitle = xmlDoc.createElement('article-title');
+    articleTitle.appendChild(serializeManuscriptSection(this.articleTitle, xmlDoc));
+    xml.appendChild(articleTitle);
+
+    const source = xmlDoc.createElement('source');
+    source.appendChild(serializeManuscriptSection(this.source, xmlDoc));
+    xml.appendChild(source);
+
+    const doi = xmlDoc.createElement('pub-id');
+    doi.setAttribute('pub-id-type', 'doi');
+    doi.appendChild(xmlDoc.createTextNode(this.doi));
+    xml.appendChild(doi);
+
+    const version = xmlDoc.createElement('version');
+    version.appendChild(xmlDoc.createTextNode(this.version));
+    xml.appendChild(version);
+
+    const publisherName = xmlDoc.createElement('publisher-name');
+    publisherName.appendChild(xmlDoc.createTextNode(this.publisherName));
+    xml.appendChild(publisherName);
+
+    const publisherLoc = xmlDoc.createElement('publisher-loc');
+    publisherLoc.appendChild(xmlDoc.createTextNode(this.publisherLocation));
+    xml.appendChild(publisherLoc);
+
+    return xml;
+  }
+
   protected fromJSON(json: JSONObject) {
     this._id = json._id as string || this._id;
     this.year = json.year as string || '';
@@ -29,6 +76,7 @@ export class SoftwareReference extends BackmatterEntity {
     this.extLink = json.extLink as string || '';
     this.source = json.source ? deserializeReferenceAnnotatedValue(json.source as JSONObject) : createReferenceAnnotatedValue();
   }
+
   protected fromXML(referenceXml: Element) {
     this.year = getTextContentFromPath(referenceXml, 'year');
     this.articleTitle = createReferenceAnnotatedValue(referenceXml.querySelector('article-title'));
@@ -39,12 +87,13 @@ export class SoftwareReference extends BackmatterEntity {
     this.doi = getTextContentFromPath(referenceXml, 'pub-id[pub-id-type="doi"]') || '';
     this.extLink = getTextContentFromPath(referenceXml, 'ext-link') || '';
   }
+
   protected createBlank() {
     this.year = '';
     this.doi = '';
     this.version = '';
     this.publisherLocation = '';
-    this.publisherName =  '';
+    this.publisherName = '';
     this.articleTitle = createReferenceAnnotatedValue();
     this.extLink = '';
     this.source = createReferenceAnnotatedValue();
