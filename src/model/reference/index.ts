@@ -30,7 +30,7 @@ export class Reference extends BackmatterEntity {
   authors: Array<ReferenceContributor> = [];
   referenceInfo!: ReferenceInfoType;
 
-  constructor(data?: JSONObject | Element, notesXml?: Element | null) {
+  constructor(data?: JSONObject | Element) {
     super();
     this.createEntity(data);
   }
@@ -38,6 +38,12 @@ export class Reference extends BackmatterEntity {
   public get type(): ReferenceType {
     return this._type;
   }
+
+  public set type(value: ReferenceType) {
+    this._type = value;
+    this.referenceInfo = this.createReferenceInfo();
+  }
+
   private _type: ReferenceType = "journal";
 
   protected createBlank(): void {
