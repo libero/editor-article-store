@@ -19,6 +19,15 @@ Array [
   Object {
     "content": Array [
       Object {
+        "text": "Bacterial cells on the surface of a plant leaf.",
+        "type": "text",
+      },
+    ],
+    "type": "figureTitle",
+  },
+  Object {
+    "content": Array [
+      Object {
         "text": "Pellentesque porta interdum sodales (",
         "type": "text",
       },
@@ -152,12 +161,6 @@ Array [
         "type": "text",
       },
     ],
-    "type": "paragraph",
-  },
-  Object {
-    "type": "figureTitle",
-  },
-  Object {
     "type": "figureLegend",
   },
   Object {

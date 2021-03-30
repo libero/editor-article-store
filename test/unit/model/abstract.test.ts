@@ -1,6 +1,3 @@
-/**
- * @jest-environment jsdom
- */
 import {
   createAbstractState,
   createImpactStatementState,
@@ -13,9 +10,12 @@ import {Manuscript} from "../../../src/model/manuscript";
 
 describe('Manuscript state factory', () => {
   it('creates abstract state', () => {
-    const el = document.createElement('abstract');
-    el.innerHTML = 'A sample <italic>text</italic> with <sub>a</sub> variety of <sup>tags</sup>';
-    const editorState = createAbstractState(el);
+    const xmlDoc = parseXML(`<article>
+        <article-meta>
+            <abstract>A sample <italic>text</italic> with <sub>a</sub> variety of <sup>tags</sup></abstract>
+        </article-meta>
+    </article>`);
+    const editorState = createAbstractState(xmlDoc.querySelector('abstract')!);
     expect(editorState).toMatchSnapshot();
   });
 
@@ -25,9 +25,12 @@ describe('Manuscript state factory', () => {
   });
 
   it('creates impact statement state', () => {
-    const el = document.createElement('abstract');
-    el.innerHTML = 'A sample <italic>text</italic> with <sub>a</sub> variety of <sup>tags</sup>';
-    const editorState = createImpactStatementState(el);
+    const xmlDoc = parseXML(`<article>
+        <article-meta>
+            <abstract>A sample <italic>text</italic> with <sub>a</sub> variety of <sup>tags</sup></abstract>
+        </article-meta>
+    </article>`);
+    const editorState = createImpactStatementState(xmlDoc.querySelector('abstract')!);
     expect(editorState).toMatchSnapshot();
   });
 

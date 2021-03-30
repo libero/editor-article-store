@@ -1,20 +1,18 @@
-import * as jsdom from "jsdom";
-
 import {BatchChange} from '../../../../src/model/history/batch-change';
 import {ProsemirrorChange} from '../../../../src/model/history/prosemirror-change';
 import {createBodyState} from '../../../../src/model/body';
 import {createTitleState} from '../../../../src/model/title';
 import {Manuscript} from '../../../../src/model/manuscript';
-
+import {parseXML} from "../../../../src/xml-exporter/xml-utils";
 
 describe('BatchChange', () => {
-  const dom = new jsdom.JSDOM();
   let manuscript: Manuscript;
 
   beforeEach(() => {
+    const xmlDoc = parseXML(`<article> <title></title> <body></body> </article>`)
     manuscript = {
-      body: createBodyState(dom.window.document.createElement('div')),
-      title: createTitleState(dom.window.document.createElement('div'))
+      body: createBodyState(xmlDoc.querySelector('body')!),
+      title: createTitleState(xmlDoc.querySelector('title')!)
     } as Manuscript;
   });
 

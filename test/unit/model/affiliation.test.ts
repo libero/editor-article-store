@@ -1,6 +1,3 @@
-/**
- * @jest-environment jsdom
- */
 import {Affiliation, createAffiliationsState, serializeAffiliations} from '../../../src/model/affiliation';
 import * as xmldom from "xmldom";
 import {EditorState} from "prosemirror-state";
@@ -36,13 +33,17 @@ const mockJSONData2 = {
   country: 'Country'
 };
 
-const mockXMLData = document.createElement('aff');
-mockXMLData.setAttribute("id", "aff1");
-mockXMLData.innerHTML = `<label>label</label>
-    <institution content-type="dept">Tech Department</institution>
-    <institution>eLife Sciences</institution>
-    <addr-line><named-content content-type="city">Cambridge</named-content></addr-line>
-    <country>United Kingdom</country>`;
+const xmlDoc = parseXML(`<article>
+        <aff id="aff1">
+          <label>label</label>
+          <institution content-type="dept">Tech Department</institution>
+          <institution>eLife Sciences</institution>
+          <addr-line><named-content content-type="city">Cambridge</named-content></addr-line>
+          <country>United Kingdom</country>
+        </aff>
+    </article>`);
+
+const mockXMLData = xmlDoc.querySelector('aff')!;
 
 describe('Affiliation', () => {
   it('returns empty Affiliation when called with no data', () => {
@@ -82,7 +83,7 @@ describe('Affiliation', () => {
   });
   describe('fromXML', () => {
     it('returns empty Affiliation when called with empty aff xml fragment', () => {
-      const affiliation = new Affiliation(document.createElement('aff'));
+      const affiliation = new Affiliation(xmlDoc.createElement('aff'));
       expect(affiliation).toBeInstanceOf(Affiliation);
       expect(affiliation).toStrictEqual(expect.objectContaining({
         label: '',
@@ -129,8 +130,8 @@ describe('createAffiliationsState', () => {
     expect(createAffiliationsState([])).toStrictEqual([]);
   });
   it('returns an Affiliation instance for each affiliation xml element', () => {
-    const xmlWrapper = document.createElement('contrib-group');
-    xmlWrapper.innerHTML = `<aff id="aff1">
+    const xmlWrapper = parseXML(`<contrib-group>
+      <aff id="aff1">
         <label>label</label>
         <institution content-type="dept">Tech Department</institution>
         <institution>eLife Sciences</institution>
@@ -143,7 +144,8 @@ describe('createAffiliationsState', () => {
         <institution>University</institution>
         <addr-line><named-content content-type="city">City</named-content></addr-line>
         <country>Country</country>
-      </aff>`;
+      </aff>
+    </contrib-group>`);
 
     const affiliations = createAffiliationsState(Array.from(xmlWrapper.querySelectorAll('aff')));
     expect(affiliations).toHaveLength(2);

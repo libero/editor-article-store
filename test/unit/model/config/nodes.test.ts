@@ -1,6 +1,8 @@
 import { Node as ProsemirrorNode } from 'prosemirror-model';
 import { nodes } from '../../../../src/model/config/nodes';
-import * as jsdom from "jsdom";
+import * as xmldom from "xmldom";
+import {parseXML} from "../../../../src/xml-exporter/xml-utils";
+
 
 jest.mock('uuid', () => ({
   v4: () => 'unique_id'
@@ -24,6 +26,9 @@ jest.mock('../../../../src/model/figure', () => ({
 }));
 
 describe('nodes spec', () => {
+
+  const xmlDoc = new xmldom.DOMImplementation().createDocument(null, null);
+
   it('checks nodes spec definition', () => {
     expect(nodes).toMatchSnapshot();
   });
@@ -81,13 +86,12 @@ describe('nodes spec', () => {
   });
 
   it('checks heading spec attributes', () => {
-    const doc = new jsdom.JSDOM().window.document;
-    doc.body.innerHTML = `<sec>
+    const doc = parseXML(`<sec>
         <title id="title1">Test</title>
         <sec>
             <title id="title2"> Second level heading </title>
         </sec>
-    </sec>`;
+    </sec>`);
     expect(nodes['heading'].parseDOM[0].getAttrs!(doc.querySelector('#title1')!)).toEqual({domId: 'unique_id', level: 1});
     expect(nodes['heading'].parseDOM[0].getAttrs!(doc.querySelector('#title2')!)).toEqual({domId: 'unique_id', level: 2});
   });
@@ -99,38 +103,21 @@ describe('nodes spec', () => {
   });
 
   it('checks refCitation spec XML attributes', () => {
-    const node = new jsdom.JSDOM().window.document.createElement('xref');
-    node.innerHTML = 'SOME_TEXT';
+    const node = xmlDoc.createElement('xref');
+    node.appendChild(xmlDoc.createTextNode('SOME_TEXT'));
     node.setAttribute('rid', 'SOME_ID');
     expect(nodes['refCitation'].parseDOM[0].getAttrs!(node)).toEqual({refText: 'SOME_TEXT', refId: 'SOME_ID'});
   });
 
   it('checks refCitation spec HTML (clipboards) attributes', () => {
-    const node = new jsdom.JSDOM().window.document.createElement('a');
-    node.innerHTML = 'SOME_TEXT';
+    const node = xmlDoc.createElement('a');
+    node.appendChild(xmlDoc.createTextNode('SOME_TEXT'));
     node.setAttribute('data-cit-type', 'reference');
     node.setAttribute('data-ref-id', 'SOME_ID');
     node.setAttribute('data-ref-text', 'SOME_TEXT');
     expect(nodes['refCitation'].parseDOM[1].getAttrs!(node)).toEqual({refText: 'SOME_TEXT', refId: 'SOME_ID'});
   });
 
-  it('checks refCitation spec HTML (clipboards) rendering', () => {
-    const node = new ProsemirrorNode();
-
-    const dom = new jsdom.JSDOM()
-    global['document'] = dom.window.document;
-
-    node.attrs = { refId: 'SOME_ID', refText: 'SOME_TEXT' };
-    expect((nodes['refCitation'].toClipboardDOM(node) as HTMLElement).outerHTML)
-      .toEqual('<a href="#" data-cit-type="reference" data-ref-id="SOME_ID" data-ref-text="SOME_TEXT" class="citation">SOME_TEXT</a>');
-  });
-
-  it('checks refCitation spec text (clipboards) rendering', () => {
-    const node = new ProsemirrorNode();
-
-    node.attrs = { refId: 'SOME_ID', refText: 'SOME_TEXT' };
-    expect(nodes['refCitation'].toClipboardText(node)).toEqual('SOME_TEXT');
-  });
 
   it('checks refCitation spec rendering', () => {
     const node = new ProsemirrorNode();
@@ -148,15 +135,17 @@ describe('nodes spec', () => {
   });
 
   it('checks figure spec rendering', () => {
-    const node = new jsdom.JSDOM().window.document.createElement('fig');
+    const node = xmlDoc.createElement('fig');
     node.setAttribute('id', 'SOME_ID');
-    node.innerHTML = '<label>SOME_LABEL</label>';
+    const label = xmlDoc.createElement('label');
+    label.appendChild(xmlDoc.createTextNode('SOME_LABEL'))
+    node.appendChild(label);
     expect(nodes['figure'].parseDOM[0].getAttrs(node))
       .toEqual({id: 'SOME_ID', label: 'SOME_LABEL', img: 'IMAGE_URL'});
   });
 
   it('checks figureLicese attributes', () => {
-    const node = new jsdom.JSDOM().window.document.createElement('fig');
+    const node = xmlDoc.createElement('fig');
     expect(nodes['figureLicense'].parseDOM[0].getAttrs!(node))
       .toEqual({ licenseInfo: {
           copyrightHolder: 'Copyright holder',
@@ -168,24 +157,18 @@ describe('nodes spec', () => {
   });
 
   it('checks figureLicese rendering', () => {
-    const node = new jsdom.JSDOM().window.document.createElement('fig');
+    const node = xmlDoc.createElement('fig');
     expect(nodes['figureLicense'].toDOM()).toEqual(['license-p', 0]);
   });
 
   it('checks figureCitation spec XML attributes', () => {
-    const node = new jsdom.JSDOM().window.document.createElement('xref');
+    const node = xmlDoc.createElement('xref');
     node.setAttribute('rid', 'SOME_ID');
     expect(nodes['figureCitation'].parseDOM[0].getAttrs!(node)).toEqual({ figIds: ['SOME_ID'] });
   });
 
-  // it('checks figureCitation spec XML attributes', () => {
-  //   const node = new jsdom.JSDOM().window.document.createElement('xref');
-  //   node.setAttribute('rid', 'SOME_ID');
-  //   expect(nodes['figureCitation'].parseDOM[0].getAttrs!(node)).toEqual({ figIds: ['SOME_ID'] });
-  // });
-
   it('checks figureCitation spec HTML (clipboards) attributes', () => {
-    const node = new jsdom.JSDOM().window.document.createElement('a');
+    const node = xmlDoc.createElement('a');
     node.setAttribute('data-fig-ids', 'SOME_ID1 SOME_ID2');
     expect(nodes['figureCitation'].parseDOM[1].getAttrs!(node)).toEqual({figIds: ['SOME_ID1', 'SOME_ID2']});
   });

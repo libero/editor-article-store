@@ -1,7 +1,5 @@
-/**
- * @jest-environment jsdom
- */
 import {createEmptyLicenseAttributes, createFigureLicenseAttributes, getLicenseUrl} from '../../../src/model/figure';
+import {parseXML} from "../../../src/xml-exporter/xml-utils";
 
 jest.mock('../../../src/model/config/nodes');
 
@@ -22,14 +20,18 @@ describe('Manuscript state factory', () => {
   });
 
   it('returns license attributes', () => {
-    const el = document.createElement('permissions');
-    el.innerHTML = `<copyright-statement>2020, Emerson et al</copyright-statement>
-      <copyright-year>2020</copyright-year>
-      <copyright-holder>Emerson et al</copyright-holder>
-      <ali:free_to_read/>
-      <license xlink:href="http://creativecommons.org/licenses/by/4.0/">
-          <ali:license_ref>http://creativecommons.org/licenses/by/4.0/</ali:license_ref>
-      </license>`;
+    const xmlDoc = parseXML(`<article>
+        <permissions> 
+          <copyright-statement>2020, Emerson et al</copyright-statement>
+          <copyright-year>2020</copyright-year>
+          <copyright-holder>Emerson et al</copyright-holder>
+          <ali:free_to_read/>
+          <license xlink:href="http://creativecommons.org/licenses/by/4.0/">
+              <ali:license_ref>http://creativecommons.org/licenses/by/4.0/</ali:license_ref>
+          </license> 
+      </permissions>
+    </article>`);
+    const el = xmlDoc.querySelector('permissions')!;
     expect(createFigureLicenseAttributes(el)).toEqual({
       copyrightHolder: 'Emerson et al',
       copyrightStatement: '2020, Emerson et al',
