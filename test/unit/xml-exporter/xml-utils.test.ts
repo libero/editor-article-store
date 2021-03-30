@@ -1,11 +1,9 @@
 import {clearNode, parseXML} from '../../../src/xml-exporter/xml-utils';
-import * as jsdom from "jsdom";
-import * as xmldom from "xmldom";
 
 describe('xml-utils', () => {
   it('checks clearNode', () => {
-    const dom = new jsdom.JSDOM();
-    const el = dom.window.document.createElement('div');
+    const dom = parseXML('<div></div><div></div><div></div>');
+    const el = dom.documentElement;
     el.innerHTML = '<div></div><div></div><div></div>';
     clearNode(el);
     expect(el.childNodes.length).toBe(0);

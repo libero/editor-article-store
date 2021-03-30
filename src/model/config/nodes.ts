@@ -137,19 +137,6 @@ export const nodes = {
         }
       }
     ],
-    toClipboardDOM(node: ProsemirrorNode): DOMOutputSpec {
-      const refCitationDom = document.createElement('a');
-      refCitationDom.setAttribute('href', '#');
-      refCitationDom.setAttribute('data-cit-type', 'reference');
-      refCitationDom.setAttribute('data-ref-id', node.attrs.refId);
-      refCitationDom.setAttribute('data-ref-text', node.attrs.refText);
-      refCitationDom.classList.add('citation');
-      refCitationDom.innerHTML = `${node.attrs.refText}`;
-      return refCitationDom;
-    },
-    toClipboardText(node: ProsemirrorNode): string {
-      return node.attrs.refText;
-    },
     toDOM(node: ProsemirrorNode): DOMOutputSpec {
       return [
         'a',

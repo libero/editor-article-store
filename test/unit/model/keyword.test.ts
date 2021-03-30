@@ -1,6 +1,3 @@
-/**
- * @jest-environment jsdom
- */
 import { Keyword, createKeywordGroupsState, serializeKeywordGroups } from '../../../src/model/keyword';
 import * as xmldom from "xmldom";
 import { parseXML } from '../../../src/xml-exporter/xml-utils';
@@ -27,6 +24,8 @@ Keyword {
 }
 `;
 
+const xmlDoc = new xmldom.DOMImplementation().createDocument(null, null);
+
 describe('Keyword', () => {
   it('returns empty Keyword when called with no data', () => {
     const keyword = new Keyword();
@@ -38,9 +37,8 @@ describe('Keyword', () => {
       expect(xmlSerializer.serializeToString(keyword.toXml())).toBe('<kwd/>')
     });
     it('serializes a populated keyword', () => {
-      const element = document.createElement('kwd')
-      element.innerHTML = `A<sub>Poodle</sub><italic>Puppy</italic><sup>Dog</sup>`;
-      const keyword = new Keyword(element);
+      const element = parseXML(`<kwd>A<sub>Poodle</sub><italic>Puppy</italic><sup>Dog</sup></kwd>`);
+      const keyword = new Keyword(element.querySelector('kwd')!);
       expect(xmlSerializer.serializeToString(keyword.toXml())).toBe(
         '<kwd>' + 
           'A<sub>Poodle</sub><italic>Puppy</italic><sup>Dog</sup>' +
@@ -50,13 +48,12 @@ describe('Keyword', () => {
   })
   describe('fromXml', () => {
     it('returns empty Keyword when called with empty aff xml fragment', () => {
-      const keyword = new Keyword(document.createElement('kwd-group'));
+      const keyword = new Keyword(xmlDoc.createElement('kwd-group'));
       expect(keyword).toMatchInlineSnapshot(emptyKywordSnapshot);
     });
     it('creates a Keyword from a complete xml fragment', () => {
-      const element = document.createElement('kwd')
-      element.innerHTML = `A<sub>Poodle</sub><italic>Puppy</italic><sup>Dog</sup>`;
-      const keyword = new Keyword(element);
+      const element = parseXML(`<kwd>A<sub>Poodle</sub><italic>Puppy</italic><sup>Dog</sup></kwd>`);
+      const keyword = new Keyword(element.querySelector('kwd')!);
       expect(keyword).toMatchInlineSnapshot(`
       Keyword {
         "_id": "unique_id",
@@ -109,7 +106,7 @@ describe('Keyword', () => {
   });
   describe('fromJSON', () => {
     it('returns empty Keyword when called with empty JSON object', () => {
-      const keyword = new Keyword(document.createElement('kwd-group'));
+      const keyword = new Keyword(xmlDoc.createElement('kwd-group'));
       expect(keyword).toMatchInlineSnapshot(emptyKywordSnapshot);
     });
     it('creates a Keyword from a complete JSON object', () => {
@@ -213,15 +210,16 @@ describe('Keyword', () => {
 
 describe('createKeywordGroupsState', () => {
   it('creates a keywordGroup from array of xml elements', () => {
-    const kwdContainer = document.createElement('div');
-    kwdContainer.innerHTML = `<kwd-group kwd-group-type="author-keywords">
+    const kwdContainer = parseXML(`<article>
+      <kwd-group kwd-group-type="author-keywords">
         <kwd>cerebellum</kwd>
         <kwd>climbing fiber</kwd>
       </kwd-group>
       <kwd-group kwd-group-type="research-organism">
         <title>Research organism</title>
         <kwd>Mouse</kwd>
-      </kwd-group>`;
+      </kwd-group>
+    </article>`);
 
     const editorState = createKeywordGroupsState(Array.from(kwdContainer.querySelectorAll('kwd-group')));
     expect(editorState).toMatchInlineSnapshot(`
@@ -354,15 +352,17 @@ describe('serializeKeywordGroups', () => {
       <kwd>chromatin</kwd>
     </kwd-group>` +
     '</article-meta></article>';
-    const kwdContainer = document.createElement('div');
-    kwdContainer.innerHTML = `<kwd-group kwd-group-type="author-keywords">
+
+    const kwdContainer = parseXML(`<article>
+      <kwd-group kwd-group-type="author-keywords">
         <kwd>cerebellum</kwd>
         <kwd>climbing fiber</kwd>
       </kwd-group>
       <kwd-group kwd-group-type="research-organism">
         <title>Research organism</title>
         <kwd>Mouse</kwd>
-      </kwd-group>`;
+      </kwd-group>
+    </article>`);
 
     const xmlDoc = parseXML(articleXmlString);
     const keywordGroups = createKeywordGroupsState(Array.from(kwdContainer.querySelectorAll('kwd-group')));

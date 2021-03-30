@@ -1,6 +1,3 @@
-/**
- * @jest-environment jsdom
- */
 import {
   createRelatedArticleState,
   RelatedArticle,
@@ -15,6 +12,8 @@ jest.mock("uuid", () => ({
 }));
 
 describe("Related Article model", () => {
+  const xmlDoc = new xmldom.DOMImplementation().createDocument(null, null);
+
   describe("Model class", () => {
     it("creates a related article from object ", () => {
       expect(
@@ -23,14 +22,14 @@ describe("Related Article model", () => {
     });
 
     it("creates a related article from xml", () => {
-      const el = document.createElement("related-article");
+      const el = xmlDoc.createElement("related-article");
       el.setAttribute("related-article-type", "commentary-article");
       el.setAttribute("xlink:href", "10.7554/eLife.48498");
       expect(new RelatedArticle(el)).toMatchSnapshot();
     });
 
     it("creates an empty article if attributes are missing", () => {
-      const el = document.createElement("related-article");
+      const el = xmlDoc.createElement("related-article");
       expect(new RelatedArticle(el)).toMatchSnapshot();
     });
 
@@ -58,12 +57,11 @@ describe("Related Article model", () => {
 
   describe("Related articles state", () => {
     it("creates related article state", () => {
-      const el = document.createElement("div");
-      el.innerHTML = `
-          <related-article related-article-type="commentary-article" xlink:href="10.7554/eLife.48496"/>
-          <related-article related-article-type="commentary-article" xlink:href="10.7554/eLife.48497"/>
-          <related-article related-article-type="commentary-article" xlink:href="10.7554/eLife.48498"/>
-      `;
+      const el = parseXML(`<article>
+        <related-article related-article-type="commentary-article" xlink:href="10.7554/eLife.48496"/>
+        <related-article related-article-type="commentary-article" xlink:href="10.7554/eLife.48497"/>
+        <related-article related-article-type="commentary-article" xlink:href="10.7554/eLife.48498"/>
+      </article>`);
       const state = createRelatedArticleState(
         Array.from(el.querySelectorAll("related-article"))
       );

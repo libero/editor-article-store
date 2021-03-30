@@ -1,6 +1,4 @@
-/**
- * @jest-environment jsdom
- */
+import {DOMImplementation} from "xmldom";
 import { BackmatterEntity } from '../../../src/model/backmatter-entity';
 class ExtendedBackmatterClass extends BackmatterEntity {
   constructor() {
@@ -41,7 +39,8 @@ describe('BackmatterEntity', () => {
     it('calls internal fromXML if data passed is type Element', () => {
       const backmatterObj = new ExposedCreateEntity();
       expect(backmatterObj.fromXML).not.toHaveBeenCalled();
-      const mockElement = document.createElement("p");
+      const xmlDoc = new DOMImplementation().createDocument(null, null);
+      const mockElement = xmlDoc.createElement("p");
       backmatterObj.exposedCreateEntity(mockElement);
       expect(backmatterObj.fromXML).toHaveBeenCalled();
       expect(backmatterObj.fromXML).toBeCalledWith(mockElement);

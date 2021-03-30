@@ -282,8 +282,6 @@ Object {
         "tag": "a.citation[data-cit-type=\\"reference\\"]",
       },
     ],
-    "toClipboardDOM": [Function],
-    "toClipboardText": [Function],
     "toDOM": [Function],
   },
   "section": Object {
