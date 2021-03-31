@@ -1,3 +1,4 @@
+import { cloneDeep } from "lodash";
 import {BackmatterEntity} from "../backmatter-entity";
 import {JSONObject} from "../types";
 import { ReferenceContributor, ReferenceType } from "./types";
@@ -53,7 +54,10 @@ export class Reference extends BackmatterEntity {
   }
 
   protected fromJSON(json: JSONObject): void {
-    console.log('fromJSON is not implemented');
+    this._id = (json._id as string) || this._id;
+    this.authors = cloneDeep(json.authors) as ReferenceContributor[];
+    this._type = json._type as ReferenceType;
+    this.referenceInfo = this.createReferenceInfo(json.referenceInfo as JSONObject);
   }
 
   protected fromXML(xmlNode: Element): void {

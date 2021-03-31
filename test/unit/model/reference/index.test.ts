@@ -29,6 +29,10 @@ jest.mock('../../../../src/model/reference/ThesisReference');
 jest.mock('../../../../src/model/reference/PatentReference');
 
 describe('Reference class', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should create a blank reference', () => {
     const ref = new Reference();
 
@@ -237,6 +241,121 @@ describe('Reference class', () => {
 
       expect(ref.type).toBe('patent');
       expect(PatentReference).toBeCalledWith(refXml.querySelector('element-citation'));
+    });
+  });
+
+  describe('fromJSON', () => {
+    it('assigns reference info correctly', () => {
+      const json = {
+        _id: 'some_id',
+        _type: 'journal',
+        authors: [{firstName: 'John', lastName: 'Doe'}],
+        referenceInfo: {}
+      };
+
+      const ref = new Reference(json);
+      expect(ref.authors).toEqual(json.authors);
+      expect(ref.authors).not.toBe(json.authors);
+      expect(ref.id).toBe(json._id);
+    });
+
+    it('uses UUID if id is not set on JSON', () => {
+      const json = {
+        _type: 'journal',
+        authors: [{firstName: 'John', lastName: 'Doe'}],
+        referenceInfo: {}
+      };
+
+      const ref = new Reference(json);
+      expect(ref.id).toBe('unique_id');
+    });
+
+    it('creates a journal reference', () => {
+      const json = { _id: 'some_id', _type: 'journal', authors: [], referenceInfo: {} };
+
+      const ref = new Reference(json);
+      expect(ref.type).toBe('journal');
+      expect(JournalReference).toBeCalledWith(json.referenceInfo);
+    });
+
+    it('creates a book reference', () => {
+      const json = { _id: 'some_id', _type: 'book', authors: [], referenceInfo: {} };
+
+      const ref = new Reference(json);
+      expect(ref.type).toBe('book');
+      expect(BookReference).toBeCalledWith(json.referenceInfo);
+    });
+
+    it('creates a periodical reference', () => {
+      const json = { _id: 'some_id', _type: 'periodical', authors: [], referenceInfo: {} };
+
+      const ref = new Reference(json);
+      expect(ref.type).toBe('periodical');
+      expect(PeriodicalReference).toBeCalledWith(json.referenceInfo);
+    });
+
+    it('creates a report reference', () => {
+      const json = { _id: 'some_id', _type: 'report', authors: [], referenceInfo: {} };
+
+      const ref = new Reference(json);
+      expect(ref.type).toBe('report');
+      expect(ReportReference).toBeCalledWith(json.referenceInfo);
+    });
+
+    it('creates a data reference', () => {
+      const json = { _id: 'some_id', _type: 'data', authors: [], referenceInfo: {} };
+
+      const ref = new Reference(json);
+      expect(ref.type).toBe('data');
+      expect(DataReference).toBeCalledWith(json.referenceInfo);
+    });
+
+    it('creates a web reference', () => {
+      const json = { _id: 'some_id', _type: 'web', authors: [], referenceInfo: {} };
+
+      const ref = new Reference(json);
+      expect(ref.type).toBe('web');
+      expect(WebReference).toBeCalledWith(json.referenceInfo);
+    });
+
+    it('creates a preprint reference', () => {
+      const json = { _id: 'some_id', _type: 'preprint', authors: [], referenceInfo: {} };
+
+      const ref = new Reference(json);
+      expect(ref.type).toBe('preprint');
+      expect(PreprintReference).toBeCalledWith(json.referenceInfo);
+    });
+
+    it('creates a software reference', () => {
+      const json = { _id: 'some_id', _type: 'software', authors: [], referenceInfo: {} };
+
+      const ref = new Reference(json);
+      expect(ref.type).toBe('software');
+      expect(SoftwareReference).toBeCalledWith(json.referenceInfo);
+    });
+
+    it('creates a confproc reference', () => {
+      const json = { _id: 'some_id', _type: 'confproc', authors: [], referenceInfo: {} };
+
+      const ref = new Reference(json);
+      expect(ref.type).toBe('confproc');
+      expect(ConferenceReference).toBeCalledWith(json.referenceInfo);
+    });
+
+    it('creates a thesis reference', () => {
+      const json = { _id: 'some_id', _type: 'thesis', authors: [], referenceInfo: {} };
+
+      const ref = new Reference(json);
+      expect(ref.type).toBe('thesis');
+      expect(ThesisReference).toBeCalledWith(json.referenceInfo);
+    });
+
+    it('creates a patent reference', () => {
+      const json = { _id: 'some_id', _type: 'patent', authors: [], referenceInfo: {} };
+
+      const ref = new Reference(json);
+      expect(ref.type).toBe('patent');
+      expect(PatentReference).toBeCalledWith(json.referenceInfo);
     });
   });
 });
