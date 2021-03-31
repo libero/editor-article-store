@@ -239,4 +239,134 @@ describe('Reference class', () => {
       expect(PatentReference).toBeCalledWith(refXml.querySelector('element-citation'));
     });
   });
+
+  describe('parse authors from XML', () => {
+    it('parses authors list', () => {
+      const xml = parseXML(`<ref id="bib26">
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name><surname>Zz</surname> <given-names>J</given-names></name>
+            <name><surname>Daniel</surname> <given-names>CR</given-names></name>
+            <name><surname>Hess</surname> <given-names>KR</given-names></name>
+          </person-group>
+          <year iso-8601-date="2019">2019</year>
+          <article-title>The association of BMI and outcomes in metastatic melanoma: a retrospective, multicohort analysis of patients treated with targeted therapy, immunotherapy, or chemotherapy</article-title>
+          <source>The Lancet. Oncology</source>
+        </element-citation>
+      </ref>`);
+      
+      const ref = new Reference(xml.querySelector('element-citation')!);
+      expect(ref.authors.length).toBe(3);
+      expect(ref.authors).toEqual([
+        {firstName: 'J', lastName: 'Zz'},
+        {firstName: 'CR', lastName: 'Daniel'},
+        {firstName: 'KR', lastName: 'Hess'}
+      ]);
+    });
+
+    it('parses group authors list', () => {
+      const xml = parseXML(`<ref id="bib26">
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <collab>Zz J</collab>
+            <collab>Daniel CR</collab>
+            <collab>Hess KR</collab>
+          </person-group>
+          <year iso-8601-date="2019">2019</year>
+          <article-title>The association of BMI and outcomes in metastatic melanoma: a retrospective, multicohort analysis of patients treated with targeted therapy, immunotherapy, or chemotherapy</article-title>
+          <source>The Lancet. Oncology</source>
+        </element-citation>
+      </ref>`);
+
+      const ref = new Reference(xml.querySelector('element-citation')!);
+      expect(ref.authors.length).toBe(3);
+      expect(ref.authors).toEqual([
+        {groupName: 'Zz J'},
+        {groupName: 'Daniel CR'},
+        {groupName: 'Hess KR'}
+      ]);
+    });
+
+    it('parses mixed type authors list', () => {
+      const xml = parseXML(`<ref id="bib26">
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name><surname>Zz</surname> <given-names>J</given-names></name>
+            <collab>Hess KR</collab>
+          </person-group>
+          <year iso-8601-date="2019">2019</year>
+          <article-title>The association of BMI and outcomes in metastatic melanoma: a retrospective, multicohort analysis of patients treated with targeted therapy, immunotherapy, or chemotherapy</article-title>
+          <source>The Lancet. Oncology</source>
+        </element-citation>
+      </ref>`);
+
+      const ref = new Reference(xml.querySelector('element-citation')!);
+      expect(ref.authors.length).toBe(2);
+      expect(ref.authors).toEqual([
+        {firstName: 'J', lastName: 'Zz'},
+        {groupName: 'Hess KR'}
+      ]);
+    });
+
+    it('parses inventors list', () => {
+      const xml = parseXML(`<ref id="bib26">
+        <element-citation publication-type="journal">
+          <person-group person-group-type="inventor">
+            <name><surname>Zz</surname> <given-names>J</given-names></name>
+            <collab>Hess KR</collab>
+          </person-group>
+          <year iso-8601-date="2019">2019</year>
+          <article-title>The association of BMI and outcomes in metastatic melanoma: a retrospective, multicohort analysis of patients treated with targeted therapy, immunotherapy, or chemotherapy</article-title>
+          <source>The Lancet. Oncology</source>
+        </element-citation>
+      </ref>`);
+
+      const ref = new Reference(xml.querySelector('element-citation')!);
+      expect(ref.authors.length).toBe(2);
+      expect(ref.authors).toEqual([
+        {firstName: 'J', lastName: 'Zz'},
+        {groupName: 'Hess KR'}
+      ]);
+    });
+
+    it('parses mixed authors and inventors lists', () => {
+      const xml = parseXML(`<ref id="bib26">
+        <element-citation publication-type="journal">
+         <person-group person-group-type="author">
+            <collab>Daniel CR</collab>
+          </person-group>
+          <person-group person-group-type="inventor">
+            <name><surname>Zz</surname> <given-names>J</given-names></name>
+            <collab>Hess KR</collab>
+          </person-group>
+          <year iso-8601-date="2019">2019</year>
+          <article-title>The association of BMI and outcomes in metastatic melanoma: a retrospective, multicohort analysis of patients treated with targeted therapy, immunotherapy, or chemotherapy</article-title>
+          <source>The Lancet. Oncology</source>
+        </element-citation>
+      </ref>`);
+
+      const ref = new Reference(xml.querySelector('element-citation')!);
+      expect(ref.authors.length).toBe(3);
+      expect(ref.authors).toEqual([
+        {groupName: 'Daniel CR'},
+        {firstName: 'J', lastName: 'Zz'},
+        {groupName: 'Hess KR'}
+      ]);
+    });
+
+    it('parses empty authors lists', () => {
+      const xml = parseXML(`<ref id="bib26">
+        <element-citation publication-type="journal">
+         <person-group person-group-type="author"></person-group>
+          <year iso-8601-date="2019">2019</year>
+          <article-title>The association of BMI and outcomes in metastatic melanoma: a retrospective, multicohort analysis of patients treated with targeted therapy, immunotherapy, or chemotherapy</article-title>
+          <source>The Lancet. Oncology</source>
+        </element-citation>
+      </ref>`);
+
+      const ref = new Reference(xml.querySelector('element-citation')!);
+      expect(ref.authors.length).toBe(0);
+      expect(ref.authors).toEqual([]);
+    });
+  });
 });
