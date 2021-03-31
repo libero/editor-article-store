@@ -57,7 +57,10 @@ export class Reference extends BackmatterEntity {
   }
 
   protected fromXML(xmlNode: Element): void {
-    console.log('fromXML is not implemented');
+    this._id = (xmlNode.parentNode as Element).getAttribute('id') || this.id;
+    this.authors = [];
+    this._type = xmlNode.getAttribute('publication-type') as ReferenceType;
+    this.referenceInfo = this.createReferenceInfo(xmlNode);
   }
 
   private createReferenceInfo(data?: JSONObject | Element): ReferenceInfoType {

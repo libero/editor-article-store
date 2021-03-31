@@ -10,6 +10,7 @@ import {SoftwareReference} from "../../../../src/model/reference/SoftwareReferen
 import {ConferenceReference} from "../../../../src/model/reference/ConferenceReference";
 import {ThesisReference} from "../../../../src/model/reference/ThesisReference";
 import {PatentReference} from "../../../../src/model/reference/PatentReference";
+import {parseXML} from "../../../../src/xml-exporter/xml-utils";
 
 jest.mock("uuid", () => ({
   v4: () => "unique_id",
@@ -111,4 +112,131 @@ describe('Reference class', () => {
     });
   });
 
+  describe('fromXML', () => {
+    const originalXml = parseXML(`<ref id="bib17"><element-citation publication-type=""></element-citation></ref>`);
+
+    it('parses ID corrently', () => {
+      const refXml = originalXml.cloneNode(true) as Element;
+      refXml.querySelector('element-citation')!.setAttribute('publication-type', 'journal');
+      const ref = new Reference(refXml.querySelector('element-citation')!);
+
+      expect(ref.id).toBe('bib17');
+    });
+
+    it('uses UUID if id is not set', () => {
+      const refXml = originalXml.cloneNode(true) as Element;
+      refXml.querySelector('element-citation')!.setAttribute('publication-type', 'journal');
+      refXml.querySelector('ref')!.setAttribute('id', '');
+      const ref = new Reference(refXml.querySelector('element-citation')!);
+
+      expect(ref.id).toBe('unique_id');
+    });
+
+    it('parses ID corrently', () => {
+      const refXml = originalXml.cloneNode(true) as Element;
+      refXml.querySelector('element-citation')!.setAttribute('publication-type', 'journal');
+      const ref = new Reference(refXml.querySelector('element-citation')!);
+
+      expect(ref.id).toBe('bib17');
+    });
+
+    it('creates a journal reference', () => {
+      const refXml = originalXml.cloneNode(true) as Element;
+      refXml.querySelector('element-citation')!.setAttribute('publication-type', 'journal');
+      const ref = new Reference(refXml.querySelector('element-citation')!);
+
+      expect(ref.type).toBe('journal');
+      expect(JournalReference).toBeCalledWith(refXml.querySelector('element-citation'));
+    });
+
+    it('creates a book reference', () => {
+      const refXml = originalXml.cloneNode(true) as Element;
+      refXml.querySelector('element-citation')!.setAttribute('publication-type', 'book');
+      const ref = new Reference(refXml.querySelector('element-citation')!);
+
+      expect(ref.type).toBe('book');
+      expect(BookReference).toBeCalledWith(refXml.querySelector('element-citation'));
+    });
+
+    it('creates a periodical reference', () => {
+      const refXml = originalXml.cloneNode(true) as Element;
+      refXml.querySelector('element-citation')!.setAttribute('publication-type', 'periodical');
+      const ref = new Reference(refXml.querySelector('element-citation')!);
+
+      expect(ref.type).toBe('periodical');
+      expect(PeriodicalReference).toBeCalledWith(refXml.querySelector('element-citation'));
+    });
+
+    it('creates a report reference', () => {
+      const refXml = originalXml.cloneNode(true) as Element;
+      refXml.querySelector('element-citation')!.setAttribute('publication-type', 'report');
+      const ref = new Reference(refXml.querySelector('element-citation')!);
+
+      expect(ref.type).toBe('report');
+      expect(ReportReference).toBeCalledWith(refXml.querySelector('element-citation'));
+    });
+
+    it('creates a data reference', () => {
+      const refXml = originalXml.cloneNode(true) as Element;
+      refXml.querySelector('element-citation')!.setAttribute('publication-type', 'data');
+      const ref = new Reference(refXml.querySelector('element-citation')!);
+
+      expect(ref.type).toBe('data');
+      expect(DataReference).toBeCalledWith(refXml.querySelector('element-citation'));
+    });
+
+    it('creates a web reference', () => {
+      const refXml = originalXml.cloneNode(true) as Element;
+      refXml.querySelector('element-citation')!.setAttribute('publication-type', 'web');
+      const ref = new Reference(refXml.querySelector('element-citation')!);
+
+      expect(ref.type).toBe('web');
+      expect(WebReference).toBeCalledWith(refXml.querySelector('element-citation'));
+    });
+
+    it('creates a preprint reference', () => {
+      const refXml = originalXml.cloneNode(true) as Element;
+      refXml.querySelector('element-citation')!.setAttribute('publication-type', 'preprint');
+      const ref = new Reference(refXml.querySelector('element-citation')!);
+
+      expect(ref.type).toBe('preprint');
+      expect(PreprintReference).toBeCalledWith(refXml.querySelector('element-citation'));
+    });
+
+    it('creates a software reference', () => {
+      const refXml = originalXml.cloneNode(true) as Element;
+      refXml.querySelector('element-citation')!.setAttribute('publication-type', 'software');
+      const ref = new Reference(refXml.querySelector('element-citation')!);
+
+      expect(ref.type).toBe('software');
+      expect(SoftwareReference).toBeCalledWith(refXml.querySelector('element-citation'));
+    });
+
+    it('creates a confproc reference', () => {
+      const refXml = originalXml.cloneNode(true) as Element;
+      refXml.querySelector('element-citation')!.setAttribute('publication-type', 'confproc');
+      const ref = new Reference(refXml.querySelector('element-citation')!);
+
+      expect(ref.type).toBe('confproc');
+      expect(ConferenceReference).toBeCalledWith(refXml.querySelector('element-citation'));
+    });
+
+    it('creates a thesis reference', () => {
+      const refXml = originalXml.cloneNode(true) as Element;
+      refXml.querySelector('element-citation')!.setAttribute('publication-type', 'thesis');
+      const ref = new Reference(refXml.querySelector('element-citation')!);
+
+      expect(ref.type).toBe('thesis');
+      expect(ThesisReference).toBeCalledWith(refXml.querySelector('element-citation'));
+    });
+
+    it('creates a patent reference', () => {
+      const refXml = originalXml.cloneNode(true) as Element;
+      refXml.querySelector('element-citation')!.setAttribute('publication-type', 'patent');
+      const ref = new Reference(refXml.querySelector('element-citation')!);
+
+      expect(ref.type).toBe('patent');
+      expect(PatentReference).toBeCalledWith(refXml.querySelector('element-citation'));
+    });
+  });
 });
