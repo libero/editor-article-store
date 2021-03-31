@@ -12,6 +12,7 @@ import {PatentReference} from "./PatentReference";
 import {SoftwareReference} from "./SoftwareReference";
 import {WebReference} from "./WebReference";
 import {ThesisReference} from "./ThesisReference";
+import {createReferencePersonList} from "./reference.utils";
 
 export type ReferenceInfoType =
   | JournalReference
@@ -58,7 +59,7 @@ export class Reference extends BackmatterEntity {
 
   protected fromXML(xmlNode: Element): void {
     this._id = (xmlNode.parentNode as Element).getAttribute('id') || this.id;
-    this.authors = [];
+    this.authors = [...createReferencePersonList(xmlNode, 'author'), ...createReferencePersonList(xmlNode, 'inventor')];
     this._type = xmlNode.getAttribute('publication-type') as ReferenceType;
     this.referenceInfo = this.createReferenceInfo(xmlNode);
   }
