@@ -1,4 +1,4 @@
-import {Reference} from "../../../../src/model/reference";
+import {createReferencesState, Reference} from "../../../../src/model/reference";
 import {JournalReference} from "../../../../src/model/reference/JournalReference";
 import {BookReference} from "../../../../src/model/reference/BookReference";
 import {PeriodicalReference} from "../../../../src/model/reference/PeriodicalReference";
@@ -486,6 +486,114 @@ describe('Reference class', () => {
       const ref = new Reference(json);
       expect(ref.type).toBe('patent');
       expect(PatentReference).toBeCalledWith(json.referenceInfo);
+    });
+  });
+
+  describe('createReferencesState', () => {
+
+    it('creates an empty references state', () => {
+      const state = createReferencesState([]);
+      expect(state).toEqual([]);
+    });
+
+    it('creates a state with one reference', () => {
+      const xml = parseXML(`<article>
+        <ref id="bib25">
+          <element-citation publication-type="journal">
+            <person-group person-group-type="author">
+              <name>
+                <surname>Zoolander</surname> <given-names>D</given-names>
+              </name>
+              <name>
+                <surname>Hansel</surname>
+              </name>
+              <name>
+                <surname>Mugatu</surname> <given-names>J</given-names>
+              </name>
+            </person-group>
+            <year iso-8601-date="2019">2019</year>
+            <article-title>Second related article title (if present)</article-title>
+            <source>eLife</source>
+            <volume>8</volume>
+            <elocation-id>e00067</elocation-id>
+            <pub-id pub-id-type="doi">10.7554/eLife.00067</pub-id>
+            <pub-id pub-id-type="pmid">00030000</pub-id>
+            <pub-id pub-id-type="pmcid">PMC00005</pub-id>
+          </element-citation>
+        </ref>
+      </article>`);
+
+      const state = createReferencesState(Array.from(xml.querySelectorAll('element-citation')));
+      expect(state).toEqual([{
+        _id: "bib25",
+        authors: [
+          {firstName: "D", lastName: "Zoolander"},
+          {firstName: "", lastName: "Hansel"},
+          {firstName: "J", lastName: "Mugatu"}
+        ],
+        _type: "journal",
+        referenceInfo: expect.any(JournalReference)
+      }]);
+
+      expect(JournalReference).toBeCalledWith(xml.querySelectorAll('element-citation')[0]);
+    });
+
+    it('creates a state with multiple references', () => {
+      const xml = parseXML(`<article>
+        <ref id="bib25">
+          <element-citation publication-type="book">
+            <person-group person-group-type="author">
+              <name> <surname>Zoolander</surname> <given-names>D</given-names> </name>
+              <name> <surname>Hansel</surname> </name>
+              <name> <surname>Mugatu</surname> <given-names>J</given-names> </name>
+            </person-group>
+            <year iso-8601-date="2019">2019</year>
+            <article-title>Second related article title (if present)</article-title>
+            <source>eLife</source>
+            <volume>8</volume>
+            <elocation-id>e00067</elocation-id>
+            <pub-id pub-id-type="doi">10.7554/eLife.00067</pub-id>
+            <pub-id pub-id-type="pmid">00030000</pub-id>
+            <pub-id pub-id-type="pmcid">PMC00005</pub-id>
+          </element-citation>
+        </ref>
+        <ref id="bib24">
+          <element-citation publication-type="periodical">
+            <person-group person-group-type="author">
+              <name> <surname>Zhang</surname> <given-names>S</given-names> </name>
+              <name> <surname>Huang</surname> <given-names>CH</given-names> </name>
+              <name> <surname>Aj</surname> <given-names>Y</given-names> </name>
+            </person-group>
+            <year iso-8601-date="2014">2014</year>
+            <article-title>Sequential effects: a bayesian analysis of prior bias on reaction time and behavioral choice</article-title>
+            <source>Cognitive Science Society</source>
+          </element-citation>
+        </ref>
+      </article>`);
+
+      const state = createReferencesState(Array.from(xml.querySelectorAll('element-citation')));
+      expect(state).toEqual([{
+        _id: "bib25",
+        authors: [
+          {firstName: "D", lastName: "Zoolander"},
+          {firstName: "", lastName: "Hansel"},
+          {firstName: "J", lastName: "Mugatu"}
+        ],
+        _type: "book",
+        referenceInfo: expect.any(BookReference)
+      }, {
+        _id: "bib24",
+        authors: [
+          {firstName: "S", lastName: "Zhang"},
+          {firstName: "CH", lastName: "Huang"},
+          {firstName: "Y", lastName: "Aj"}
+        ],
+        _type: "periodical",
+        referenceInfo: expect.any(PeriodicalReference)
+      }]);
+
+      expect(BookReference).toBeCalledWith(xml.querySelectorAll('element-citation')[0]);
+      expect(PeriodicalReference).toBeCalledWith(xml.querySelectorAll('element-citation')[1]);
     });
   });
 });
