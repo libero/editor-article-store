@@ -1,11 +1,10 @@
 import {EditorState} from 'prosemirror-state';
 import { Affiliation } from './affiliation';
 import { Person } from './person';
-// import { Reference } from 'app/models/reference';
 import {RelatedArticle} from './related-article';
 import { KeywordGroups } from './keyword';
 import {ArticleInformation} from "./article-information";
-
+import {Reference} from "./reference";
 
 interface JournalMeta {
   publisherName: string;
@@ -23,6 +22,6 @@ export type Manuscript = {
   body: EditorState;
   acknowledgements: EditorState;
   keywordGroups: KeywordGroups;
-  // references: Reference[];
+  references: Reference[];
   relatedArticles: RelatedArticle[];
 };

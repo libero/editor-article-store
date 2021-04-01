@@ -86,3 +86,9 @@ export class Reference extends BackmatterEntity {
     return new refInfoClass(data);
   }
 }
+
+export function createReferencesState(referencesXml: Element[]): Reference[] {
+  return referencesXml.map((referenceXml: Element) => {
+    return new Reference(referenceXml);
+  });
+}

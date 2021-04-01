@@ -11,6 +11,7 @@ import { createAffiliationsState } from "../model/affiliation";
 import { createAuthorsState } from "../model/person";
 import { createKeywordGroupsState } from '../model/keyword';
 import {ArticleInformation} from "../model/article-information";
+import {createReferencesState} from "../model/reference";
 
 export function getArticleManuscript(article: Article): Manuscript {
   const xmlDoc = parseXML(article.xml);
@@ -26,7 +27,7 @@ export function getArticleManuscript(article: Article): Manuscript {
   const authorsXml = Array.from(xmlDoc.querySelectorAll('contrib'))
     .filter(xmlNode => xmlNode.getAttribute('contrib-type') === 'author');
   const authorNotesXml = xmlDoc.querySelector('author-notes');
-  // // const references = doc.querySelectorAll('ref-list ref element-citation');
+  const references = xmlDoc.querySelectorAll('ref-list ref > element-citation');
   // // const authorNotes = doc.querySelector('author-notes');
 
   const affiliations = xmlDoc.querySelectorAll('contrib-group:first-of-type aff');
@@ -45,12 +46,8 @@ export function getArticleManuscript(article: Article): Manuscript {
     keywordGroups: createKeywordGroupsState(Array.from(keywordGroups)),
     authors: authorsState,
     affiliations: createAffiliationsState(Array.from(affiliations)),
-    // references: createReferencesState(Array.from(references)),
+    references: createReferencesState(Array.from(references)),
     relatedArticles: createRelatedArticleState(Array.from(relatedArticles)),
     articleInfo: new ArticleInformation(xmlDoc.documentElement, authorsState),
-    // journalMeta: {
-  //   //   publisherName: getTextContentFromPath(doc, 'journal-meta publisher publisher-name'),
-  //   //   issn: getTextContentFromPath(doc, 'journal-meta issn')
-  //   // }
   } as Manuscript;
 }

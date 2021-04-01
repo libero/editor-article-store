@@ -200,5 +200,8 @@ describe('ArticleParser', function () {
       "articleType": "commentary-article",
       "href": "10.7554/eLife.00067"
     }]);
+
+    expect(manuscript.references).toMatchSnapshot();
+
   });
 });
