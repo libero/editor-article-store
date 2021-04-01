@@ -150,7 +150,8 @@ const mockManuscript: Manuscript = {
   acknowledgements: EditorState.create({ schema: textSchema}),
   keywordGroups: {},
   relatedArticles: [],
-  affiliations: []
+  affiliations: [],
+  references: []
 };
 
 const createProsemirrorChange = (path:string, value:string) => ({

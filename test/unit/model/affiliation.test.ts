@@ -180,7 +180,8 @@ describe('serializeAffiliations', () => {
     acknowledgements: new EditorState(),
     keywordGroups: {},
     relatedArticles: [],
-    affiliations: []
+    affiliations: [],
+    references: []
   };
 
   it('handles an empty affiliations list', () => {

@@ -28,7 +28,6 @@ export function getArticleManuscript(article: Article): Manuscript {
     .filter(xmlNode => xmlNode.getAttribute('contrib-type') === 'author');
   const authorNotesXml = xmlDoc.querySelector('author-notes');
   const references = xmlDoc.querySelectorAll('ref-list ref > element-citation');
-  // // const authorNotes = doc.querySelector('author-notes');
 
   const affiliations = xmlDoc.querySelectorAll('contrib-group:first-of-type aff');
   const relatedArticles = xmlDoc.querySelectorAll('related-article');
