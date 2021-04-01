@@ -1,3 +1,1479 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ArticleParser should parse article XML 1`] = `"Related research article  Srinivasan S, Kaplan CN, Mahadevan L. 2019. A multiphase theory for spreadingmicrobial swarms and films. eLife 8:e42697. doi: 10.7554/eLife.42697Related research article Zoolander D, Hansel, Mugatu J. 2019. Second related article title (if present). eLife 8:e00067. doi: 10.7554/eLife.00067Lorem ipsum dolor sit amet, consectetur adipiscing elit (; ). Etiam imperdiet tortor nec enim feugiat euismod . Etiam malesuada tristique quam non fringilla (). Curabitur sem neque, pretium et lorem ac, porta lobortis nisl. Curabitur suscipit semper sodales. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus cursus faucibus felis, consequat rutrum neque vehicula eget (http://www.broadinstitute.org/igv/). Donec in neque et ligula tristique semper id sit amet quam. Proin varius, arcu posuere faucibus rhoncus, leo neque porttitor augue, sit amet cursus neque neque quis turpis. Maecenas dignissim aliquam orci, maximus scelerisque nisl imperdiet in. (; ; ).First entry (bullet)First sub-entry (bullet)Second sub-entry (bullet)First sub-entry (bullet)Second sub-entry (bullet)First sub-entry (bullet)Second sub-entry (bullet)Second entry (bullet) integer suscipit purus a semper dictum . Duis finibus elementum ex sit amet pulvinar (; ). Cras  nec est in sem iaculis fermentum (). Aenean sit amet turpis pulvinar, ornare nisl ac, porta nisl. Vivamus sit amet maximus elit (Figure 1). Duis a ultrices augue. Duis id ipsum iaculis, imperdiet leo a, cursus purus ().Etiam nunc eros, porttitor tincidunt libero eu (), varius pretium nibh (; ; ). Curabitur nibh libero, gravida eu ex vel, rhoncus finibus est. Aliquam viverra augue vel posuere tempus (proin pharetra posuere eros vitae semper []). Duis aliquam ac ex non tristique. Nulla dignissim vel ipsum at vulputate (; ). Nam orci ipsum, dapibus ac sagittis non, blandit non enim ().Phasellus ac nisl a erat congue fringilla/fringilla. Maecenas nulla leo , viverra ut tortor at, tristique maximus urna. Aenean commodo mauris sapien, a vulputate sapien porttitor nec (see Figures 1 and 2). Integer id aliquam libero. Duis euismod velit augue, id ultricies enim varius sit amet.Integer in dui quis velit iaculis rhoncus (European Galaxy Server https://usegalaxy.eu). Vestibulum nec nulla eget nisi  cursus dignissim non sed felis (donec tincidunt vulputate lectus non malesuada [; ]). Nulla condimentum porttitor arcu a posuere. Duis dictum diam sit amet mauris elementum luctus. Mauris placerat arcu ut lobortis ultricies. Nunc ultricies, ante eget mollis viverra, elit urna feugiat nibh, malesuada dictum nulla est at lorem. Proin id ligula ligula. Nulla eu risus porta, ornare eros id, sodales risus(; ). Proin id metus in neque rutrum venenatis eget sed ante (). Pellentesque nec justo a orci sodales dapibus. Etiam quis felis feugiat, lobortis dui semper, imperdiet est.The resolution of a microscope, , is defined as the shortest distance between two points on a specimen that can still be seen as two distinct points in the image. In 1873 Ernst Abbe showed that diffraction limited the resolution of a microscope to , where is the wavelength of the light, is the refractive index of the medium the light travels through, and is the half-angle at which the objective captures light from the sample: is also known as the \\"numerical aperture\\" of the objective.Cras at diam eu mauris scelerisque fermentum . Sed semper mauris eget nulla faucibus, sed ultricies ligula pellentesque. Donec posuere mi non quam dapibus egestas scelerisque non magna. Vestibulum sit amet bibendum tortor. Interdum et malesuada fames ac ante ipsum primis in faucibus (; ; ).Praesent lobortis tempus nisi ac pulvinar (). Praesent at nulla ac lorem faucibus finibus. Ut vel maximus tortor, in dictum arcu. Proin condimentum felis eu dignissim posuere. Vivamus a tincidunt justo, eu eleifend mauris. Mauris porttitor erat eu purus dignissim, sed consectetur odio pharetra. Integer a lorem commodo, tempus nulla sed, vehicula metus. Nunc laoreet erat sed nibh iaculis aliquam. Nullam maximus ligula eu sem dictum dignissim.First entry (ordered)First sub-entry (bullet)Second sub-entry (bullet)First sub-entry (bullet)Second sub-entry (bullet)First sub-entry (bullet)Second sub-entry (bullet)Second entry (ordered)DisclaimerThe content of this publication does not necessarily reflect the views or policies of the Department of Health and Human Services, nor does mention of trade names, commercial products, or organizations imply endorsement by the US Government.Second level headingThe content of the second level sectionThird level headingThe content of the third level sectionFourth level headingThe content of the fourth level section"`;
+
+exports[`ArticleParser should parse article XML 2`] = `
+Array [
+  Reference {
+    "_id": "bib1",
+    "_type": "journal",
+    "authors": Array [
+      Object {
+        "firstName": "V",
+        "lastName": "Berk",
+      },
+      Object {
+        "firstName": "JC",
+        "lastName": "Fong",
+      },
+      Object {
+        "firstName": "GT",
+        "lastName": "Dempsey",
+      },
+      Object {
+        "firstName": "ON",
+        "lastName": "Develioglu",
+      },
+      Object {
+        "firstName": "X",
+        "lastName": "Zhuang",
+      },
+      Object {
+        "firstName": "J",
+        "lastName": "Liphardt",
+      },
+      Object {
+        "firstName": "FH",
+        "lastName": "Yildiz",
+      },
+      Object {
+        "firstName": "S",
+        "lastName": "Chu",
+      },
+    ],
+    "referenceInfo": JournalReference {
+      "_id": "unique_id",
+      "articleTitle": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "Molecular architecture and assembly principles of ",
+              "type": "text",
+            },
+            Object {
+              "marks": Array [
+                Object {
+                  "type": "italic",
+                },
+              ],
+              "text": "Vibrio cholerae",
+              "type": "text",
+            },
+            Object {
+              "text": " biofilms",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "doi": "",
+      "elocationId": "",
+      "firstPage": "236",
+      "inPress": false,
+      "lastPage": "239",
+      "pmid": "",
+      "source": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "Science",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "volume": "337",
+      "year": "2012",
+    },
+  },
+  Reference {
+    "_id": "bib2",
+    "_type": "book",
+    "authors": Array [
+      Object {
+        "firstName": "PK",
+        "lastName": "Feyerabend",
+      },
+    ],
+    "referenceInfo": BookReference {
+      "_id": "unique_id",
+      "chapterTitle": Object {
+        "doc": Object {
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "doi": "",
+      "edition": "4th Edition",
+      "editors": Array [],
+      "elocationId": "",
+      "firstPage": "",
+      "inPress": false,
+      "lastPage": "",
+      "pmid": "",
+      "publisherLocation": "London",
+      "publisherName": "Verso",
+      "source": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "Against Method",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "volume": "",
+      "year": "2010",
+    },
+  },
+  Reference {
+    "_id": "bib3",
+    "_type": "report",
+    "authors": Array [
+      Object {
+        "firstName": "B",
+        "lastName": "Foley",
+      },
+      Object {
+        "firstName": "T",
+        "lastName": "Leitner",
+      },
+      Object {
+        "firstName": "C",
+        "lastName": "Apetrei",
+      },
+      Object {
+        "firstName": "B",
+        "lastName": "Hahn",
+      },
+      Object {
+        "firstName": "I",
+        "lastName": "Mizrachi",
+      },
+      Object {
+        "firstName": "J",
+        "lastName": "Mullins",
+      },
+      Object {
+        "firstName": "A",
+        "lastName": "Rambaut",
+      },
+      Object {
+        "firstName": "S",
+        "lastName": "Wolinsky",
+      },
+      Object {
+        "firstName": "B",
+        "lastName": "Korber",
+      },
+    ],
+    "referenceInfo": ReportReference {
+      "_id": "unique_id",
+      "doi": "10.2172/1458915",
+      "extLink": "",
+      "isbn": "",
+      "pmid": "",
+      "publisherLocation": "",
+      "publisherName": "US Department of Energy",
+      "source": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "Hiv Sequence Compendium 2018",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "volume": "",
+      "year": "2018",
+    },
+  },
+  Reference {
+    "_id": "bib4",
+    "_type": "data",
+    "authors": Array [
+      Object {
+        "firstName": "S",
+        "lastName": "Gavrilov",
+      },
+      Object {
+        "firstName": "RP",
+        "lastName": "Harvey",
+      },
+      Object {
+        "firstName": "VE",
+        "lastName": "Papaioannou",
+      },
+    ],
+    "referenceInfo": DataReference {
+      "_id": "unique_id",
+      "accessionId": "NM_009324",
+      "dataTitle": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "Mus musculus T-box 2 (Tbx2), mRNA",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "doi": "",
+      "extLink": "http://www.ncbi.nlm.nih.gov/nuccore/120407038",
+      "source": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "NCBI Nucleotide",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "specificUse": undefined,
+      "version": "NM_009324.2",
+      "year": "2014",
+    },
+  },
+  Reference {
+    "_id": "bib5",
+    "_type": "web",
+    "authors": Array [
+      Object {
+        "firstName": "A",
+        "lastName": "Harmon",
+      },
+    ],
+    "referenceInfo": WebReference {
+      "_id": "unique_id",
+      "articleTitle": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "James Watson had a chance to salvage his reputation on race. He made things worse",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "dateInCitation": "2019-01-01",
+      "extLink": "https://www.nytimes.com/2019/01/01/science/watson-dna-genetics-race.html",
+      "source": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "The New York Times",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "year": "2019",
+    },
+  },
+  Reference {
+    "_id": "bib6",
+    "_type": "journal",
+    "authors": Array [
+      Object {
+        "firstName": "SM",
+        "lastName": "Heissler",
+      },
+      Object {
+        "firstName": "JR",
+        "lastName": "Sellers",
+      },
+    ],
+    "referenceInfo": JournalReference {
+      "_id": "unique_id",
+      "articleTitle": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "Various Themes of Myosin Regulation",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "doi": "10.1016/j.jmb.2016.01.022",
+      "elocationId": "",
+      "firstPage": "1927",
+      "inPress": false,
+      "lastPage": "1946",
+      "pmid": "",
+      "source": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "Journal of Molecular Biology",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "volume": "428",
+      "year": "2016a",
+    },
+  },
+  Reference {
+    "_id": "bib7",
+    "_type": "journal",
+    "authors": Array [
+      Object {
+        "firstName": "SM",
+        "lastName": "Heissler",
+      },
+      Object {
+        "firstName": "JR",
+        "lastName": "Sellers",
+      },
+    ],
+    "referenceInfo": JournalReference {
+      "_id": "unique_id",
+      "articleTitle": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "Kinetic Adaptations of Myosins for Their Diverse Cellular Functions",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "doi": "10.1111/tra.12388",
+      "elocationId": "",
+      "firstPage": "839",
+      "inPress": false,
+      "lastPage": "859",
+      "pmid": "",
+      "source": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "Traffic",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "volume": "17",
+      "year": "2016b",
+    },
+  },
+  Reference {
+    "_id": "bib8",
+    "_type": "book",
+    "authors": Array [
+      Object {
+        "firstName": "KM",
+        "lastName": "Hogarth",
+      },
+      Object {
+        "firstName": "J",
+        "lastName": "Jaroszz",
+      },
+      Object {
+        "firstName": "P",
+        "lastName": "Butler",
+      },
+    ],
+    "referenceInfo": BookReference {
+      "_id": "unique_id",
+      "chapterTitle": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "The skull and brain",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "doi": "10.1017/CBO9780511977930.001",
+      "edition": "2nd Edition",
+      "editors": Array [
+        Object {
+          "firstName": "P",
+          "lastName": "Butler",
+        },
+        Object {
+          "firstName": "A",
+          "lastName": "Mitchell",
+        },
+        Object {
+          "firstName": "JC",
+          "lastName": "Healy",
+        },
+      ],
+      "elocationId": "",
+      "firstPage": "1",
+      "inPress": false,
+      "lastPage": "32",
+      "pmid": "",
+      "publisherLocation": "Cambridge, United Kingdom",
+      "publisherName": "Cambridge University Press",
+      "source": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "Applied Radiological Anatomy",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "volume": "1",
+      "year": "2012",
+    },
+  },
+  Reference {
+    "_id": "bib9",
+    "_type": "data",
+    "authors": Array [
+      Object {
+        "firstName": "K",
+        "lastName": "Kok",
+      },
+      Object {
+        "firstName": "A",
+        "lastName": "Ay",
+      },
+      Object {
+        "firstName": "L",
+        "lastName": "Li",
+      },
+    ],
+    "referenceInfo": DataReference {
+      "_id": "unique_id",
+      "accessionId": "",
+      "dataTitle": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "Genome-wide errant targeting by Hairy",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "doi": "10.5061/dryad.53sq7kn",
+      "extLink": "",
+      "source": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "Dryad Digital Repository",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "specificUse": undefined,
+      "version": "",
+      "year": "2015",
+    },
+  },
+  Reference {
+    "_id": "bib10",
+    "_type": "preprint",
+    "authors": Array [
+      Object {
+        "firstName": "H",
+        "lastName": "Li",
+      },
+    ],
+    "referenceInfo": PreprintReference {
+      "_id": "unique_id",
+      "articleTitle": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "Aligning sequence reads clone sequences and assembly contigs with BWA-MEM",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "doi": "",
+      "extLink": "https://arxiv.org/abs/1303.3997",
+      "pmid": "",
+      "source": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "arXiv",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "year": "2013",
+    },
+  },
+  Reference {
+    "_id": "bib11",
+    "_type": "software",
+    "authors": Array [
+      Object {
+        "firstName": "D",
+        "lastName": "Linares",
+      },
+    ],
+    "referenceInfo": SoftwareReference {
+      "_id": "unique_id",
+      "articleTitle": Object {
+        "doc": Object {
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "doi": "",
+      "extLink": "https://github.com/danilinares/2018LinaresAguilarLopezmoliner",
+      "publisherLocation": "",
+      "publisherName": "GitHub",
+      "source": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "Data and Code for 'Decoupling Sensory From Decisional Choice Biases in Perceptual Decision Making'",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "version": "3e48e64",
+      "year": "2019",
+    },
+  },
+  Reference {
+    "_id": "bib12",
+    "_type": "confproc",
+    "authors": Array [
+      Object {
+        "firstName": "MA",
+        "lastName": "Miller",
+      },
+      Object {
+        "firstName": "W",
+        "lastName": "Pfeiffer",
+      },
+      Object {
+        "firstName": "T",
+        "lastName": "Schwartz",
+      },
+    ],
+    "referenceInfo": ConferenceReference {
+      "_id": "unique_id",
+      "articleTitle": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "The CIPRES science gateway: a community resource for phylogenetic analyses",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "conferenceDate": "",
+      "conferenceLocation": "Salt Lake City, Utah",
+      "conferenceName": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "Proceedings of the 2011 TeraGrid Conference: Extreme Digital Discovery",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "doi": "",
+      "elocationId": "",
+      "extLink": "https://dl.acm.org/citation.cfm?doid=2016741.2016785",
+      "firstPage": "1",
+      "lastPage": "8",
+      "volume": "",
+      "year": "2011",
+    },
+  },
+  Reference {
+    "_id": "bib13",
+    "_type": "data",
+    "authors": Array [
+      Object {
+        "firstName": "DP",
+        "lastName": "Mulvihill",
+      },
+    ],
+    "referenceInfo": DataReference {
+      "_id": "unique_id",
+      "accessionId": "",
+      "dataTitle": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "TORC2 dependent phosphorylation modulates calcium regulation of fission yeast myosin",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "doi": "",
+      "extLink": "",
+      "source": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "Kent Data Repository",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "specificUse": undefined,
+      "version": "",
+      "year": "2010",
+    },
+  },
+  Reference {
+    "_id": "bib14",
+    "_type": "preprint",
+    "authors": Array [
+      Object {
+        "firstName": "D",
+        "lastName": "Murray",
+      },
+      Object {
+        "firstName": "K",
+        "lastName": "Siler",
+      },
+      Object {
+        "firstName": "V",
+        "lastName": "Larivière",
+      },
+      Object {
+        "firstName": "Wei Mun",
+        "lastName": "Chan",
+      },
+      Object {
+        "firstName": "AM",
+        "lastName": "Collings",
+      },
+      Object {
+        "firstName": "Jennifer",
+        "lastName": "Rayond",
+      },
+      Object {
+        "firstName": "CR",
+        "lastName": "Sugimoto",
+      },
+    ],
+    "referenceInfo": PreprintReference {
+      "_id": "unique_id",
+      "articleTitle": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "Gender and international diversity improves equity in peer review",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "doi": "10.1101/400515",
+      "extLink": "",
+      "pmid": "",
+      "source": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "bioRxiv",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "year": "2019",
+    },
+  },
+  Reference {
+    "_id": "bib15",
+    "_type": "patent",
+    "authors": Array [
+      Object {
+        "firstName": "T",
+        "lastName": "Onoda",
+      },
+    ],
+    "referenceInfo": PatentReference {
+      "_id": "unique_id",
+      "articleTitle": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "Imidazopyridine Derivative",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "extLink": "https://patents.google.com/patent/WO2015087996A1/en",
+      "patent": "2015087996",
+      "source": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "World Intellectual Property Organization",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "year": "2015",
+    },
+  },
+  Reference {
+    "_id": "bib16",
+    "_type": "software",
+    "authors": Array [
+      Object {
+        "groupName": "R Development Core Team",
+      },
+    ],
+    "referenceInfo": SoftwareReference {
+      "_id": "unique_id",
+      "articleTitle": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "R: A Language and Environment for Statistical Computing",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "doi": "",
+      "extLink": "http://www.R-project.org/",
+      "publisherLocation": "Vienna, Austria",
+      "publisherName": "R Foundation for Statistical Computing",
+      "source": Object {
+        "doc": Object {
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "version": "",
+      "year": "2014",
+    },
+  },
+  Reference {
+    "_id": "bib17",
+    "_type": "data",
+    "authors": Array [
+      Object {
+        "firstName": "K",
+        "lastName": "Read",
+      },
+    ],
+    "referenceInfo": DataReference {
+      "_id": "unique_id",
+      "accessionId": "",
+      "dataTitle": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "Sizing the Problem of Improving Discovery and Access to NIH-funded Data: A Preliminary Study (Datasets)",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "doi": "10.6084/m9.figshare.1285515",
+      "extLink": "",
+      "source": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "Figshare",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "specificUse": undefined,
+      "version": "",
+      "year": "2015",
+    },
+  },
+  Reference {
+    "_id": "bib18",
+    "_type": "periodical",
+    "authors": Array [
+      Object {
+        "firstName": "J",
+        "lastName": "Schwartz",
+      },
+    ],
+    "referenceInfo": PeriodicalReference {
+      "_id": "unique_id",
+      "articleTitle": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "Obesity affects economic, social status",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "date": "",
+      "extLink": "",
+      "firstPage": "A1",
+      "lastPage": "A4",
+      "source": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "The Washington Post",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "volume": "",
+    },
+  },
+  Reference {
+    "_id": "bib19",
+    "_type": "confproc",
+    "authors": Array [
+      Object {
+        "firstName": "S",
+        "lastName": "Spangler",
+      },
+    ],
+    "referenceInfo": ConferenceReference {
+      "_id": "unique_id",
+      "articleTitle": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "Automated hypothesis generation based on mining scientific literature",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "conferenceDate": "",
+      "conferenceLocation": "",
+      "conferenceName": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "Proceedings of the 20th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "doi": "10.1145/2623330.2623667",
+      "elocationId": "",
+      "extLink": "",
+      "firstPage": "1877",
+      "lastPage": "1886",
+      "volume": "",
+      "year": "2014",
+    },
+  },
+  Reference {
+    "_id": "bib20",
+    "_type": "journal",
+    "authors": Array [
+      Object {
+        "firstName": "S",
+        "lastName": "Srinivasan",
+      },
+      Object {
+        "firstName": "C Nadir",
+        "lastName": "Kaplan",
+      },
+      Object {
+        "firstName": "L",
+        "lastName": "Mahadevan",
+      },
+    ],
+    "referenceInfo": JournalReference {
+      "_id": "unique_id",
+      "articleTitle": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "A multiphase theory for spreadingmicrobial swarms and films",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "doi": "10.7554/eLife.42697",
+      "elocationId": "e42697",
+      "firstPage": "",
+      "inPress": false,
+      "lastPage": "",
+      "pmid": "31038122",
+      "source": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "eLife",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "volume": "8",
+      "year": "2019",
+    },
+  },
+  Reference {
+    "_id": "bib21",
+    "_type": "periodical",
+    "authors": Array [
+      Object {
+        "firstName": "WP",
+        "lastName": "Wahls",
+      },
+    ],
+    "referenceInfo": PeriodicalReference {
+      "_id": "unique_id",
+      "articleTitle": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "Send my tax dollars to Mississippi",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "date": "",
+      "extLink": "https://www.asbmb.org/asbmbtoday/201610/Essay/",
+      "firstPage": "24",
+      "lastPage": "25",
+      "source": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "ASBMB Today",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "volume": "15",
+    },
+  },
+  Reference {
+    "_id": "bib22",
+    "_type": "report",
+    "authors": Array [
+      Object {
+        "groupName": "World Health Organization",
+      },
+    ],
+    "referenceInfo": ReportReference {
+      "_id": "unique_id",
+      "doi": "",
+      "extLink": "http://www.who.int/malaria/publications/world-malaria-report-2015/en/",
+      "isbn": "",
+      "pmid": "",
+      "publisherLocation": "Geneva",
+      "publisherName": "World Health Organization",
+      "source": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "World Malaria Report 2015",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "volume": "",
+      "year": "2015",
+    },
+  },
+  Reference {
+    "_id": "bib23",
+    "_type": "web",
+    "authors": Array [
+      Object {
+        "firstName": "J",
+        "lastName": "Walker",
+      },
+    ],
+    "referenceInfo": WebReference {
+      "_id": "unique_id",
+      "articleTitle": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "Solar System Live",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "dateInCitation": "1995-09-10",
+      "extLink": "https://www.fourmilab.ch/solar/",
+      "source": Object {
+        "doc": Object {
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "year": "1994",
+    },
+  },
+  Reference {
+    "_id": "bib24",
+    "_type": "journal",
+    "authors": Array [
+      Object {
+        "firstName": "S",
+        "lastName": "Zhang",
+      },
+      Object {
+        "firstName": "CH",
+        "lastName": "Huang",
+      },
+      Object {
+        "firstName": "Y",
+        "lastName": "Aj",
+      },
+    ],
+    "referenceInfo": JournalReference {
+      "_id": "unique_id",
+      "articleTitle": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "Sequential effects: a bayesian analysis of prior bias on reaction time and behavioral choice",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "doi": "",
+      "elocationId": "",
+      "firstPage": "",
+      "inPress": false,
+      "lastPage": "",
+      "pmid": "",
+      "source": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "Cognitive Science Society",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "volume": "",
+      "year": "2014",
+    },
+  },
+  Reference {
+    "_id": "bib25",
+    "_type": "journal",
+    "authors": Array [
+      Object {
+        "firstName": "D",
+        "lastName": "Zoolander",
+      },
+      Object {
+        "firstName": "",
+        "lastName": "Hansel",
+      },
+      Object {
+        "firstName": "J",
+        "lastName": "Mugatu",
+      },
+    ],
+    "referenceInfo": JournalReference {
+      "_id": "unique_id",
+      "articleTitle": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "Second related article title (if present)",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "doi": "10.7554/eLife.00067",
+      "elocationId": "e00067",
+      "firstPage": "",
+      "inPress": false,
+      "lastPage": "",
+      "pmid": "00030000",
+      "source": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "eLife",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "volume": "8",
+      "year": "2019",
+    },
+  },
+  Reference {
+    "_id": "bib26",
+    "_type": "journal",
+    "authors": Array [
+      Object {
+        "firstName": "J",
+        "lastName": "Zz",
+      },
+      Object {
+        "firstName": "CR",
+        "lastName": "Daniel",
+      },
+      Object {
+        "firstName": "KR",
+        "lastName": "Hess",
+      },
+    ],
+    "referenceInfo": JournalReference {
+      "_id": "unique_id",
+      "articleTitle": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "The association of BMI and outcomes in metastatic melanoma: a retrospective, multicohort analysis of patients treated with targeted therapy, immunotherapy, or chemotherapy",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "doi": "",
+      "elocationId": "",
+      "firstPage": "",
+      "inPress": true,
+      "lastPage": "",
+      "pmid": "",
+      "source": Object {
+        "doc": Object {
+          "content": Array [
+            Object {
+              "text": "The Lancet. Oncology",
+              "type": "text",
+            },
+          ],
+          "type": "annotatedReferenceInfoDoc",
+        },
+        "selection": Object {
+          "anchor": 0,
+          "head": 0,
+          "type": "text",
+        },
+      },
+      "volume": "",
+      "year": "2019",
+    },
+  },
+]
+`;
