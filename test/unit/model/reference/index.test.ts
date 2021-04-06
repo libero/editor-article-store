@@ -1,3 +1,4 @@
+import {XMLSerializer} from 'xmldom';
 import {createReferencesState, Reference} from "../../../../src/model/reference";
 import {JournalReference} from "../../../../src/model/reference/JournalReference";
 import {BookReference} from "../../../../src/model/reference/BookReference";
@@ -486,6 +487,84 @@ describe('Reference class', () => {
       const ref = new Reference(json);
       expect(ref.type).toBe('patent');
       expect(PatentReference).toBeCalledWith(json.referenceInfo);
+    });
+  });
+
+  describe('toXml', () => {
+    const serializer = new XMLSerializer();
+    beforeEach(() => {
+      (JournalReference as jest.Mock)
+        .mockImplementationOnce((data) => {
+            return new (jest.requireActual('../../../../src/model/reference/JournalReference').JournalReference)(data);
+        });
+    });
+
+    it('serializes a reference to xml', () => {
+      const json = {
+        _id: 'some_id',
+        _type: 'journal',
+        authors: [{firstName: 'John', lastName: 'Doe'}],
+        referenceInfo: {
+          "articleTitle": {
+            "doc": {
+              "content": [
+                {
+                  "text": "I am articleTitle text",
+                  "type": "text",
+                },
+              ],
+              "type": "annotatedReferenceInfoDoc",
+            },
+            "selection": {
+              "anchor": 0,
+              "head": 0,
+              "type": "text",
+            },
+          },
+          "source": {
+            "doc": {
+              "content": [
+                {
+                  "text": "I am source text",
+                  "type": "text",
+                },
+              ],
+              "type": "annotatedReferenceInfoDoc",
+            },
+            "selection": {
+              "anchor": 0,
+              "head": 0,
+              "type": "text",
+            },
+          },
+          doi: "DOI",
+          elocationId: "elocationId",
+          firstPage: "firstPage",
+          inPress: true,
+          lastPage: "lastPage",
+          pmid: "pmid",
+          volume: "volume",
+          year: "year",
+        }
+      };
+
+      const ref = new Reference(json);
+      expect(serializer.serializeToString(ref.toXml())).toBe('<ref id="some_id">' +
+        '<element-citation publication-type="journal">' +
+          '<person-group person-group-type="author">' +
+            '<name><given-names>John</given-names><surname>Doe</surname></name></person-group>' +
+            '<elocation-id>elocationId</elocation-id>' +
+            '<fpage>firstPage</fpage>' +
+            '<lpage>lastPage</lpage>' +
+            '<year iso-8601-date="year">year</year>' +
+            '<article-title>I am articleTitle text</article-title>' +
+            '<source>I am source text</source>' +
+            '<pub-id pub-id-type="doi">DOI</pub-id>' +
+            '<pub-id pub-id-type="pmid">pmid</pub-id>' +
+            '<volume>volume</volume>' +
+            '<comment>In press</comment>' +
+          '</element-citation>' +
+        '</ref>');
     });
   });
 
