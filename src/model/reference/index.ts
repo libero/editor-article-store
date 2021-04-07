@@ -13,7 +13,7 @@ import {PatentReference} from "./PatentReference";
 import {SoftwareReference} from "./SoftwareReference";
 import {WebReference} from "./WebReference";
 import {ThesisReference} from "./ThesisReference";
-import {createReferencePersonList} from "./reference.utils";
+import {createReferencePersonList, serializeReferenceContributorsList} from "./reference.utils";
 
 export type ReferenceInfoType =
   | JournalReference
@@ -44,6 +44,16 @@ export class Reference extends BackmatterEntity {
   public set type(value: ReferenceType) {
     this._type = value;
     this.referenceInfo = this.createReferenceInfo();
+  }
+
+  toXml(): Element {
+    const elementCitation = this.referenceInfo.toXml();
+    const authorsXml = serializeReferenceContributorsList('author', this.authors);
+    elementCitation.insertBefore(authorsXml, elementCitation.firstChild);
+    const refElement = elementCitation.ownerDocument.createElement('ref');
+    refElement.setAttribute('id', this._id);
+    refElement.appendChild(elementCitation);
+    return refElement;
   }
 
   private _type: ReferenceType = "journal";
