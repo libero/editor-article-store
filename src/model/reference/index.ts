@@ -14,6 +14,8 @@ import {SoftwareReference} from "./SoftwareReference";
 import {WebReference} from "./WebReference";
 import {ThesisReference} from "./ThesisReference";
 import {createReferencePersonList, serializeReferenceContributorsList} from "./reference.utils";
+import {Manuscript} from "../manuscript";
+import {clearNode} from "../../xml-exporter/xml-utils";
 
 export type ReferenceInfoType =
   | JournalReference
@@ -100,5 +102,23 @@ export class Reference extends BackmatterEntity {
 export function createReferencesState(referencesXml: Element[]): Reference[] {
   return referencesXml.map((referenceXml: Element) => {
     return new Reference(referenceXml);
+  });
+}
+
+export function serializeReferenceState(xmlDoc: Document, manuscript: Manuscript) {
+  let refList = xmlDoc.querySelector('ref-list');
+  if(!refList) {
+    refList = xmlDoc.createElement('ref-list');
+    xmlDoc.querySelector('article back')!.appendChild(refList);
+  } else {
+    clearNode(refList);
+  }
+
+  const title = xmlDoc.createElement('title');
+  title.appendChild(xmlDoc.createTextNode('References'));
+  refList.appendChild(title);
+
+  manuscript.references.forEach((ref: Reference) => {
+    refList!.appendChild(ref.toXml());
   });
 }
