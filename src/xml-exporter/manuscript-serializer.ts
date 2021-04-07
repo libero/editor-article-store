@@ -13,6 +13,7 @@ import {serializeRelatedArticles} from "../model/related-article";
 import {serializeAuthors} from "../model/person";
 import {serializeAffiliations} from "../model/affiliation";
 import { serializeKeywordGroups } from '../model/keyword';
+import {serializeReferenceState} from "../model/reference";
 
 export function createXmlDomSerializer(editorState: EditorState): DOMSerializer {
   return DOMSerializer.fromSchema(editorState.schema);
@@ -35,15 +36,7 @@ export function serializeManuscript(article: Article, manuscript: Manuscript): s
   serializeAuthors(xmlDoc, manuscript);
   serializeAffiliations(xmlDoc, manuscript);
   serializeKeywordGroups(xmlDoc, manuscript);
-
-  // // // const keywordGroups = doc.querySelectorAll('kwd-group');
-  // const abstract = doc.querySelector('abstract:not([abstract-type])') as Element;
-  // const impactStatement = doc.querySelector('abstract[abstract-type="toc"]') as Element;
-  // // // const references = doc.querySelectorAll('ref-list ref element-citation');
-  // // // const authorNotes = doc.querySelector('author-notes');
-
-  // const acknowledgements = doc.querySelector('ack') as Element;
-  // const body = doc.querySelector('body') as Element;
+  serializeReferenceState(xmlDoc, manuscript);
 
   return new xmldom.XMLSerializer().serializeToString(xmlDoc);
 
