@@ -41,6 +41,7 @@ const mockJsonData = {
   _id: 'author-3888',
   firstName: 'Joseph',
   lastName: 'Bloggs',
+  suffix: 'Capt.',
   isAuthenticated: true,
   orcid: '0000-0001-5225-4203',
   email: 'example@example.com',
@@ -262,35 +263,77 @@ describe('Person class', () => {
       const xmlSerializer = new xmldom.XMLSerializer();
       it('serializes an empty Person to XML', () => {
         const person = new Person();
-        expect(xmlSerializer.serializeToString(person.toXml())).toBe(
+        const authorNotesXml = new xmldom.DOMImplementation()
+          .createDocument('', '', null)
+          .createElement('author-notes');
+
+        expect(xmlSerializer.serializeToString(person.toXml(authorNotesXml))).toBe(
           '<contrib contrib-type="author" id="unique_id">' +
             '<name/>' +
             '<bio>' +
               '<p/>' +
             '</bio>' +
+            '<xref ref-type="author-notes" rid="con1"/>' +
           '</contrib>');
       });
-      it('serializes an populated Person to XML', () => {
+      it('serializes a populated Person to XML', () => {
         const person = new Person(mockJsonData);
-        expect(xmlSerializer.serializeToString(person.toXml())).toBe(
+
+        const xmlDoc = parseXML(`<article><article-meta> <author-notes></author-notes> </article-meta></article>`);
+        const authorNotesXml = xmlDoc.querySelector('author-notes')!;
+
+        expect(xmlSerializer.serializeToString(person.toXml(authorNotesXml))).toBe(
           '<contrib contrib-type="author" id="author-3888" corresp="yes">' +
-            '<name><given-names>Joseph</given-names><surname>Bloggs</surname></name>' +
+            '<name><given-names>Joseph</given-names><surname>Bloggs</surname><suffix>Capt.</suffix></name>' +
             '<contrib-id contrib-id-type="orcid" authenticated="true">0000-0001-5225-4203</contrib-id>' + 
             '<email>example@example.com</email>' +
             '<bio><p><bold>Joseph Bloggs</bold> is in the Department of Molecular Biology and Genetics, Cornell University, Ithaca, United States</p></bio>' +
+            '<xref ref-type="author-notes" rid="con1"/>' +
           '</contrib>');
       });
-      it('serializes an populated Person to XML with affiliation label mapped', () => {
-        const person = new Person(mockJsonData);
-        const affiliations = [new Affiliation({_id: 'aff2', label: 'Some Affiliation Label'})]
-        expect(xmlSerializer.serializeToString(person.toXml(affiliations))).toBe(
+
+      it('serializes a populated Person with competing interests to XML', () => {
+        const person = new Person({
+          ...mockJsonData,
+          hasCompetingInterest: true,
+          competingInterestStatement: 'Eats too many biscuits'
+        });
+
+        const xmlDoc = parseXML(`<article><article-meta> <author-notes></author-notes> </article-meta></article>`);
+        const authorNotesXml = xmlDoc.querySelector('author-notes')!;
+
+        expect(xmlSerializer.serializeToString(person.toXml(authorNotesXml))).toBe(
           '<contrib contrib-type="author" id="author-3888" corresp="yes">' +
-            '<name><given-names>Joseph</given-names><surname>Bloggs</surname></name>' +
+          '<name><given-names>Joseph</given-names><surname>Bloggs</surname><suffix>Capt.</suffix></name>' +
+          '<contrib-id contrib-id-type="orcid" authenticated="true">0000-0001-5225-4203</contrib-id>' +
+          '<email>example@example.com</email>' +
+          '<bio><p><bold>Joseph Bloggs</bold> is in the Department of Molecular Biology and Genetics, Cornell University, Ithaca, United States</p></bio>' +
+          '<xref ref-type="author-notes" rid="con1"/>' +
+          '</contrib>');
+
+        expect(xmlSerializer.serializeToString(authorNotesXml)).toBe('<author-notes><fn fn-type="COI-statement" id="con1"><p>Eats too many biscuits</p></fn></author-notes>')
+      });
+
+      it('serializes a populated Person to XML with affiliation label mapped', () => {
+        const person = new Person(mockJsonData);
+        const affiliations = [new Affiliation({_id: 'aff2', label: 'Some Affiliation Label'})];
+        const xmlDoc = parseXML(`<article><article-meta> <author-notes></author-notes> </article-meta></article>`);
+        const authorNotesXml = xmlDoc.querySelector('author-notes')!;
+
+        expect(xmlSerializer.serializeToString(person.toXml(authorNotesXml, affiliations))).toBe(
+          '<contrib contrib-type="author" id="author-3888" corresp="yes">' +
+            '<name><given-names>Joseph</given-names><surname>Bloggs</surname><suffix>Capt.</suffix></name>' +
             '<contrib-id contrib-id-type="orcid" authenticated="true">0000-0001-5225-4203</contrib-id>' + 
             '<email>example@example.com</email>' +
             '<bio><p><bold>Joseph Bloggs</bold> is in the Department of Molecular Biology and Genetics, Cornell University, Ithaca, United States</p></bio>' +
-            '<xref ref-type=\"aff\" rid=\"aff2\">Some Affiliation Label</xref>' +
+            '<xref ref-type="aff" rid="aff2">Some Affiliation Label</xref>' +
+            '<xref ref-type="author-notes" rid="con1"/>' +
           '</contrib>');
+
+        expect(xmlSerializer.serializeToString(authorNotesXml))
+          .toBe('<author-notes>' +
+            '<fn fn-type="COI-statement" id="con1"><p>No competing interests declared</p></fn>' +
+          '</author-notes>');
       });
     });
   });
@@ -397,22 +440,38 @@ describe('Person class', () => {
       manuscript.authors = [new Person()];
       serializeAuthors(xmlDoc, manuscript);
       expect(xmlSerializer.serializeToString(xmlDoc))
-        .toBe(`<article><article-meta><contrib-group><contrib contrib-type=\"author\" id=\"unique_id\"><name/><bio><p/></bio></contrib></contrib-group></article-meta></article>`);
+        .toBe('<article>' +
+          '<article-meta>' +
+            '<contrib-group>' +
+              '<contrib contrib-type="author" id="unique_id">' +
+                '<name/>' +
+                '<bio><p/></bio>' +
+                '<xref ref-type="author-notes" rid="con1"/>' +
+              '</contrib>' +
+            '</contrib-group>' +
+            '<author-notes>' +
+              '<fn fn-type="COI-statement" id="con1"><p>No competing interests declared</p></fn>' +
+            '</author-notes>' +
+          '</article-meta>' +
+        '</article>');
     });
 
     it('serializes a Person object to XML', () => {
-      const xmlDoc = parseXML('<article><article-meta></article-meta></article>');
+      const xmlDoc = parseXML('<article><article-meta><author-notes></author-notes></article-meta></article>');
 
       const manuscript = cloneManuscript(mockManuscript);
       manuscript.authors = [new Person(mockJsonData)];
       serializeAuthors(xmlDoc, manuscript);
       expect(xmlSerializer.serializeToString(xmlDoc)).toBe(
-        '<article><article-meta><contrib-group>' +
+        '<article><article-meta>' +
+        '<author-notes><fn fn-type="COI-statement" id="con1"><p>No competing interests declared</p></fn></author-notes>' +
+        '<contrib-group>' +
           '<contrib contrib-type="author" id="author-3888" corresp="yes">' +
-            '<name><given-names>Joseph</given-names><surname>Bloggs</surname></name>' +
+            '<name><given-names>Joseph</given-names><surname>Bloggs</surname><suffix>Capt.</suffix></name>' +
             '<contrib-id contrib-id-type="orcid" authenticated="true">0000-0001-5225-4203</contrib-id>' +
             '<email>example@example.com</email>' +
             '<bio><p><bold>Joseph Bloggs</bold> is in the Department of Molecular Biology and Genetics, Cornell University, Ithaca, United States</p></bio>' +
+            '<xref ref-type="author-notes" rid="con1"/>' +
           '</contrib>' +
         '</contrib-group></article-meta></article>');
     });
@@ -420,7 +479,7 @@ describe('Person class', () => {
     it('handles an empty authors list correctly', () => {
       const xmlDoc = parseXML('<article><article-meta></article-meta></article>');
       serializeAuthors(xmlDoc, mockManuscript);
-      expect(xmlSerializer.serializeToString(xmlDoc)).toBe('<article><article-meta><contrib-group/></article-meta></article>');
+      expect(xmlSerializer.serializeToString(xmlDoc)).toBe('<article><article-meta><contrib-group/><author-notes/></article-meta></article>');
     });
   });
 });

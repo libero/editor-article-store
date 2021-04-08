@@ -12,6 +12,8 @@ import {serializeManuscriptSection} from "../xml-exporter/manuscript-serializer"
 import {Affiliation} from "./affiliation";
 import {clearNode} from "../xml-exporter/xml-utils";
 
+const NO_COI_STATEMENT = 'No competing interests declared';
+
 export class Person extends BackmatterEntity {
 
   firstName: string | undefined;
@@ -34,7 +36,7 @@ export class Person extends BackmatterEntity {
     }
   }
 
-  public toXml(affiliations: Affiliation[] = []): Element {
+  public toXml(authorNotes: Element, affiliations: Affiliation[] = []): Element {
     const xmlDoc = new DOMImplementation().createDocument(null, null);
     const contrib = xmlDoc.createElement('contrib');
     contrib.setAttribute('contrib-type', 'author');
@@ -82,7 +84,7 @@ export class Person extends BackmatterEntity {
       bioXml.appendChild(serializeManuscriptSection(this.bio, xmlDoc));
       contrib.appendChild(bioXml);
     }
-  
+
     (this.affiliations || []).forEach((affId) => {
       const affEl = xmlDoc.createElement('xref');
       affEl.setAttribute('ref-type', 'aff');
@@ -93,8 +95,48 @@ export class Person extends BackmatterEntity {
         contrib.appendChild(affEl);
       }
     });
-  
+    this.serializeCompetingInterest(contrib, authorNotes);
     return contrib
+  }
+
+  private serializeCompetingInterest(contrib: Element, authorNotes: Element) {
+    const xmlDoc = contrib.ownerDocument;
+    const coiStatementsList = Array.from(authorNotes.querySelectorAll('fn[fn-type="COI-statement"]'));
+    if (this.hasCompetingInterest) {
+      let coiStmtEl = coiStatementsList.find(coiEl => coiEl.textContent === this.competingInterestStatement);
+
+      if (!coiStmtEl) {
+        coiStmtEl = xmlDoc.createElement('fn');
+        coiStmtEl.setAttribute('fn-type', 'COI-statement');
+        coiStmtEl.setAttribute('id', 'con' + (coiStatementsList.length + 1));
+        const paragraph = xmlDoc.createElement('p');
+        paragraph.appendChild(xmlDoc.createTextNode(this.competingInterestStatement || ''));
+        coiStmtEl.appendChild(paragraph);
+        authorNotes.appendChild(coiStmtEl);
+      }
+
+      const xref = xmlDoc.createElement('xref');
+      xref.setAttribute('ref-type', 'author-notes');
+      xref.setAttribute('rid', coiStmtEl.getAttribute('id')!);
+      contrib.appendChild(xref);
+    } else {
+      let noCoiStmt = coiStatementsList.find(coiEl => coiEl.textContent === NO_COI_STATEMENT);
+      if (!noCoiStmt) {
+        noCoiStmt = xmlDoc.createElement('fn');
+        noCoiStmt.setAttribute('fn-type', 'COI-statement');
+        noCoiStmt.setAttribute('id', 'con' + (coiStatementsList.length + 1));
+        const paragraph = xmlDoc.createElement('p');
+        paragraph.appendChild(xmlDoc.createTextNode(NO_COI_STATEMENT));
+        noCoiStmt.appendChild(paragraph);
+        authorNotes.appendChild(noCoiStmt);
+      }
+
+      const xref = xmlDoc.createElement('xref');
+      xref.setAttribute('ref-type', 'author-notes');
+      xref.setAttribute('rid', noCoiStmt.getAttribute('id')!);
+      contrib.appendChild(xref);
+    }
+
   }
 
   protected fromXML(xml: Element): void {
@@ -126,6 +168,8 @@ export class Person extends BackmatterEntity {
       : this.createBioEditorStateFromXml();
     this.email = json.email as string || '';
     this.isCorrespondingAuthor = !!json.isCorrespondingAuthor;
+    this.hasCompetingInterest = json.hasCompetingInterest as boolean | undefined;
+    this.competingInterestStatement = json.competingInterestStatement as string | undefined;
     this.affiliations = Array.isArray(json.affiliations) ? (json.affiliations as string[]) : [];
   }
 
@@ -150,7 +194,7 @@ export class Person extends BackmatterEntity {
     );
 
     this.hasCompetingInterest = competingInterestEl
-      ? competingInterestEl.textContent !== 'No competing interests declared'
+      ? competingInterestEl.textContent !== NO_COI_STATEMENT
       : false;
     this.competingInterestStatement = competingInterestEl ? competingInterestEl.textContent!.trim() : '';
   }
@@ -196,7 +240,21 @@ export function serializeAuthors(xmlDoc: Document, manuscript: Manuscript) {
     clearNode(authorsGroup);
   }
 
+  const authorNotes = getAuthorsNotes(xmlDoc);
+
   manuscript.authors.forEach((author: Person) => {
-    authorsGroup!.appendChild(author.toXml());
+    authorsGroup!.appendChild(author.toXml(authorNotes, manuscript.affiliations));
   });
+}
+
+function getAuthorsNotes(xmlDoc: Document): Element {
+  let authorNotes = xmlDoc.documentElement.querySelector('author-notes');
+  if(!authorNotes) {
+    authorNotes = xmlDoc.createElement('author-notes');
+    xmlDoc.querySelector('article-meta')!.appendChild(authorNotes);
+  } else {
+    authorNotes.querySelectorAll('[fn-type="COI-statement"]').forEach(coiStmtEl => authorNotes!.removeChild(coiStmtEl));
+  }
+
+  return authorNotes;
 }
