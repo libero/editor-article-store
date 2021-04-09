@@ -56,6 +56,7 @@ describe('serializeManuscript', () => {
     deleteAllNodes(xmlDoc, 'related-article');
     deleteAllNodes(xmlDoc, 'kwd-group');
     deleteAllNodes(xmlDoc, 'ref-list');
+    deleteAllNodes(xmlDoc, 'article-meta > author-notes');
 
     deleteAllNodes(outputXmlDoc, 'abstract');
     deleteAllNodes(outputXmlDoc, 'ack');
@@ -64,6 +65,7 @@ describe('serializeManuscript', () => {
     deleteAllNodes(outputXmlDoc, 'related-article');
     deleteAllNodes(outputXmlDoc, 'kwd-group');
     deleteAllNodes(outputXmlDoc, 'ref-list');
+    deleteAllNodes(outputXmlDoc, 'article-meta > author-notes');
 
     expect(serializer.serializeToString(xmlDoc)).toEqual(serializer.serializeToString(outputXmlDoc));
   });
