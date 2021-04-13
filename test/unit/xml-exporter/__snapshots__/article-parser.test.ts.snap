@@ -77,6 +77,7 @@ Array [
       "firstPage": "236",
       "inPress": false,
       "lastPage": "239",
+      "pmcid": "",
       "pmid": "",
       "source": Object {
         "doc": Object {
@@ -125,7 +126,9 @@ Array [
       "elocationId": "",
       "firstPage": "",
       "inPress": false,
+      "isbn": "978-1844674428",
       "lastPage": "",
+      "pmcid": "",
       "pmid": "",
       "publisherLocation": "London",
       "publisherName": "Verso",
@@ -361,6 +364,7 @@ Array [
       "firstPage": "1927",
       "inPress": false,
       "lastPage": "1946",
+      "pmcid": "",
       "pmid": "",
       "source": Object {
         "doc": Object {
@@ -418,6 +422,7 @@ Array [
       "firstPage": "839",
       "inPress": false,
       "lastPage": "859",
+      "pmcid": "",
       "pmid": "",
       "source": Object {
         "doc": Object {
@@ -493,7 +498,9 @@ Array [
       "elocationId": "",
       "firstPage": "1",
       "inPress": false,
+      "isbn": "9780511977930",
       "lastPage": "32",
+      "pmcid": "",
       "pmid": "",
       "publisherLocation": "Cambridge, United Kingdom",
       "publisherName": "Cambridge University Press",
@@ -605,6 +612,7 @@ Array [
       },
       "doi": "",
       "extLink": "https://arxiv.org/abs/1303.3997",
+      "pmcid": "",
       "pmid": "",
       "source": Object {
         "doc": Object {
@@ -648,6 +656,7 @@ Array [
       },
       "doi": "",
       "extLink": "https://github.com/danilinares/2018LinaresAguilarLopezmoliner",
+      "pmid": "",
       "publisherLocation": "",
       "publisherName": "GitHub",
       "source": Object {
@@ -728,6 +737,7 @@ Array [
       "extLink": "https://dl.acm.org/citation.cfm?doid=2016741.2016785",
       "firstPage": "1",
       "lastPage": "8",
+      "pmid": "",
       "volume": "",
       "year": "2011",
     },
@@ -836,6 +846,7 @@ Array [
       },
       "doi": "10.1101/400515",
       "extLink": "",
+      "pmcid": "",
       "pmid": "",
       "source": Object {
         "doc": Object {
@@ -932,6 +943,7 @@ Array [
       },
       "doi": "",
       "extLink": "http://www.R-project.org/",
+      "pmid": "",
       "publisherLocation": "Vienna, Austria",
       "publisherName": "R Foundation for Statistical Computing",
       "source": Object {
@@ -1099,6 +1111,7 @@ Array [
       "extLink": "",
       "firstPage": "1877",
       "lastPage": "1886",
+      "pmid": "",
       "volume": "",
       "year": "2014",
     },
@@ -1143,6 +1156,7 @@ Array [
       "firstPage": "",
       "inPress": false,
       "lastPage": "",
+      "pmcid": "PMC12345",
       "pmid": "31038122",
       "source": Object {
         "doc": Object {
@@ -1332,6 +1346,7 @@ Array [
       "firstPage": "",
       "inPress": false,
       "lastPage": "",
+      "pmcid": "",
       "pmid": "",
       "source": Object {
         "doc": Object {
@@ -1393,6 +1408,7 @@ Array [
       "firstPage": "",
       "inPress": false,
       "lastPage": "",
+      "pmcid": "PMC00005",
       "pmid": "00030000",
       "source": Object {
         "doc": Object {
@@ -1454,6 +1470,7 @@ Array [
       "firstPage": "",
       "inPress": true,
       "lastPage": "",
+      "pmcid": "",
       "pmid": "",
       "source": Object {
         "doc": Object {

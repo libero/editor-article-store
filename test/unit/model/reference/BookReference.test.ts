@@ -15,6 +15,8 @@ const emptyBookRefJSON = {
   "inPress": false,
   "lastPage": "",
   "pmid": "",
+  "pmcid": "",
+  "isbn": "",
   "publisherLocation": "",
   "publisherName": "",
   "volume": "",
@@ -33,6 +35,8 @@ const populatedBookRefJSON = {
   "inPress": true,
   "lastPage": "lastPage",
   "pmid": "pmid",
+  "pmcid": "pmcid",
+  "isbn": "isbn",
   "publisherLocation": "publisherLocation",
   "publisherName": "publisherName",
   "volume": "volume",
@@ -165,7 +169,7 @@ describe('BookReference', () => {
       const reference = new BookReference(emptyBookRefJSON);
       const xmlString = xmlSerializer.serializeToString(reference.toXml());
       expect(xmlString)
-        .toBe('<element-citation publication-type="book"><edition></edition><person-group person-group-type="editor"/><elocation-id></elocation-id><fpage></fpage><lpage></lpage><year iso-8601-date=""></year><chapter-title/><source/><pub-id pub-id-type="doi"></pub-id><pub-id pub-id-type="pmid"></pub-id><publisher-name></publisher-name><publisher-loc></publisher-loc><volume></volume></element-citation>');
+        .toBe('<element-citation publication-type="book"><edition></edition><person-group person-group-type="editor"/><elocation-id></elocation-id><fpage></fpage><lpage></lpage><year iso-8601-date=""></year><chapter-title/><source/><pub-id pub-id-type="doi"></pub-id><pub-id pub-id-type="pmid"></pub-id><publisher-name></publisher-name><publisher-loc></publisher-loc><volume></volume><pub-id pub-id-type="isbn"></pub-id><pub-id pub-id-type="pmcid"></pub-id></element-citation>');
     });
 
     it('should serialize a populated book reference', () => {
@@ -204,7 +208,7 @@ describe('BookReference', () => {
         }});
       const xmlString = xmlSerializer.serializeToString(reference.toXml());
       expect(xmlString)
-        .toBe('<element-citation publication-type="book"><edition>edition</edition><person-group person-group-type="editor"><name><given-names>DJ</given-names><surname>Katz</surname></name></person-group><elocation-id>elocationId</elocation-id><fpage>firstPage</fpage><lpage>lastPage</lpage><year iso-8601-date="year">year</year><chapter-title>I am chapterTitle text</chapter-title><source>I am source text</source><pub-id pub-id-type="doi">DOI</pub-id><pub-id pub-id-type="pmid">pmid</pub-id><publisher-name>publisherName</publisher-name><publisher-loc>publisherLocation</publisher-loc><volume>volume</volume></element-citation>');
+        .toBe('<element-citation publication-type="book"><edition>edition</edition><person-group person-group-type="editor"><name><given-names>DJ</given-names><surname>Katz</surname></name></person-group><elocation-id>elocationId</elocation-id><fpage>firstPage</fpage><lpage>lastPage</lpage><year iso-8601-date="year">year</year><chapter-title>I am chapterTitle text</chapter-title><source>I am source text</source><pub-id pub-id-type="doi">DOI</pub-id><pub-id pub-id-type="pmid">pmid</pub-id><publisher-name>publisherName</publisher-name><publisher-loc>publisherLocation</publisher-loc><volume>volume</volume><pub-id pub-id-type="isbn">isbn</pub-id><pub-id pub-id-type="pmcid">pmcid</pub-id></element-citation>');
     });
   });
 });

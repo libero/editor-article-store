@@ -15,6 +15,7 @@ export class SoftwareReference extends BackmatterEntity {
   publisherLocation!: string;
   extLink!: string;
   doi!: string;
+  pmid!: string;
 
   constructor(data?: Element | JSONObject) {
     super();
@@ -62,6 +63,11 @@ export class SoftwareReference extends BackmatterEntity {
     publisherLoc.appendChild(xmlDoc.createTextNode(this.publisherLocation));
     xml.appendChild(publisherLoc);
 
+    const pmid = xmlDoc.createElement('pub-id');
+    pmid.setAttribute('pub-id-type', 'pmid');
+    pmid.appendChild(xmlDoc.createTextNode(this.pmid));
+    xml.appendChild(pmid);
+
     return xml;
   }
 
@@ -69,6 +75,7 @@ export class SoftwareReference extends BackmatterEntity {
     this._id = json._id as string || this._id;
     this.year = json.year as string || '';
     this.doi = json.doi as string || '';
+    this.pmid = json.pmid as string || '';
     this.version = json.version as string || '';
     this.publisherLocation = json.publisherLocation as string || '';
     this.publisherName = json.publisherName as string || '';
@@ -85,12 +92,14 @@ export class SoftwareReference extends BackmatterEntity {
     this.publisherLocation = getTextContentFromPath(referenceXml, 'publisher-loc') || '';
     this.publisherName = getTextContentFromPath(referenceXml, 'publisher-name') || '';
     this.doi = getTextContentFromPath(referenceXml, 'pub-id[pub-id-type="doi"]') || '';
+    this.pmid = getTextContentFromPath(referenceXml, 'pub-id[pub-id-type="pmid"]') || '';
     this.extLink = getTextContentFromPath(referenceXml, 'ext-link') || '';
   }
 
   protected createBlank() {
     this.year = '';
     this.doi = '';
+    this.pmid = '';
     this.version = '';
     this.publisherLocation = '';
     this.publisherName = '';

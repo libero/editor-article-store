@@ -13,10 +13,12 @@ const emptySoftwareRefJSON = {
   "version": "",
   "extLink": "",
   "year": "",
+  "pmid": ""
 };
 
 const populatedSoftwareRefJSON = {
   "doi": "doi",
+  "pmid": "pmid",
   "publisherLocation": "publisherLocation",
   "publisherName": "publisherName",
   "version": "version",
@@ -104,6 +106,7 @@ describe('SoftwareReference', () => {
           <source>A source Title</source>
           <version designator="3e48e64">3e48e64</version>
           <pub-id pub-id-type="doi">10.7554/eLife.00067</pub-id>
+          <pub-id pub-id-type="pmid">pmid</pub-id>
           <publisher-name>GitHub</publisher-name>
           <publisher-loc>Github Land</publisher-loc>
           <ext-link ext-link-type="uri">https://github.com/danilinares/2018LinaresAguilarLopezmoliner</ext-link>
@@ -132,7 +135,7 @@ describe('SoftwareReference', () => {
       const reference = new SoftwareReference(emptySoftwareRefJSON);
       const xmlString = xmlSerializer.serializeToString(reference.toXml());
       expect(xmlString)
-        .toBe('<element-citation publication-type="software"><year iso-8601-date=""></year><ext-link ext-link-type="uri" xlink:href=""></ext-link><article-title/><source/><pub-id pub-id-type="doi"></pub-id><version></version><publisher-name></publisher-name><publisher-loc></publisher-loc></element-citation>');
+        .toBe('<element-citation publication-type="software"><year iso-8601-date=""></year><ext-link ext-link-type="uri" xlink:href=""></ext-link><article-title/><source/><pub-id pub-id-type="doi"></pub-id><version></version><publisher-name></publisher-name><publisher-loc></publisher-loc><pub-id pub-id-type="pmid"></pub-id></element-citation>');
     });
 
     it('should serialize a populated software reference', () => {
@@ -172,7 +175,7 @@ describe('SoftwareReference', () => {
       });
       const xmlString = xmlSerializer.serializeToString(reference.toXml());
       expect(xmlString)
-        .toBe('<element-citation publication-type="software"><year iso-8601-date="year">year</year><ext-link ext-link-type="uri" xlink:href="extLink">extLink</ext-link><article-title>I am articleTitle text</article-title><source>I am source text</source><pub-id pub-id-type="doi">doi</pub-id><version>version</version><publisher-name>publisherName</publisher-name><publisher-loc>publisherLocation</publisher-loc></element-citation>');
+        .toBe('<element-citation publication-type="software"><year iso-8601-date="year">year</year><ext-link ext-link-type="uri" xlink:href="extLink">extLink</ext-link><article-title>I am articleTitle text</article-title><source>I am source text</source><pub-id pub-id-type="doi">doi</pub-id><version>version</version><publisher-name>publisherName</publisher-name><publisher-loc>publisherLocation</publisher-loc><pub-id pub-id-type="pmid">pmid</pub-id></element-citation>');
     });
 
   });

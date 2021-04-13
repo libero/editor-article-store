@@ -13,6 +13,7 @@ const emptyJournalRefJSON = {
   "inPress": false,
   "lastPage": "",
   "pmid": "",
+  "pmcid": "",
   "volume": "",
   "year": "",
 };
@@ -24,6 +25,7 @@ const populatedJournalRefJSON = {
   "inPress": true,
   "lastPage": "lastPage",
   "pmid": "pmid",
+  "pmcid": "pmcid",
   "volume": "volume",
   "year": "year",
 };
@@ -140,7 +142,7 @@ describe('JournalReference', () => {
       const reference = new JournalReference(emptyJournalRefJSON);
       const xmlString = xmlSerializer.serializeToString(reference.toXml());
       expect(xmlString)
-        .toBe('<element-citation publication-type="journal"><elocation-id></elocation-id><fpage></fpage><lpage></lpage><year iso-8601-date=""></year><article-title/><source/><pub-id pub-id-type="doi"></pub-id><pub-id pub-id-type="pmid"></pub-id><volume></volume></element-citation>');
+        .toBe('<element-citation publication-type="journal"><elocation-id></elocation-id><fpage></fpage><lpage></lpage><year iso-8601-date=""></year><article-title/><source/><pub-id pub-id-type="doi"></pub-id><pub-id pub-id-type="pmid"></pub-id><pub-id pub-id-type="pmcid"></pub-id><volume></volume></element-citation>');
     });
 
     it('should serialize a populated journal reference', () => {
@@ -179,14 +181,14 @@ describe('JournalReference', () => {
         }});
       const xmlString = xmlSerializer.serializeToString(reference.toXml());
       expect(xmlString)
-        .toBe('<element-citation publication-type="journal"><elocation-id>elocationId</elocation-id><fpage>firstPage</fpage><lpage>lastPage</lpage><year iso-8601-date="year">year</year><article-title>I am articleTitle text</article-title><source>I am source text</source><pub-id pub-id-type="doi">DOI</pub-id><pub-id pub-id-type="pmid">pmid</pub-id><volume>volume</volume><comment>In press</comment></element-citation>');
+        .toBe('<element-citation publication-type="journal"><elocation-id>elocationId</elocation-id><fpage>firstPage</fpage><lpage>lastPage</lpage><year iso-8601-date="year">year</year><article-title>I am articleTitle text</article-title><source>I am source text</source><pub-id pub-id-type="doi">DOI</pub-id><pub-id pub-id-type="pmid">pmid</pub-id><pub-id pub-id-type="pmcid">pmcid</pub-id><volume>volume</volume><comment>In press</comment></element-citation>');
     });
 
     it('should exclude In press if flag is false' , () => {
       const reference = new JournalReference({ ...populatedJournalRefJSON, inPress: false });
       const xmlString = xmlSerializer.serializeToString(reference.toXml());
       expect(xmlString)
-        .toBe('<element-citation publication-type="journal"><elocation-id>elocationId</elocation-id><fpage>firstPage</fpage><lpage>lastPage</lpage><year iso-8601-date="year">year</year><article-title/><source/><pub-id pub-id-type="doi">DOI</pub-id><pub-id pub-id-type="pmid">pmid</pub-id><volume>volume</volume></element-citation>');
+        .toBe('<element-citation publication-type="journal"><elocation-id>elocationId</elocation-id><fpage>firstPage</fpage><lpage>lastPage</lpage><year iso-8601-date="year">year</year><article-title/><source/><pub-id pub-id-type="doi">DOI</pub-id><pub-id pub-id-type="pmid">pmid</pub-id><pub-id pub-id-type="pmcid">pmcid</pub-id><volume>volume</volume></element-citation>');
     });
   });
 });

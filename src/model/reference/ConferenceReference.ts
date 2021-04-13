@@ -18,6 +18,7 @@ export class ConferenceReference extends BackmatterEntity {
   doi!: string;
   firstPage!: string;
   lastPage!: string;
+  pmid!: string;
 
   constructor(data?: JSONObject | Element) {
     super();
@@ -67,6 +68,11 @@ export class ConferenceReference extends BackmatterEntity {
     doi.appendChild(xmlDoc.createTextNode(this.doi));
     xml.appendChild(doi);
 
+    const pmid = xmlDoc.createElement('pub-id');
+    pmid.setAttribute('pub-id-type', 'pmid');
+    pmid.appendChild(xmlDoc.createTextNode(this.pmid));
+    xml.appendChild(pmid);
+
     const extLink = xmlDoc.createElement('ext-link');
     extLink.setAttribute('ext-link-type', 'uri');
     extLink.setAttribute('xlink:href', this.extLink);
@@ -91,6 +97,7 @@ export class ConferenceReference extends BackmatterEntity {
     this.volume = json.volume as string || '';
     this.year = json.year as string || '';
     this.doi = json.doi as string || '';
+    this.pmid = json.pmid as string || '';
     this.conferenceName = json.conferenceName ? deserializeReferenceAnnotatedValue(json.conferenceName as JSONObject) : createReferenceAnnotatedValue();
     this.conferenceLocation = json.conferenceLocation as string || '';
   }
@@ -100,6 +107,7 @@ export class ConferenceReference extends BackmatterEntity {
     this.articleTitle = createReferenceAnnotatedValue(referenceXml.querySelector('article-title'));
     this.conferenceName = createReferenceAnnotatedValue(referenceXml.querySelector('conf-name'));
     this.doi = getTextContentFromPath(referenceXml, 'pub-id[pub-id-type="doi"]') || '';
+    this.pmid = getTextContentFromPath(referenceXml, 'pub-id[pub-id-type="pmid"]') || '';
     this.elocationId = getTextContentFromPath(referenceXml, 'elocation-id') || '';
     this.conferenceDate = getTextContentFromPath(referenceXml, 'conf-date') || '';
     this.conferenceLocation = getTextContentFromPath(referenceXml, 'conf-loc') || '';
@@ -119,6 +127,7 @@ export class ConferenceReference extends BackmatterEntity {
     this.volume = '';
     this.year = '';
     this.doi = '';
+    this.pmid = '';
     this.conferenceName = createReferenceAnnotatedValue();
     this.conferenceLocation = '';
   }

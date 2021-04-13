@@ -20,6 +20,7 @@ export class JournalReference extends BackmatterEntity {
   inPress!: boolean;
   doi!: string;
   pmid!: string;
+  pmcid!: string;
 
   constructor(data?: JSONObject | Element) {
     super();
@@ -66,6 +67,11 @@ export class JournalReference extends BackmatterEntity {
     pmid.appendChild(xmlDoc.createTextNode(this.pmid));
     xml.appendChild(pmid);
 
+    const pmcid = xmlDoc.createElement('pub-id');
+    pmcid.setAttribute('pub-id-type', 'pmcid');
+    pmcid.appendChild(xmlDoc.createTextNode(this.pmcid));
+    xml.appendChild(pmcid);
+
     const volume = xmlDoc.createElement('volume');
     volume.appendChild(xmlDoc.createTextNode(this.volume));
     xml.appendChild(volume);
@@ -87,6 +93,7 @@ export class JournalReference extends BackmatterEntity {
     this.inPress = json.inPress as boolean || false;
     this.lastPage = json.lastPage as string || '';
     this.pmid = json.pmid as string || '';
+    this.pmcid = json.pmcid as string || '';
     this.volume = json.volume as string || '';
     this.year = json.year as string || '';
     this.doi = json.doi as string || '';
@@ -99,6 +106,7 @@ export class JournalReference extends BackmatterEntity {
     this.source = createReferenceAnnotatedValue(referenceXml.querySelector('source'));
     this.doi = getTextContentFromPath(referenceXml, 'pub-id[pub-id-type="doi"]') || '';
     this.pmid = getTextContentFromPath(referenceXml, 'pub-id[pub-id-type="pmid"]') || '';
+    this.pmcid = getTextContentFromPath(referenceXml, 'pub-id[pub-id-type="pmcid"]') || '';
     this.elocationId = getTextContentFromPath(referenceXml, 'elocation-id') || '';
     this.firstPage = getTextContentFromPath(referenceXml, 'fpage') || '';
     this.lastPage = getTextContentFromPath(referenceXml, 'lpage') || '';
@@ -113,6 +121,7 @@ export class JournalReference extends BackmatterEntity {
     this.inPress = false;
     this.lastPage = '';
     this.pmid = '';
+    this.pmcid = '';
     this.volume = '';
     this.year = '';
     this.doi = '';
