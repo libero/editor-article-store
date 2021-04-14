@@ -250,7 +250,7 @@ describe('Person class', () => {
         expect(author1.competingInterestStatement).toBe('');
   
         const competingInterestRef = authorXml.ownerDocument.createElement('xref');
-        competingInterestRef.setAttribute('ref-type', 'fn');
+        competingInterestRef.setAttribute('ref-type', 'author-notes');
         competingInterestRef.setAttribute('rid', 'con1');
         authorXml.appendChild(competingInterestRef);
   
@@ -385,7 +385,7 @@ describe('Person class', () => {
       author1Xml.setAttribute('id', 'author-3888');
 
       const competingInterestRef = author1Xml.ownerDocument.createElement('xref');
-      competingInterestRef.setAttribute('ref-type', 'fn');
+      competingInterestRef.setAttribute('ref-type', 'author-notes');
       competingInterestRef.setAttribute('rid', 'con1');
       author1Xml.appendChild(competingInterestRef);
 
