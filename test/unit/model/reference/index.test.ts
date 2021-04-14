@@ -543,6 +543,7 @@ describe('Reference class', () => {
           inPress: true,
           lastPage: "lastPage",
           pmid: "pmid",
+          pmcid: "pmcid",
           volume: "volume",
           year: "year",
         }
@@ -561,6 +562,7 @@ describe('Reference class', () => {
             '<source>I am source text</source>' +
             '<pub-id pub-id-type="doi">DOI</pub-id>' +
             '<pub-id pub-id-type="pmid">pmid</pub-id>' +
+            '<pub-id pub-id-type="pmcid">pmcid</pub-id>' +
             '<volume>volume</volume>' +
             '<comment>In press</comment>' +
           '</element-citation>' +

@@ -13,6 +13,7 @@ export class PreprintReference extends BackmatterEntity {
   extLink!: string;
   doi!: string;
   pmid!: string;
+  pmcid!: string;
 
   constructor(data?: JSONObject | Element) {
     super();
@@ -53,6 +54,11 @@ export class PreprintReference extends BackmatterEntity {
     pmid.appendChild(xmlDoc.createTextNode(this.pmid));
     xml.appendChild(pmid);
 
+    const pmcid = xmlDoc.createElement('pub-id');
+    pmcid.setAttribute('pub-id-type', 'pmcid');
+    pmcid.appendChild(xmlDoc.createTextNode(this.pmcid));
+    xml.appendChild(pmcid);
+
     return xml;
   }
 
@@ -63,6 +69,7 @@ export class PreprintReference extends BackmatterEntity {
     this.doi = json.doi as string || '';
     this.extLink = json.extLink as string || '';
     this.pmid = json.pmid as string || '';
+    this.pmcid = json.pmcid as string || '';
     this.source = json.source ? deserializeReferenceAnnotatedValue(json.source as JSONObject) : createReferenceAnnotatedValue();
   }
 
@@ -72,6 +79,7 @@ export class PreprintReference extends BackmatterEntity {
     this.articleTitle = createReferenceAnnotatedValue(referenceXml.querySelector('article-title'));
     this.doi = getTextContentFromPath(referenceXml, 'pub-id[pub-id-type="doi"]') || '';
     this.pmid = getTextContentFromPath(referenceXml, 'pub-id[pub-id-type="pmid"]') || '';
+    this.pmcid = getTextContentFromPath(referenceXml, 'pub-id[pub-id-type="pmcid"]') || '';
     this.extLink = getTextContentFromPath(referenceXml, 'ext-link') || '';
   }
 
@@ -81,6 +89,7 @@ export class PreprintReference extends BackmatterEntity {
     this.doi = '';
     this.extLink = '';
     this.pmid = '';
+    this.pmcid = '';
     this.source = createReferenceAnnotatedValue();
   }
 }

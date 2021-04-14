@@ -26,6 +26,8 @@ export class BookReference extends BackmatterEntity {
   volume!: string;
   year!: string;
   doi!: string;
+  isbn!: string;
+  pmcid!: string;
   source!: EditorState;
 
   constructor(data?: JSONObject | Element) {
@@ -91,6 +93,16 @@ export class BookReference extends BackmatterEntity {
     volume.appendChild(xmlDoc.createTextNode(this.volume));
     xml.appendChild(volume);
 
+    const isbn = xmlDoc.createElement('pub-id');
+    isbn.setAttribute('pub-id-type', 'isbn');
+    isbn.appendChild(xmlDoc.createTextNode(this.isbn));
+    xml.appendChild(isbn);
+
+    const pmcid = xmlDoc.createElement('pub-id');
+    pmcid.setAttribute('pub-id-type', 'pmcid');
+    pmcid.appendChild(xmlDoc.createTextNode(this.pmcid));
+    xml.appendChild(pmcid);
+
     return xml;
   }
   
@@ -101,14 +113,16 @@ export class BookReference extends BackmatterEntity {
     this.editors = json.editors as ReferenceContributor[] || [];
     this.elocationId = json.elocationId as string || '';
     this.firstPage = json.firstPage as string || '';
-    this.inPress = json.inPress as boolean || false,
+    this.inPress = json.inPress as boolean || false;
     this.lastPage = json.lastPage as string || '';
     this.pmid = json.pmid as string || '';
+    this.pmcid = json.pmcid as string || '';
     this.publisherLocation = json.publisherLocation as string || '';
     this.publisherName = json.publisherName as string || '';
     this.volume = json.volume as string || '';
     this.year = json.year as string || '';
     this.doi = json.doi as string || '';
+    this.isbn = json.isbn as string || '';
     this.source = json.source ? deserializeReferenceAnnotatedValue(json.source as JSONObject) : createReferenceAnnotatedValue();
   }
 
@@ -122,6 +136,8 @@ export class BookReference extends BackmatterEntity {
     this.publisherName = getTextContentFromPath(referenceXml, 'publisher-name') || '';
     this.edition = getTextContentFromPath(referenceXml, 'edition') || '';
     this.doi = getTextContentFromPath(referenceXml, 'pub-id[pub-id-type="doi"]') || '';
+    this.isbn = getTextContentFromPath(referenceXml, 'pub-id[pub-id-type="isbn"]') || '';
+    this.pmcid = getTextContentFromPath(referenceXml, 'pub-id[pub-id-type="pmcid"]') || '';
     this.pmid = getTextContentFromPath(referenceXml, 'pub-id[pub-id-type="pmid"]') || '';
     this.elocationId = getTextContentFromPath(referenceXml, 'elocation-id') || '';
     this.firstPage = getTextContentFromPath(referenceXml, 'fpage') || '';
@@ -139,6 +155,8 @@ export class BookReference extends BackmatterEntity {
     this.inPress = false;
     this.lastPage = '';
     this.pmid = '';
+    this.isbn = '';
+    this.pmcid = '';
     this.publisherLocation = '';
     this.publisherName = '';
     this.volume = '';

@@ -13,6 +13,7 @@ const emptyConferenceRefJSON = {
   "volume": "",
   "extLink": "",
   "doi": "",
+  "pmid": "",
   "elocationId": "",
   "firstPage": "",
   "lastPage": "",
@@ -25,6 +26,7 @@ const populatedConferenceRefJSON = {
   "volume": "volume",
   "extLink": "extLink",
   "doi": "doi",
+  "pmid": "pmid",
   "elocationId": "elocationId",
   "firstPage": "firstPage",
   "lastPage": "lastPage",
@@ -143,7 +145,7 @@ describe('ConferenceReference', () => {
       const reference = new ConferenceReference(emptyConferenceRefJSON);
       const xmlString = xmlSerializer.serializeToString(reference.toXml());
       expect(xmlString)
-        .toBe('<element-citation publication-type="confproc"><elocation-id></elocation-id><conf-name/><conf-loc></conf-loc><conf-date></conf-date><fpage></fpage><lpage></lpage><year iso-8601-date=""></year><article-title/><pub-id pub-id-type="doi"></pub-id><ext-link ext-link-type="uri" xlink:href=""></ext-link><volume></volume></element-citation>');
+        .toBe('<element-citation publication-type="confproc"><elocation-id></elocation-id><conf-name/><conf-loc></conf-loc><conf-date></conf-date><fpage></fpage><lpage></lpage><year iso-8601-date=""></year><article-title/><pub-id pub-id-type="doi"></pub-id><pub-id pub-id-type="pmid"></pub-id><ext-link ext-link-type="uri" xlink:href=""></ext-link><volume></volume></element-citation>');
     });
 
     it('should serialize a populated conference reference', () => {
@@ -182,7 +184,7 @@ describe('ConferenceReference', () => {
         }});
       const xmlString = xmlSerializer.serializeToString(reference.toXml());
       expect(xmlString)
-        .toBe('<element-citation publication-type="confproc"><elocation-id>elocationId</elocation-id><conf-name>I am conferenceName text</conf-name><conf-loc>conferenceLocation</conf-loc><conf-date>conferenceDate</conf-date><fpage>firstPage</fpage><lpage>lastPage</lpage><year iso-8601-date="year">year</year><article-title>I am articleTitle text</article-title><pub-id pub-id-type="doi">doi</pub-id><ext-link ext-link-type="uri" xlink:href="extLink">extLink</ext-link><volume>volume</volume></element-citation>');
+        .toBe('<element-citation publication-type="confproc"><elocation-id>elocationId</elocation-id><conf-name>I am conferenceName text</conf-name><conf-loc>conferenceLocation</conf-loc><conf-date>conferenceDate</conf-date><fpage>firstPage</fpage><lpage>lastPage</lpage><year iso-8601-date="year">year</year><article-title>I am articleTitle text</article-title><pub-id pub-id-type="doi">doi</pub-id><pub-id pub-id-type="pmid">pmid</pub-id><ext-link ext-link-type="uri" xlink:href="extLink">extLink</ext-link><volume>volume</volume></element-citation>');
     });
   });
 });
