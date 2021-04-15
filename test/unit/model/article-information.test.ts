@@ -25,8 +25,8 @@ const ARTICLE_XML = `
     <elocation-id>e00104</elocation-id>
     <article-categories>
       <subj-group subj-group-type="heading"><subject>Insight</subject></subj-group>
-      <subj-group subj-group-type="subject"><subject>Cell Biology</subject></subj-group>
-      <subj-group subj-group-type="subject"><subject>Genetics and Genomics</subject></subj-group>
+      <subj-group subj-group-type="major-subject"><subject>Cell Biology</subject></subj-group>
+      <subj-group subj-group-type="major-subject"><subject>Genetics and Genomics</subject></subj-group>
     </article-categories>
   </article-meta>
 </article>`
