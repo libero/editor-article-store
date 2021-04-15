@@ -250,7 +250,7 @@ describe('Person class', () => {
         expect(author1.competingInterestStatement).toBe('');
   
         const competingInterestRef = authorXml.ownerDocument.createElement('xref');
-        competingInterestRef.setAttribute('ref-type', 'fn');
+        competingInterestRef.setAttribute('ref-type', 'author-notes');
         competingInterestRef.setAttribute('rid', 'con1');
         authorXml.appendChild(competingInterestRef);
   
@@ -268,7 +268,7 @@ describe('Person class', () => {
           .createElement('author-notes');
 
         expect(xmlSerializer.serializeToString(person.toXml(authorNotesXml))).toBe(
-          '<contrib contrib-type="author" id="unique_id">' +
+          '<contrib contrib-type="author">' +
             '<name/>' +
             '<bio>' +
               '<p/>' +
@@ -283,7 +283,7 @@ describe('Person class', () => {
         const authorNotesXml = xmlDoc.querySelector('author-notes')!;
 
         expect(xmlSerializer.serializeToString(person.toXml(authorNotesXml))).toBe(
-          '<contrib contrib-type="author" id="author-3888" corresp="yes">' +
+          '<contrib contrib-type="author" corresp="yes">' +
             '<name><given-names>Joseph</given-names><surname>Bloggs</surname><suffix>Capt.</suffix></name>' +
             '<contrib-id contrib-id-type="orcid" authenticated="true">0000-0001-5225-4203</contrib-id>' + 
             '<email>example@example.com</email>' +
@@ -303,7 +303,7 @@ describe('Person class', () => {
         const authorNotesXml = xmlDoc.querySelector('author-notes')!;
 
         expect(xmlSerializer.serializeToString(person.toXml(authorNotesXml))).toBe(
-          '<contrib contrib-type="author" id="author-3888" corresp="yes">' +
+          '<contrib contrib-type="author" corresp="yes">' +
           '<name><given-names>Joseph</given-names><surname>Bloggs</surname><suffix>Capt.</suffix></name>' +
           '<contrib-id contrib-id-type="orcid" authenticated="true">0000-0001-5225-4203</contrib-id>' +
           '<email>example@example.com</email>' +
@@ -321,7 +321,7 @@ describe('Person class', () => {
         const authorNotesXml = xmlDoc.querySelector('author-notes')!;
 
         expect(xmlSerializer.serializeToString(person.toXml(authorNotesXml, affiliations))).toBe(
-          '<contrib contrib-type="author" id="author-3888" corresp="yes">' +
+          '<contrib contrib-type="author" corresp="yes">' +
             '<name><given-names>Joseph</given-names><surname>Bloggs</surname><suffix>Capt.</suffix></name>' +
             '<contrib-id contrib-id-type="orcid" authenticated="true">0000-0001-5225-4203</contrib-id>' + 
             '<email>example@example.com</email>' +
@@ -345,7 +345,6 @@ describe('Person class', () => {
 
     it('creates an empty authors state without notes', () => {
       const author1Xml = parseXML(mockXmlData).querySelector('contrib')!;
-      author1Xml.setAttribute('id', 'author-3888');
 
       const author2Xml = parseXML(`<contrib corresp="yes">
         <name><surname>Bloggs</surname><given-names>Joseph</given-names></name>
@@ -353,12 +352,11 @@ describe('Person class', () => {
         <email>example@example.com</email>
         <xref ref-type="aff" rid="aff2">2</xref>
       </contrib>`).querySelector('contrib')!;
-      author2Xml.setAttribute('id', 'author-3889');
 
       const state = createAuthorsState([author1Xml, author2Xml]);
       expect(state.length).toBe(2);
       expect(state[0]).toStrictEqual(expect.objectContaining({
-        _id: 'author-3888',
+        _id: 'unique_id',
         firstName: 'Fred',
         lastName: 'Atherden',
         isAuthenticated: true,
@@ -369,7 +367,7 @@ describe('Person class', () => {
       }));
 
       expect(state[1]).toStrictEqual(expect.objectContaining({
-        _id: 'author-3889',
+        _id: 'unique_id',
         firstName: 'Joseph',
         lastName: 'Bloggs',
         isAuthenticated: true,
@@ -382,10 +380,9 @@ describe('Person class', () => {
 
     it('creates an empty authors state with notes', () => {
       const author1Xml = parseXML(mockXmlData).querySelector('contrib')!;
-      author1Xml.setAttribute('id', 'author-3888');
 
       const competingInterestRef = author1Xml.ownerDocument.createElement('xref');
-      competingInterestRef.setAttribute('ref-type', 'fn');
+      competingInterestRef.setAttribute('ref-type', 'author-notes');
       competingInterestRef.setAttribute('rid', 'con1');
       author1Xml.appendChild(competingInterestRef);
 
@@ -402,7 +399,7 @@ describe('Person class', () => {
       const state = createAuthorsState([author1Xml, author2Xml], notesXml);
       expect(state.length).toBe(2);
       expect(state[0]).toStrictEqual(expect.objectContaining({
-        _id: 'author-3888',
+        _id: 'unique_id',
         firstName: 'Fred',
         lastName: 'Atherden',
         suffix: "Capt.",
@@ -416,7 +413,7 @@ describe('Person class', () => {
       }));
 
       expect(state[1]).toStrictEqual(expect.objectContaining({
-        _id: 'author-3889',
+        _id: 'unique_id',
         firstName: 'Joseph',
         lastName: 'Bloggs',
         isAuthenticated: true,
@@ -443,7 +440,7 @@ describe('Person class', () => {
         .toBe('<article>' +
           '<article-meta>' +
             '<contrib-group>' +
-              '<contrib contrib-type="author" id="unique_id">' +
+              '<contrib contrib-type="author">' +
                 '<name/>' +
                 '<bio><p/></bio>' +
                 '<xref ref-type="author-notes" rid="con1"/>' +
@@ -466,7 +463,7 @@ describe('Person class', () => {
         '<article><article-meta>' +
         '<author-notes><fn fn-type="COI-statement" id="con1"><p>No competing interests declared</p></fn></author-notes>' +
         '<contrib-group>' +
-          '<contrib contrib-type="author" id="author-3888" corresp="yes">' +
+          '<contrib contrib-type="author" corresp="yes">' +
             '<name><given-names>Joseph</given-names><surname>Bloggs</surname><suffix>Capt.</suffix></name>' +
             '<contrib-id contrib-id-type="orcid" authenticated="true">0000-0001-5225-4203</contrib-id>' +
             '<email>example@example.com</email>' +

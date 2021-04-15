@@ -40,7 +40,6 @@ export class Person extends BackmatterEntity {
     const xmlDoc = new DOMImplementation().createDocument(null, null);
     const contrib = xmlDoc.createElement('contrib');
     contrib.setAttribute('contrib-type', 'author');
-    contrib.setAttribute('id', this.id);
     if (this.isCorrespondingAuthor) {
       contrib.setAttribute('corresp', 'yes');
     }
@@ -142,7 +141,6 @@ export class Person extends BackmatterEntity {
   protected fromXML(xml: Element): void {
     const orcidEl = xml.querySelector('contrib-id[contrib-id-type="orcid"]');
 
-    this._id = xml.getAttribute('id') || this._id;
     this.firstName = getTextContentFromPath(xml, 'name > given-names');
     this.lastName = getTextContentFromPath(xml, 'name > surname');
     this.suffix = getTextContentFromPath(xml, 'name > suffix');
@@ -189,7 +187,7 @@ export class Person extends BackmatterEntity {
     const competingInterestEl = Array.from(notesXml.querySelectorAll('[fn-type="COI-statement"]')).find(
       (fnEl: Element) => {
         const id = fnEl.getAttribute('id');
-        return dataXml.querySelector(`xref[ref-type="fn"][rid="${id}"]`);
+        return dataXml.querySelector(`xref[ref-type="author-notes"][rid="${id}"]`);
       }
     );
 
