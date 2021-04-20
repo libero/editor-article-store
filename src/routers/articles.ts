@@ -76,5 +76,17 @@ export default (articleService: ArticleService): express.Router => {
     }
   });
 
+  // returns current article manifest with assets
+  router.get("/:articleId/manifest", async (req, res) => {
+    const articleId = req.params.articleId;
+
+    const articleManifest = await articleService.getManifest(articleId);
+    if (articleManifest === null) {
+      return res.sendStatus(404);
+    }
+
+    return res.type("application/json").status(200).json(articleManifest);
+  });
+
   return router;
 };
