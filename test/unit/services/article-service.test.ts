@@ -51,7 +51,7 @@ describe("articleService", () => {
   test("Returns article if found", async () => {
     const data = {
       _id: 123,
-      xml: "<xml></xml",
+      xml: "<xml></xml>",
       datatype: "xml",
       articleId: "12345",
       fileName: "main.xml",
@@ -96,7 +96,7 @@ describe("articleService", () => {
   test("Returns a manifest for article", async () => {
     const data = {
       _id: 'ARTICLE_ID',
-      xml: "<xml></xml",
+      xml: "<xml></xml>",
       datatype: "xml",
       articleId: "12345",
       fileName: "main.xml",
