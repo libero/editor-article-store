@@ -42,10 +42,9 @@ describe('Get /article/id', () => {
       .expect(200);
   });
 
-  test('Can get article manifest', async () => {
+  test('Returns 404 for an invalid article manifest', async () => {
     return agent
       .get('/articles/00000/manifest')
-      .expect('Content-Type', /json/)
       .expect(404);
   });
 });
