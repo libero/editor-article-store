@@ -1,4 +1,3 @@
-import {Db} from "mongodb";
 import {ArticleRepository} from "../../../src/repositories/articles";
 import articleService from "../../../src/services/article";
 import {ChangeRepository} from "../../../src/repositories/changes";
@@ -18,9 +17,9 @@ const mockArticleRepo = {
 let insertChangesMock = jest.fn();
 let getChanesMock = jest.fn();
 
-jest.mock('../../../src/xml-exporter/article-parser')
-jest.mock('../../../src/model/changes.utils')
-jest.mock('../../../src/model/utils')
+jest.mock('../../../src/xml-exporter/article-parser');
+jest.mock('../../../src/model/changes.utils');
+jest.mock('../../../src/model/utils');
 
 const mockChangesRepo =  {
     insert: insertChangesMock,
@@ -29,7 +28,6 @@ const mockChangesRepo =  {
 } as ChangeRepository;
 
 describe("articleService", () => {
-  const db = {} as unknown as Db;
 
   beforeEach(async () => {
     jest.restoreAllMocks();
@@ -91,7 +89,6 @@ describe("articleService", () => {
     const articles = await articleService(mockArticleRepo, mockChangesRepo).getManifest('ARTICLE_ID');
     expect(articles).toBe(null);
   });
-
 
   test("Returns a manifest for article", async () => {
     const data = {

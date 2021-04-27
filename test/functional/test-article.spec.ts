@@ -41,4 +41,11 @@ describe('Get /article/id', () => {
       .expect('Content-Type', /json/)
       .expect(200);
   });
+
+  test('Can get article manifest', async () => {
+    return agent
+      .get('/articles/00000/manifest')
+      .expect('Content-Type', /json/)
+      .expect(404);
+  });
 });
