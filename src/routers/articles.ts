@@ -84,8 +84,7 @@ export default (articleService: ArticleService): express.Router => {
     if (articleManifest === null) {
       return res.sendStatus(404);
     }
-
-    console.log(req);
+    
     const hostname = `${req.protocol}://${req.headers.host}`;
     articleManifest.assets.forEach(entry => {
       entry.path = hostname + entry.path;
