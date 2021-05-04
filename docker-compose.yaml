@@ -43,6 +43,10 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: password
     ports:
       - 27017:27017
+  transformer:
+    image: elifesciences/basex-transformer:latest
+    ports:
+      - 8984:8984
 
 # Development Services
   s3-file-watcher:
