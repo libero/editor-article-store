@@ -3,8 +3,9 @@ import { Db } from "mongodb";
 import decompress from "decompress";
 import FileType from "file-type";
 import { AssetService } from '../services/asset';
+import { TransformService } from '../services/transform';
 
-export default function importHandler(assetService: AssetService, db: Db) {
+export default function importHandler(assetService: AssetService, transformService: TransformService, db: Db, transformEnabled?: boolean) {
   // S3 has the following format /folder/zip-id-version.zip
   const extractS3Path = (s3Key: string): {
     version: string;
@@ -66,9 +67,15 @@ export default function importHandler(assetService: AssetService, db: Db) {
           const { fileName, content, contentType } = await getFileDetails(file);
           await assetService.saveAsset(articleId, content, contentType?.mime as string, fileName);
           if (file.path.includes(".xml")) {
+            let xml = content.toString();
+
+            if (transformEnabled) {
+              xml = await transformService.importTransform(xml)
+            }
+
             try {
               const articleToStore = {
-                xml: content.toString(),
+                xml,
                 articleId,
                 version,
                 datatype: "xml",

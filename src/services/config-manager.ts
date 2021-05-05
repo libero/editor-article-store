@@ -3,17 +3,17 @@ import { ConfigManager } from '../types/config-manager';
 
 // Encapsulates a Configuration
 export class ConfigManagerInstance implements ConfigManager {
-  private config: Map<string, string>;
+  private config: Map<string, any>;
   constructor() {
     this.config = new Map();
   }
 
   // Get the value of the specified key from this config object.
-  get(key: string): string {
+  get<T = string>(key: string): T {
     if (!this.config.has(key)) {
       throw new Error(`Configuration entry '${key} not found!`);
     }
-    return this.config.get(key) as string;
+    return this.config.get(key) as T;
   }
 
   // Set the value of the specified key in this config object.

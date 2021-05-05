@@ -60,7 +60,5 @@ export function createConfigFromEnv(env: ProcessEnv): Config {
     retVal.editorS3Bucket = env['AWS_EDITOR_BUCKET'];
   }
 
-  // todo: add buckets to env
-
   return retVal;
 }

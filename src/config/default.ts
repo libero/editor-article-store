@@ -15,5 +15,7 @@ export const defaultConfig: Config = {
   dbSSLValidate: false,
   dbName: "editor",
   editorS3Bucket: "editor",
-  srcS3Bucket: "kryia"
+  srcS3Bucket: "kryia",
+  importTransformUrl: 'http://localhost:8984/v1tov2',
+  importTransformEnabled: true
 };
