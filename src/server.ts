@@ -39,7 +39,7 @@ const dbName = configManager.get("dbName");
 const dbUri = buildDatabaseUri(configManager.get("dbEndpoint"), configManager.get("dbUser"), configManager.get("dbPassword"), configManager.get("dbUriQuery"));
 
 // connect to cluster with TSL enabled 
-const dbSSLValidate = configManager.get("dbSSLValidate");
+const dbSSLValidate = configManager.get<boolean>("dbSSLValidate");
 
 //TODO: make cert file name configurable
 const dbCertLocation = "/rds-combined-ca-bundle.pem";

@@ -3,6 +3,7 @@ import { Consumer } from "sqs-consumer";
 import AWS from "aws-sdk";
 import { configManager } from "../services/config-manager";
 import AssetService from '../services/asset';
+import TransformService from '../services/transform';
 import initialiseDb from "../db";
 import {
   createConfigFromArgs,
@@ -40,7 +41,7 @@ async function buildHandler() {
  const dbUri = buildDatabaseUri(configManager.get("dbEndpoint"), configManager.get("dbUser"), configManager.get("dbPassword"), configManager.get("dbUriQuery"))
 
  // connect to cluster with TSL enabled 
- const dbSSLValidate = configManager.get("dbSSLValidate");
+ const dbSSLValidate = configManager.get<boolean>("dbSSLValidate");
  const dbCertLocation = "/rds-combined-ca-bundle.pem";
 
  let dbSSLCert: (string | Buffer)[] | undefined;
@@ -50,8 +51,9 @@ async function buildHandler() {
  const db = await initialiseDb(dbUri, dbName, dbSSLCert);
  const assetRepository = await AssetRepository(db);
  const assetService = AssetService(s3, assetRepository, configManager);
+ const transformService = TransformService(configManager)
 
- return importHandler(assetService, db);
+ return importHandler(assetService, transformService, db, configManager.get<boolean>('importTransformEnabled'));
 }
 
 export default async function start() {

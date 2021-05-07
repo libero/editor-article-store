@@ -11,7 +11,7 @@ build:
 
 start_dev: start_services
 	RUN_ENV=dev ${MAKE} build 
-	docker-compose up -d editor-article-store s3-file-watcher
+	docker-compose up -d editor-article-store s3-file-watcher transformer
 	docker-compose logs -f editor-article-store s3-file-watcher
 
 start: start_services

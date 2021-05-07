@@ -44,6 +44,7 @@ services:
     ports:
       - 27017:27017
   transformer:
+    container_name: transformer
     image: elifesciences/basex-transformer:latest
     ports:
       - 8984:8984

@@ -1,7 +1,3 @@
-export type TransformConfig = {
-  importUrl: string;
-  importTransformEnabled?: boolean;
-};
 export type Config = {
   port?: number;
   awsRegion?: string;
@@ -17,5 +13,6 @@ export type Config = {
   dbName?: string;
   editorS3Bucket?: string;
   srcS3Bucket?: string;
-  articleTransform?: TransformConfig
+  importTransformUrl?: string;
+  importTransformEnabled?: boolean;
 };

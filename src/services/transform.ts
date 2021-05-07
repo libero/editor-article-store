@@ -1,14 +1,16 @@
 import fetch from 'node-fetch';
-import { TransformConfig } from '../types/config';
+import { ConfigManager } from '../types/config-manager';
 
-export default ({ 
-  importUrl, 
-}: TransformConfig) => {
+export interface TransformService {
+  importTransform: (xml: string) => Promise<string>
+};
+
+export default (config: ConfigManager): TransformService => {
   return {
     importTransform: async (xml: string) => {
       let response;
       try {
-        response = await fetch(importUrl, { method: 'POST', body: xml })
+        response = await fetch(config.get('importTransformUrl'), { method: 'POST', body: xml })
       } catch (e) {
         throw new Error('Failed to transform the imported xml: ' + e.message)
       }
