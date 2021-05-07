@@ -64,7 +64,7 @@ OR via docker-compose `environment` configuration
 
 ## XML import listener
 
-The article store service also runs an article import service in parallel which can be used to ingest XML articles and assets in the form of a .zip file and deposit them into a target S3 bucket and DB collection. The import service reliese on the source S3 bucket being hooked up to an SQS messaging system and the dropped .zip file having a specific naming format.
+The article store service also runs an article import service in parallel which can be used to ingest XML articles and assets in the form of a .zip file and deposit them into a target S3 bucket and DB collection. The import service relies on the source S3 bucket being hooked up to an SQS messaging system and the dropped .zip file having a specific naming format.
 
 - The `awsBucketInputEventQueueUrl` config value which can be set through the envvar `AWS_BUCKET_INPUT_EVENT_QUEUE_URL` is used to point the listener towards an SQS notification queue. 
 
