@@ -17,8 +17,9 @@ const assetServiceMock = {
   saveAsset: saveAssetMock
 } as AssetService;
 
+const importTransformMock = jest.fn();
 const transformServiceMock = {
-  importTransform: jest.fn()
+  importTransform: importTransformMock
 }
 
 const decompressMock = jest.fn();
@@ -32,13 +33,14 @@ import importHandler from '../../../src/listeners/import-handler';
 
 describe('importHandler', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
     getAssetMock.mockImplementation(() => ({ promise: jest.fn(() => Promise.resolve('someBody'))}));
     saveAssetMock.mockImplementation(()=>({ promise: jest.fn(() => Promise.resolve())}))
     decompressMock.mockImplementation(() => Promise.resolve([{
       path: '/elife-54296-vor-r1.xml',
       data: 'somecontent'
     }]));
+    importTransformMock.mockImplementation(() => 'someTransformedContent');
   });
 
   it("doesn't throw when initialized", () => {
@@ -105,5 +107,24 @@ describe('importHandler', () => {
   it('throws an error if unable to store article in db collection', async () => {
     mockMongoInsert.mockImplementation(() => { throw new Error('Something went wrong on insert')});
     await expect(importHandler(assetServiceMock, transformServiceMock, dbMock).import('elife-54296-vor-r1.zip', 'kryia')).rejects.toThrow('Error storing article XML: { ArticleID: 54296, Version: r1 } - Something went wrong on insert');
+  })
+
+  it('calls transform service if enabled', async () => {
+    expect(importTransformMock).not.toBeCalled()
+    await importHandler(assetServiceMock, transformServiceMock, dbMock, true).import('elife-54296-vor-r1.zip', 'kryia');
+    expect(importTransformMock).toBeCalledTimes(1);
+    expect(mockMongoInsert).toBeCalledWith({
+      "articleId": "54296", 
+      "datatype": "xml", 
+      "fileName": "elife-54296-vor-r1.xml", 
+      "version": "r1", 
+      "xml": "someTransformedContent"
+    });
+  });
+
+  it('does not call transform service when disabled', async () => {
+    expect(importTransformMock).not.toBeCalled()
+    await importHandler(assetServiceMock, transformServiceMock, dbMock, false).import('elife-54296-vor-r1.zip', 'kryia');
+    expect(importTransformMock).not.toBeCalled()
   })
 });
