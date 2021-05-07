@@ -10,7 +10,7 @@ export class ConfigManagerInstance implements ConfigManager {
   }
 
   // Get the value of the specified key from this config object.
-  get<T extends ConfigValue>(key: string): T {
+  get<T extends ConfigValue = string>(key: string): T {
     if (!this.config.has(key)) {
       throw new Error(`Configuration entry '${key} not found!`);
     }
