@@ -66,9 +66,7 @@ OR via docker-compose `environment` configuration
 
 The article store service also runs an article import service in parallel which can be used to ingest XML articles and assets in the form of a .zip file and deposit them into a target S3 bucket and DB collection. The import service relies on the source S3 bucket being hooked up to an SQS messaging system and the dropped .zip file having a specific naming format.
 
-- The `awsBucketInputEventQueueUrl` config value which can be set through the envvar `AWS_BUCKET_INPUT_EVENT_QUEUE_URL` is used to point the listener towards an SQS notification queue. 
-
-- The `srcS3Bucket` config value which can be set through the envvar `SRC_BUCKET` is the bucket new articles will be deposited within. 
+- The `awsBucketInputEventQueueUrl` config value which can be set through the envvar `AWS_BUCKET_INPUT_EVENT_QUEUE_URL` and is used to point the listener towards an SQS notification queue. The messages recieved will have the source S3 bucket information for the service to know where to pull the .zip from. The application currently requires the credentials for accessing the Libero Editor S3 bucket and source bucket to be the same (these are set via `AWS_ACCESS_KEY` and `AWS_SECRET_ACCESS_KEY`)
 
 - All new article .zip files must follow the naming convention `${prefix}-${ARTICLE_ID}-${....other}-${ARTICLE_VERSION}` eg: `elife-00000-vor-r1.zip` would be picked up as `{ articleId: '00000', version: 'r1' }`
 

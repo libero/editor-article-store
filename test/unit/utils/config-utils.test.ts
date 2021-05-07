@@ -62,7 +62,9 @@ describe('createConfigFromEnv()', () => {
       AWS_ACCESS_KEY: 'AWS_ACCESS_KEY',
       AWS_SECRET_ACCESS_KEY: 'AWS_SECRET_ACCESS_KEY',
       AWS_BUCKET_INPUT_EVENT_QUEUE_URL: 'AWS_BUCKET_INPUT_EVENT_QUEUE_URL',
-      AWS_ENDPOINT: 'AWS_ENDPOINT'
+      AWS_ENDPOINT: 'AWS_ENDPOINT',
+      IMPORT_TRANSFORM_ENABLED: 'true',
+      IMPORT_TRANSFORM_URL: 'someUrl'
     };
     const output = {
       port: 8080,
@@ -76,7 +78,9 @@ describe('createConfigFromEnv()', () => {
       awsAccessKey: 'AWS_ACCESS_KEY',
       awsSecretAccessKey: 'AWS_SECRET_ACCESS_KEY',
       awsBucketInputEventQueueUrl: 'AWS_BUCKET_INPUT_EVENT_QUEUE_URL',
-      awsEndpoint: 'AWS_ENDPOINT'
+      awsEndpoint: 'AWS_ENDPOINT',
+      importTransformEnabled: true,
+      importTransformUrl: 'someUrl'
     };
     expect(createConfigFromEnv(input)).toEqual(output);
   });
