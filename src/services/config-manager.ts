@@ -1,7 +1,7 @@
 import { Config } from '../types/config';
 import { ConfigManager } from '../types/config-manager';
 
-type ConfigValue = string | boolean;
+type ConfigValue = string | boolean | undefined;
 // Encapsulates a Configuration
 export class ConfigManagerInstance implements ConfigManager {
   private config: Map<string, ConfigValue>;
