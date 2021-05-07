@@ -5,7 +5,7 @@ start_services:
 	./.scripts/docker/wait-healthy.sh localstack 120
 	docker-compose up -d mongo
 	./.scripts/docker/wait-healthy.sh editor_mongo 60
-
+	docker-compose up -d transformer
 build:
 	docker-compose build editor-article-store
 
