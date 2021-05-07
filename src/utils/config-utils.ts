@@ -59,6 +59,11 @@ export function createConfigFromEnv(env: ProcessEnv): Config {
   if (env['AWS_EDITOR_BUCKET']) {
     retVal.editorS3Bucket = env['AWS_EDITOR_BUCKET'];
   }
-
+  if (env['IMPORT_TRANSFORM_ENABLED']) {
+    retVal.importTransformEnabled = env['IMPORT_TRANSFORM_ENABLED'] === 'true';
+  }
+  if (env['IMPORT_TRANSFORM_URL']) {
+    retVal.importTransformUrl = env['IMPORT_TRANSFORM_URL'];
+  }
   return retVal;
 }

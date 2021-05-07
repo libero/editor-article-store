@@ -8,6 +8,7 @@ Getting up and running is rather straightforward, you just need to install the r
 and then start it.
 
 On first run you'll need to initialize and update the git submodule which has some of the required `.sh` scripts used in thee `Makefile` as well as install the required npm packages
+
 ```
 git submodule init
 git submodule update --recursive
@@ -46,6 +47,39 @@ Or via the command line...
 ```
 npm run start -- --article-root ./path/to/my/articles
 ```
+
+OR via docker-compose `environment` configuration
+
+```
+  editor-article-store:
+    build:
+      context: './'
+      target: ${RUN_ENV:-prod}
+    image: editor-article-store:${IMAGE_TAG:-local}
+    volumes:
+      - ./src/:/app/src
+    environment:
+      - AWS_REGION=us-east-1
+```
+
+## XML import listener
+
+The article store service also runs an article import service in parallel which can be used to ingest XML articles and assets in the form of a .zip file and deposit them into a target S3 bucket and DB collection. The import service reliese on the source S3 bucket being hooked up to an SQS messaging system and the dropped .zip file having a specific naming format.
+
+- The `awsBucketInputEventQueueUrl` config value which can be set through the envvar `AWS_BUCKET_INPUT_EVENT_QUEUE_URL` is used to point the listener towards an SQS notification queue. 
+
+- The `srcS3Bucket` config value which can be set through the envvar `SRC_BUCKET` is the bucket new articles will be deposited within. 
+
+- All new article .zip files must follow the naming convention `${prefix}-${ARTICLE_ID}-${....other}-${ARTICLE_VERSION}` eg: `elife-00000-vor-r1.zip` would be picked up as `{ articleId: '00000', version: 'r1' }`
+
+### Transform on import
+
+As part of the import process, you may wish to send the extracted XML to an external service to be transformed before storing it within the article-stores DB. By default, this functionality is turned OFF but it can be toggled and configured with the following options.
+
+- The `importTransformEnabled` config option toggles whether transform on import is enabled. This can be set with the `IMPORT_TRANSFORM_ENABLED` envvar.
+
+- The `importTransformUrl` config option configures where the xml is set to via a `POST` request. The application expects a `plain/text` return type which should be the XML you wish to store in string format. This can be set with the `IMPORT_TRANSFORM_URL` envvar.
+
 
 ## Running tests
 

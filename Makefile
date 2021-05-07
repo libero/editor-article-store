@@ -5,13 +5,13 @@ start_services:
 	./.scripts/docker/wait-healthy.sh localstack 120
 	docker-compose up -d mongo
 	./.scripts/docker/wait-healthy.sh editor_mongo 60
-	docker-compose up -d transformer
+
 build:
 	docker-compose build editor-article-store
 
 start_dev: start_services
 	RUN_ENV=dev ${MAKE} build 
-	docker-compose up -d editor-article-store s3-file-watcher
+	docker-compose up -d editor-article-store s3-file-watcher transformer
 	docker-compose logs -f editor-article-store s3-file-watcher
 
 start: start_services
