@@ -1,15 +1,16 @@
 import { Config } from '../types/config';
 import { ConfigManager } from '../types/config-manager';
 
+type ConfigValue = string | boolean;
 // Encapsulates a Configuration
 export class ConfigManagerInstance implements ConfigManager {
-  private config: Map<string, any>;
+  private config: Map<string, ConfigValue>;
   constructor() {
     this.config = new Map();
   }
 
   // Get the value of the specified key from this config object.
-  get<T = string>(key: string): T {
+  get<T extends ConfigValue>(key: string): T {
     if (!this.config.has(key)) {
       throw new Error(`Configuration entry '${key} not found!`);
     }
