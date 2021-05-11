@@ -10,6 +10,7 @@ export default (config: ConfigManager): TransformService => {
     importTransform: async (xml: string) => {
       let response;
       try {
+        console.log('Transforming imported XML');
         response = await fetch(config.get('importTransformUrl'), { method: 'POST', body: xml })
       } catch (e) {
         throw new Error('Failed to transform the imported xml: ' + e.message)
