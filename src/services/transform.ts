@@ -5,7 +5,7 @@ import { ConfigManager } from '../types/config-manager';
 
 export interface TransformService {
   importTransform: (xml: string) => Promise<string>;
-  articleMetaOrderTransform: (xml: string) => Promise<string>
+  articleMetaOrderTransform: (xml: string) => Promise<string>;
 };
 
 export default (config: ConfigManager): TransformService => {
