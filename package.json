@@ -86,6 +86,7 @@
     "deep-diff": "^1.0.2",
     "express": "^4.17.1",
     "file-type": "^15.0.1",
+    "fontoxpath": "^3.17.4",
     "lodash": "^4.17.21",
     "migrate": "^1.7.0",
     "moment": "^2.29.1",

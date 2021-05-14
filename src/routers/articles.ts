@@ -2,8 +2,9 @@ import { default as express } from "express";
 import { http415Response } from "../providers/errors";
 import { logRequest } from "../middlewares/log-request";
 import { ArticleService } from '../services/article';
+import { TransformService } from "../services/transform";
 
-export default (articleService: ArticleService): express.Router => {
+export default (articleService: ArticleService, transformerService: TransformService): express.Router => {
   const router = express.Router();
 
   // Log all requests on this route.
@@ -59,7 +60,8 @@ export default (articleService: ArticleService): express.Router => {
     const accept = req.headers.accept || "";
     const articleId = req.params.articleId;
 
-    const articleXml = await articleService.exportXml(articleId);
+    const unprocessedArticleXml = await articleService.exportXml(articleId);
+    const articleXml = await transformerService.articleMetaOrderTransform(unprocessedArticleXml as string);
 
     if (articleXml === null) {
       return res.sendStatus(404);
