@@ -19,7 +19,8 @@ const assetServiceMock = {
 
 const importTransformMock = jest.fn();
 const transformServiceMock = {
-  importTransform: importTransformMock
+  importTransform: importTransformMock,
+  articleMetaOrderTransform: jest.fn()
 }
 
 const decompressMock = jest.fn();

@@ -13,6 +13,7 @@ import { configManager } from "./services/config-manager";
 import ArticleService from "./services/article";
 import ChangesService from "./services/changes";
 import AssetService from "./services/asset";
+import TransformService from './services/transform';
 import { defaultConfig } from "./config/default";
 import {
   createConfigFromArgs,
@@ -75,13 +76,14 @@ export default async function start() {
   const articleService = ArticleService(articleRepository, changeRepository);
   const changesService = ChangesService(changeRepository);
   const assetService = AssetService(s3, assetRepository, configManager);
+  const transformerService = TransformService(configManager);
 
   // Register middlewares
   app.use(cors());
   app.use(bodyParser.json());
 
   // Register routers
-  app.use("/articles", articlesRouter(articleService));
+  app.use("/articles", articlesRouter(articleService, transformerService));
   app.use("/articles/:articleId/assets", assetRouter(assetService));
   app.use(
     "/articles/:articleId/changes",
