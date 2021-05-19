@@ -1,5 +1,9 @@
 import AWS from 'aws-sdk';
-
+AWS.config.update({
+  region: 'us-east-1',
+  accessKeyId: 'test',
+  secretAccessKey: 'test',
+});
 const s3 = new AWS.S3({
   endpoint: 'http://localhost:4566',
   apiVersion: "2006-03-01",
