@@ -9,6 +9,9 @@ import {
   createConfigFromEnv,
 } from "../../src/utils/config-utils";
 
+import { clearCollections, populateCollection } from '../util/database-utils';
+import { clearBuckets, populateBucket } from '../util/assets-utils';
+
 jest.setTimeout(60000);
 
 // Load the configuration for this service with the following precedence...
@@ -54,7 +57,12 @@ async function waitForConditionOrTimeout(check: Function, limit: number) {
 }
 
 describe("SQS bucket listener", () => {
-  test("should upload assets to s3", async () => {
+  beforeEach(async () => {
+    await clearCollections(['articles', 'changes', 'assets']);
+    await clearBuckets(['editor']);
+  })
+
+  it("should upload assets to s3", async () => {
     const kryiaBucket = configManager.get("srcS3Bucket");
     const editorBucket = configManager.get("editorS3Bucket");
     const folderName = new Date()
@@ -67,6 +75,7 @@ describe("SQS bucket listener", () => {
     );
     const bucketContentBefore = await s3.listObjects({ Prefix: folderName, Bucket: editorBucket}).promise();
     expect(bucketContentBefore.Contents).toHaveLength(0);
+    
     await s3
       .putObject({
         Body: zipBuffer,
