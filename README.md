@@ -20,6 +20,12 @@ Then to build and start the services just run:
 make start_dev
 ```
 
+To get an article into the application try running:
+
+```
+docker exec localstack awslocal s3 cp /resources/articles/elife-54296-vor-r1.zip s3://kryia/
+```
+
 ## Usage
 
 You can interact with the service via your browser...
