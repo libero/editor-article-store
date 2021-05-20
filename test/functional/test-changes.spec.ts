@@ -25,7 +25,8 @@ const change = {
   articleId: "54296",
   path: "abstract",
   timestamp: 1605198300275,
-  steps: [
+  type: "prosemirror",
+  transactionSteps: [
     {
       stepType: "replace",
       from: 5,

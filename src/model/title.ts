@@ -27,6 +27,8 @@ export function createTitleState(content?: Element): EditorState {
 export function serializeTitleState(xmlDoc: Document, manuscript: Manuscript) {
   const titleXml = serializeManuscriptSection(manuscript.title, xmlDoc);
   const titleEl = xmlDoc.querySelector('title-group article-title') as Element;
-  clearNode(titleEl);
-  titleEl.parentNode!.replaceChild(titleXml, titleEl);
+  if (titleEl) {
+    clearNode(titleEl);
+    titleEl.parentNode!.replaceChild(titleXml, titleEl);
+  }
 }

@@ -109,7 +109,7 @@ export function serializeReferenceState(xmlDoc: Document, manuscript: Manuscript
   let refList = xmlDoc.querySelector('ref-list');
   if(!refList) {
     refList = xmlDoc.createElement('ref-list');
-    xmlDoc.querySelector('article back')!.appendChild(refList);
+    xmlDoc.querySelector('article back')?.appendChild(refList);
   } else {
     clearNode(refList);
   }
@@ -119,6 +119,6 @@ export function serializeReferenceState(xmlDoc: Document, manuscript: Manuscript
   refList.appendChild(title);
 
   manuscript.references.forEach((ref: Reference) => {
-    refList!.appendChild(ref.toXml());
+    refList?.appendChild(ref.toXml());
   });
 }

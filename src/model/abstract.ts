@@ -43,7 +43,7 @@ export function serializeAbstractState(xmlDoc: Document, manuscript: Manuscript)
     .find((el: Element) => !el.hasAttribute('abstract-type'));
   if (!abstractEl) {
     abstractEl = xmlDoc.createElement('abstract');
-    xmlDoc.querySelector('article-meta')!.appendChild(abstractEl);
+    xmlDoc.querySelector('article-meta')?.appendChild(abstractEl);
   }
   clearNode(abstractEl);
   abstractEl.appendChild(abstractXML.firstChild!.firstChild!);
