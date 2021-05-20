@@ -1,5 +1,7 @@
 import * as request from 'supertest';
 import { clearCollections, populateCollection } from '../util/database-utils';
+import completeArticle from './data/complete-article';
+import completeChanges from './data/complete-changes';
 
 // move to enviroment;
 const API_URL = 'localhost:8080';
@@ -133,4 +135,17 @@ describe('Get /article/id/export', () => {
         expect(response.text).toBe('<article><article-meta><contrib-group/><author-notes/><abstract><p>Hello World!@123</p></abstract><abstract abstract-type="toc"><p/></abstract></article-meta><body><p/></body></article>')
       });
   });
+
+  it('exports a complete article with many changes applied', async () => {
+    await populateCollection('articles', [completeArticle]);
+    await populateCollection('changes', completeChanges);
+    return agent
+      .get('/articles/54296/export')
+      .set('Accept', 'application/xml')
+      .expect('Content-Type', /xml/)
+      .expect(200)
+      .then(response => {
+        expect(response.text).toMatchSnapshot();
+      });
+  })
 });
