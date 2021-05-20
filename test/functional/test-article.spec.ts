@@ -17,6 +17,7 @@ describe('Get /article/id', () => {
   beforeEach(async () => {
     await clearCollections(['articles', 'changes', 'assets']);
   });
+  
   test('Returns 404 for an invalid article', async () => {
     return agent
       .get('/article/00000')

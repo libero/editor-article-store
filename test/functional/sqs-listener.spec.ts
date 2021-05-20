@@ -60,7 +60,7 @@ describe("SQS bucket listener", () => {
   beforeEach(async () => {
     await clearCollections(['articles', 'changes', 'assets']);
     await clearBuckets(['editor']);
-  })
+  });
 
   it("should upload assets to s3", async () => {
     const kryiaBucket = configManager.get("srcS3Bucket");

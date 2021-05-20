@@ -8,7 +8,6 @@ describe('Get /articles', () => {
   beforeEach(async () => {
     await clearCollections(['articles', 'changes', 'assets']);
   });
-
   it('Returns 200 for a valid mimetype', async () => {
     return agent
       .get('/articles')
