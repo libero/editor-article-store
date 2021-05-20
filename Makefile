@@ -20,13 +20,11 @@ start: start_services
 
 test_ci: start
 	npm install
-	docker exec localstack awslocal s3 cp /resources/articles/elife-54296-vor-r1.zip s3://kryia/
 	npm run test
 	npm run test:functional
 
 test: start_dev
 	npm install
-	docker exec localstack awslocal s3 cp /resources/articles/elife-54296-vor-r1.zip s3://kryia/
 stop:
 	rm -rf tmp
 	docker-compose down
