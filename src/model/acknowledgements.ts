@@ -45,7 +45,7 @@ export function serializeAcknowledgementState(xmlDoc: Document, manuscript: Manu
 
     ackTitleEl.appendChild(xmlDoc.createTextNode('Acknowledgements'));
     acknowledgementsEl.appendChild(ackTitleEl);
-    xmlDoc.querySelector('back')!.appendChild(acknowledgementsEl);
+    xmlDoc.querySelector('back')?.appendChild(acknowledgementsEl);
   }
 
   const ackTitleEl = acknowledgementsEl.firstChild as Element;

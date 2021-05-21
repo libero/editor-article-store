@@ -13,6 +13,7 @@ import {UpdateObjectChange} from "./history/update-object-change";
 import {Person} from "./person";
 import { Keyword } from './keyword';
 import { Affiliation } from './affiliation';
+import { Reference } from './reference';
 
 export function manuscriptEntityToJson<T>(object: T): JSONObject {
   return cloneDeepWith(object, (value) => {
@@ -55,9 +56,9 @@ export function deserializeBackmatter(path: string, json: JSONObject): Backmatte
     return new Person(json);
   }
 
-  // if (path.indexOf('references') >= 0) {
-  //   return new Reference(json);
-  // }
+  if (path.indexOf('references') >= 0) {
+    return new Reference(json);
+  }
 
   if (path.indexOf('relatedArticles') >= 0) {
     return new RelatedArticle(json);
