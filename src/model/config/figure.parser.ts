@@ -10,9 +10,9 @@ import xmldom from "xmldom";
 import { getLicenseUrl } from '../figure';
 
 const MISSING_NODES_SELECTORS_MAP = {
-  figureTitle: 'caption > title',
-  figureLegend: 'caption > p',
-  figureAttribution: 'attrib'
+  figureTitle: 'fig > caption > title',
+  figureLegend: 'fig > caption > p',
+  figureAttribution: 'fig > attrib'
 };
 
 export function parseFigure(dom: Element, schema: Schema): Fragment {
