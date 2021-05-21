@@ -145,6 +145,7 @@ describe('Get /article/id/export', () => {
       .expect('Content-Type', /xml/)
       .expect(200)
       .then(response => {
+        //TODO: update the snapshot once keywords are fixed
         expect(response.text).toMatchSnapshot();
       });
   })
