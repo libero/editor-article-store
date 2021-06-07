@@ -47,7 +47,7 @@ export default function importHandler(assetService: AssetService, transformServi
   const processAssetLocations = (xml: string, assets: Array<{fileName: string; assetKey:string}>): string => {  
     let returnXml = xml;
     for(const asset of assets) {
-      returnXml = returnXml.replace(asset.fileName, '/assets/' + asset.assetKey);
+      returnXml = returnXml.replace(asset.fileName, asset.assetKey);
     }
     return returnXml;
   }
