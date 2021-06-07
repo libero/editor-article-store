@@ -37,8 +37,8 @@ export function serializeFigure(node: ProsemirrorNode): Element {
   figure.appendChild(label);
 
   const graphic = xmlDoc.createElement('graphic');
-  const mimeType = mime.lookup(node.attrs.img);
-  graphic.setAttribute('mime-subtype', mimeType.split('/')[1]);
+  const mimeType = mime.lookup(node.attrs.img) || '';
+  graphic.setAttribute('mime-subtype', mimeType.split('/')[1] || '');
   graphic.setAttribute(' xlink:href', node.attrs.img);
   graphic.setAttribute('mimetype', mimeType.split('/')[0]);
   figure.appendChild(graphic);

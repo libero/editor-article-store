@@ -35,8 +35,8 @@ import importHandler from '../../../src/listeners/import-handler';
 describe('importHandler', () => {
   beforeEach(() => {
     jest.resetAllMocks();
-    getAssetMock.mockImplementation(() => ({ promise: jest.fn(() => Promise.resolve('someBody'))}));
-    saveAssetMock.mockImplementation(()=>({ promise: jest.fn(() => Promise.resolve())}))
+    getAssetMock.mockImplementation(() => Promise.resolve('someBody'));
+    saveAssetMock.mockImplementation(()=> Promise.resolve(''));
     decompressMock.mockImplementation(() => Promise.resolve([{
       path: '/elife-54296-vor-r1.xml',
       data: 'somecontent'
@@ -127,5 +127,25 @@ describe('importHandler', () => {
     expect(importTransformMock).not.toBeCalled()
     await importHandler(assetServiceMock, transformServiceMock, dbMock, false).import('elife-54296-vor-r1.zip', 'kryia');
     expect(importTransformMock).not.toBeCalled()
+  })
+
+  it('replaces graphic ref in xml with returned key from saving asset', async () => {
+    let assetUUID = 0;
+    decompressMock.mockImplementation(() => Promise.resolve([{
+      path: '/elife-54296-vor-r1.xml',
+      data: '<article><graphic xlink:href="sometif.tif" mimetype="image" mime-subtype="tiff"/></article>'
+    }, {
+      path: '/sometif.tif',
+      data: 'someTiffContent'
+    }]));
+    saveAssetMock.mockImplementation((_, __, ___, fileName)=> { assetUUID++; return `${assetUUID}/${fileName}`});
+    await importHandler(assetServiceMock, transformServiceMock, dbMock, false).import('elife-54296-vor-r1.zip', 'kryia');
+    expect(mockMongoInsert).toBeCalledWith({
+      "articleId": "54296", 
+      "datatype": "xml", 
+      "fileName": "elife-54296-vor-r1.xml", 
+      "version": "r1", 
+      "xml": '<article><graphic xlink:href="2/sometif.tif" mimetype="image" mime-subtype="tiff"/></article>'
+    });
   })
 });

@@ -134,7 +134,7 @@ describe("assetService", () => {
           mockAssetRepo,
           mockConfigManager
         ).saveAsset("11111", Buffer.from("some content"), "image/tiff", "someFileName.tiff");
-        expect(assetKey).toBe("11111111-1111-1111-1111-111111111111/someFileName.jpeg");
+        expect(assetKey).toBe("11111111-1111-1111-1111-111111111111/someFileName.tiff");
         expect(putObjectMock).toBeCalledTimes(2);
         expect(putObjectMock).toBeCalledWith(expect.objectContaining({
           Bucket: "editorS3Bucket",
@@ -172,7 +172,8 @@ describe("assetService", () => {
           mockConfigManager
         ).saveAsset("11111", Buffer.from("some content"), "image/tiff", "someFileName.tif");
         expect(imageConverter).toBeCalledTimes(2);
-        expect(assetKey1).toEqual(assetKey2);
+        expect(assetKey1).toEqual('11111111-1111-1111-1111-111111111111/someFileName.tiff');
+        expect(assetKey2).toEqual('11111111-1111-1111-1111-111111111111/someFileName.tif');
       });
 
       it("throws correct error if storing the converted tif file fails", async () => {
