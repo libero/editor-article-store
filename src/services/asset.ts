@@ -111,7 +111,6 @@ export default function assetService(s3: S3, assetRepository: AssetRepository, c
             `Error when storing S3 object: { Key: ${path.join(articleId, assetId, keyName) + ".jpeg"}, Bucket: ${targetBucket} } converted from .tif file: { Key: ${articleId}/${assetId}/${fileName}, Bucket: ${targetBucket} } - ${error.message}`
           );
         }
-        return `${assetId}/${keyName}.jpeg`;
       }
       return `${assetId}/${fileName}`;
     }

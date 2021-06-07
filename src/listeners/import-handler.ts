@@ -44,6 +44,14 @@ export default function importHandler(assetService: AssetService, transformServi
     return { fileName, content, contentType}
   }
 
+  const processAssetLocations = (xml: string, assets: Array<{fileName: string; assetKey:string}>): string => {  
+    let returnXml = xml;
+    for(const asset of assets) {
+      returnXml = returnXml.replace(asset.fileName, '/assets/' + asset.assetKey);
+    }
+    return returnXml;
+  }
+
   return {
     import: async (key:string, srcBucket:string) => {
       let zipContentsDirectory;
@@ -62,34 +70,41 @@ export default function importHandler(assetService: AssetService, transformServi
         );
       }
 
+      const assetList = [];
+      let xmlAsset;
       for (const file of zipContentsDirectory) {
         if (file) {
           const { fileName, content, contentType } = await getFileDetails(file);
-          await assetService.saveAsset(articleId, content, contentType?.mime as string, fileName);
+          const assetKey = await assetService.saveAsset(articleId, content, contentType?.mime as string, fileName);
+          assetList.push({ assetKey, fileName });
           if (file.path.includes(".xml")) {
-            let xml = content.toString();
-
-            if (transformEnabled) {
-              xml = await transformService.importTransform(xml)
-            }
-
-            try {
-              const articleToStore = {
-                xml,
-                articleId,
-                version,
-                datatype: "xml",
-                fileName,
-              };
-              await writeArticleToDb(articleToStore as Article);
-              console.log(
-                `Article XML stored: { ArticleID: ${articleId}, Version: ${version} }`
-              );
-            } catch (error) {
-              throw new Error(
-                `Error storing article XML: { ArticleID: ${articleId}, Version: ${version} } - ${error.message}`);
-            }
+            xmlAsset = { fileName, content };
           }
+        }
+      }
+
+
+      if (xmlAsset) {
+        let xml = processAssetLocations(xmlAsset.content.toString(), assetList);
+        if (transformEnabled) {
+          xml = await transformService.importTransform(xml)
+        }
+
+        try {
+          const articleToStore = {
+            xml,
+            articleId,
+            version,
+            datatype: "xml",
+            fileName: xmlAsset.fileName,
+          };
+          await writeArticleToDb(articleToStore as Article);
+          console.log(
+            `Article XML stored: { ArticleID: ${articleId}, Version: ${version} }`
+          );
+        } catch (error) {
+          throw new Error(
+            `Error storing article XML: { ArticleID: ${articleId}, Version: ${version} } - ${error.message}`);
         }
       }
     }
