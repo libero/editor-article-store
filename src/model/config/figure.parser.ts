@@ -1,4 +1,4 @@
-import {get} from 'lodash';
+import mime from 'mime-types';
 import {
   DOMParser as ProseMirrorDOMParser,
   DOMSerializer,
@@ -37,9 +37,10 @@ export function serializeFigure(node: ProsemirrorNode): Element {
   figure.appendChild(label);
 
   const graphic = xmlDoc.createElement('graphic');
-  graphic.setAttribute('mime-subtype', get(node.attrs.img.match(/\.([^\.]+)$/), '1', ''));
+  const mimeType = mime.lookup(node.attrs.img) || '';
+  graphic.setAttribute('mime-subtype', mimeType.split('/')[1] || '');
   graphic.setAttribute(' xlink:href', node.attrs.img);
-  graphic.setAttribute('mimetype', 'image');
+  graphic.setAttribute('mimetype', mimeType.split('/')[0]);
   figure.appendChild(graphic);
 
   const caption = xmlDoc.createElement('caption');

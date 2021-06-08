@@ -9,7 +9,7 @@ services:
       - ./src/:/app/src
     network_mode: "service:localstack"
   localstack:
-    image: localstack/localstack
+    image: localstack/localstack:0.12.11
     ports:
       - 4566:4566
       # this is exposing the editor-article-store which is making use of localstacks network for host resolving reasons

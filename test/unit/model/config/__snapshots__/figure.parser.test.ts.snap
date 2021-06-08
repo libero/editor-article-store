@@ -177,7 +177,7 @@ exports[`figure parsing spec checks figure serialization 1`] = `
   <graphic
      xlink:href="IMAGE_URL"
     mime-subtype=""
-    mimetype="image"
+    mimetype=""
   />
   <caption>
     <title>

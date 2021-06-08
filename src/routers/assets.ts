@@ -15,14 +15,14 @@ export default (assetService: AssetService): express.Router => {
       return;
     }
 
-    const s3Name = await assetService.saveAsset(
+    const s3Key = await assetService.saveAsset(
       articleId,
       req.file.buffer,
       req.file.mimetype,
       req.file.originalname
     );
 
-    res.json({assetName: s3Name});
+    res.json({assetKey: s3Key});
   });
 
   router.get("/:fileUuid/:fileName?", async (req, res) => {
