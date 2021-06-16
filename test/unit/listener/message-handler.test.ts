@@ -1,10 +1,11 @@
 import { handleMessage, parseMessage } from '../../../src/listeners/message-handler';
 
 const mockSQSMessage = {
-  MessageId: "7d32a0c9-59a6-54b7-a64e-1a104acff875",
-  ReceiptHandle: "qgxnhmcnihwwfzkyncampkmywejgznjrmulonmqnpimydkodqvbpxdtqjszwidywppnlidlbzmquxtvrdkymareicwzmasxlafddbaeljzetigkfwyxfcrehvwpikletrhaajedqvksnsflhhkgadnodujfpxyuaqlpsocnigukginykhdirrukkv",
-  MD5OfBody: "e29131c795e78736d30be12d1a0c3326",
-  Body: `{
+    MessageId: '7d32a0c9-59a6-54b7-a64e-1a104acff875',
+    ReceiptHandle:
+        'qgxnhmcnihwwfzkyncampkmywejgznjrmulonmqnpimydkodqvbpxdtqjszwidywppnlidlbzmquxtvrdkymareicwzmasxlafddbaeljzetigkfwyxfcrehvwpikletrhaajedqvksnsflhhkgadnodujfpxyuaqlpsocnigukginykhdirrukkv',
+    MD5OfBody: 'e29131c795e78736d30be12d1a0c3326',
+    Body: `{
     "Records": [
       {
         "eventVersion": "2.0",
@@ -29,24 +30,26 @@ const mockSQSMessage = {
         }
       }
     ]
-  }`
+  }`,
 } as unknown as AWS.SQS.Message;
 
 describe('parseMessage', () => {
-  it('parses a message to the corrct format', () => {
-    expect(parseMessage(mockSQSMessage)).toEqual([{ key: 'elife-11111-vor-r1.zip', bucketName: 'kriya'}])
-  });
+    it('parses a message to the corrct format', () => {
+        expect(parseMessage(mockSQSMessage)).toEqual([{ key: 'elife-11111-vor-r1.zip', bucketName: 'kriya' }]);
+    });
 
-  it('throws Unable to parse message error when message is malformed', () => {
-    expect(() => parseMessage({ "foo": "Bar" }as unknown as AWS.SQS.Message)).toThrow('Unable to parse message:{\"foo\":\"Bar\"}')
-  });
+    it('throws Unable to parse message error when message is malformed', () => {
+        expect(() => parseMessage({ foo: 'Bar' } as unknown as AWS.SQS.Message)).toThrow(
+            'Unable to parse message:{"foo":"Bar"}',
+        );
+    });
 });
 
 describe('handleMessage', () => {
-  it('calls import with correct params', async () => {
-    const handler = jest.fn();
-    await handleMessage(handler, mockSQSMessage);
-    expect(handler).toBeCalledTimes(1);
-    expect(handler). toBeCalledWith('elife-11111-vor-r1.zip', 'kriya');
-  });
+    it('calls import with correct params', async () => {
+        const handler = jest.fn();
+        await handleMessage(handler, mockSQSMessage);
+        expect(handler).toBeCalledTimes(1);
+        expect(handler).toBeCalledWith('elife-11111-vor-r1.zip', 'kriya');
+    });
 });

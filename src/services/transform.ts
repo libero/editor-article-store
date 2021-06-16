@@ -1,33 +1,33 @@
 import fetch from 'node-fetch';
 import { DOMParser, XMLSerializer } from 'xmldom';
-import fontoxpath from  'fontoxpath';
+import fontoxpath from 'fontoxpath';
 import { ConfigManager } from '../types/config-manager';
 
 export interface TransformService {
-  importTransform: (xml: string) => Promise<string>;
-  articleMetaOrderTransform: (xml: string) => Promise<string>;
-};
+    importTransform: (xml: string) => Promise<string>;
+    articleMetaOrderTransform: (xml: string) => Promise<string>;
+}
 
 export default (config: ConfigManager): TransformService => {
-  return {
-    importTransform: async (xml: string) => {
-      let response;
-      try {
-        console.log('Transforming imported XML');
-        response = await fetch(config.get('importTransformUrl'), { method: 'POST', body: xml })
-      } catch (e) {
-        throw new Error('Failed to transform the imported xml: ' + e.message)
-      }
-      return response.text()
-    },
-    articleMetaOrderTransform: async (xml: string) => {
-      const documentNode = new DOMParser().parseFromString(xml, 'text/xml');
-      const result = await fontoxpath.evaluateUpdatingExpression(articleMetaOrderingExpression, documentNode);
-      fontoxpath.executePendingUpdateList(result.pendingUpdateList);
-      return new XMLSerializer().serializeToString(documentNode)
-    }
-  }
-}
+    return {
+        importTransform: async (xml: string) => {
+            let response;
+            try {
+                console.log('Transforming imported XML');
+                response = await fetch(config.get('importTransformUrl'), { method: 'POST', body: xml });
+            } catch (e) {
+                throw new Error('Failed to transform the imported xml: ' + e.message);
+            }
+            return response.text();
+        },
+        articleMetaOrderTransform: async (xml: string) => {
+            const documentNode = new DOMParser().parseFromString(xml, 'text/xml');
+            const result = await fontoxpath.evaluateUpdatingExpression(articleMetaOrderingExpression, documentNode);
+            fontoxpath.executePendingUpdateList(result.pendingUpdateList);
+            return new XMLSerializer().serializeToString(documentNode);
+        },
+    };
+};
 
 const articleMetaOrderingExpression = `
 replace node //article-meta with <article-meta>{
@@ -78,4 +78,4 @@ replace node //article-meta with <article-meta>{
   //article-meta/*:counts,
   //article-meta/*:custom-meta-group
 }</article-meta>
-`
+`;
