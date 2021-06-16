@@ -1,5 +1,5 @@
 const data = {
-  xml: `<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE article PUBLIC "-//NLM//DTD JATS (Z39.96) Journal Archiving and Interchange DTD with MathML3 v1.2 20190208//EN" "JATS-archivearticle1-mathml3.dtd">
+    xml: `<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE article PUBLIC "-//NLM//DTD JATS (Z39.96) Journal Archiving and Interchange DTD with MathML3 v1.2 20190208//EN" "JATS-archivearticle1-mathml3.dtd">
   <!-- Use JATS 1.2 -->
   <!-- All XML would be on one line (with the exception of code snippets with new lines). 
        Only pretty-printed here for readability -->
@@ -1151,9 +1151,9 @@ const data = {
       </back>
       <!-- TODO: re-add sub-article from kitchensink when bugs are fixed -->
   </article>`,
-  articleId: '54296',
-  version: 'r1',
-  datatype: "xml",
-  fileName: 'elife-54296-vor-r1.xml',
+    articleId: '54296',
+    version: 'r1',
+    datatype: 'xml',
+    fileName: 'elife-54296-vor-r1.xml',
 };
 export default data;

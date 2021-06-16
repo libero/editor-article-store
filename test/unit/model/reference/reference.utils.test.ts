@@ -1,29 +1,29 @@
 import {
-  createReferencePersonList,
-  createReferenceAnnotatedValue,
-  deserializeReferenceAnnotatedValue,
-  serializeReferenceContributorsList
+    createReferencePersonList,
+    createReferenceAnnotatedValue,
+    deserializeReferenceAnnotatedValue,
+    serializeReferenceContributorsList,
 } from '../../../../src/model/reference/reference.utils';
 import { parseXML } from '../../../../src/xml-exporter/xml-utils';
 import { XMLSerializer } from 'xmldom';
 
 describe('createReferencePersonList', () => {
-  it('returns empty xml if no persongroup xml is present', () => {
-    const element = parseXML('<article></article>')
-    expect(createReferencePersonList(element.querySelector('article') as Element, 'someGroupType')).toEqual([]);
-  });
-  it('returns empty xml if no persongroup with passed groupType is present', () => {
-    const element = parseXML(`
+    it('returns empty xml if no persongroup xml is present', () => {
+        const element = parseXML('<article></article>');
+        expect(createReferencePersonList(element.querySelector('article') as Element, 'someGroupType')).toEqual([]);
+    });
+    it('returns empty xml if no persongroup with passed groupType is present', () => {
+        const element = parseXML(`
     <article>
       <person-group person-group-type="author"><name>
         <surname>Katz</surname>
         <given-names>DJ</given-names>
       </name></person-group>
-    </article>`)
-    expect(createReferencePersonList(element.querySelector('article') as Element, 'someGroupType')).toEqual([]);
-  });
-  it('returns expected array of objects when passed persongroup xml', () => {
-    const element = parseXML(`
+    </article>`);
+        expect(createReferencePersonList(element.querySelector('article') as Element, 'someGroupType')).toEqual([]);
+    });
+    it('returns expected array of objects when passed persongroup xml', () => {
+        const element = parseXML(`
     <article>
       <person-group person-group-type="author">
       <name>
@@ -42,32 +42,32 @@ describe('createReferencePersonList', () => {
       <self-closing-element />
     </person-group>
     </article>`);
-    expect(createReferencePersonList(element.querySelector('article') as Element, 'author')).toEqual([
-      {
-        firstName: 'DJ',
-        lastName: 'Katz'
-      },
-      {
-        firstName: '',
-        lastName: 'Bloggs'
-      },
-      {
-        firstName: 'Joe',
-        lastName: ''
-      },
-      {
-        groupName: "I'm some text content"
-      },
-      {
-        groupName: ""
-      }
-    ]);
-  });
+        expect(createReferencePersonList(element.querySelector('article') as Element, 'author')).toEqual([
+            {
+                firstName: 'DJ',
+                lastName: 'Katz',
+            },
+            {
+                firstName: '',
+                lastName: 'Bloggs',
+            },
+            {
+                firstName: 'Joe',
+                lastName: '',
+            },
+            {
+                groupName: "I'm some text content",
+            },
+            {
+                groupName: '',
+            },
+        ]);
+    });
 });
 
 describe('createReferenceAnnotatedValue', () => {
-  it('returns empty EditorState when passed no Element', () => {
-    expect(createReferenceAnnotatedValue()).toMatchInlineSnapshot(`
+    it('returns empty EditorState when passed no Element', () => {
+        expect(createReferenceAnnotatedValue()).toMatchInlineSnapshot(`
     Object {
       "doc": Object {
         "type": "annotatedReferenceInfoDoc",
@@ -79,13 +79,13 @@ describe('createReferenceAnnotatedValue', () => {
       },
     }
     `);
-  });
-  it('returns populated EditorState when passed Element', () => {
-    const element = parseXML(`
+    });
+    it('returns populated EditorState when passed Element', () => {
+        const element = parseXML(`
     <article><p>
     I <bold>am</bold><italic>some</italic><sub>styled</sub><sup>HTML</sup>
     </p></article>`);
-    expect(createReferenceAnnotatedValue(element.querySelector('p'))).toMatchInlineSnapshot(`
+        expect(createReferenceAnnotatedValue(element.querySelector('p'))).toMatchInlineSnapshot(`
     Object {
       "doc": Object {
         "content": Array [
@@ -139,62 +139,64 @@ describe('createReferenceAnnotatedValue', () => {
       },
     }
     `);
-  });
+    });
 });
 
 describe('deserializeReferenceAnnotatedValue', () => {
-  expect(deserializeReferenceAnnotatedValue({
-    "doc": {
-      "content": [
-        {
-          "text": "I ",
-          "type": "text",
-        },
-        {
-          "marks": [
-            {
-              "type": "bold",
+    expect(
+        deserializeReferenceAnnotatedValue({
+            doc: {
+                content: [
+                    {
+                        text: 'I ',
+                        type: 'text',
+                    },
+                    {
+                        marks: [
+                            {
+                                type: 'bold',
+                            },
+                        ],
+                        text: 'am',
+                        type: 'text',
+                    },
+                    {
+                        marks: [
+                            {
+                                type: 'italic',
+                            },
+                        ],
+                        text: 'some',
+                        type: 'text',
+                    },
+                    {
+                        marks: [
+                            {
+                                type: 'subscript',
+                            },
+                        ],
+                        text: 'styled',
+                        type: 'text',
+                    },
+                    {
+                        marks: [
+                            {
+                                type: 'superscript',
+                            },
+                        ],
+                        text: 'HTML',
+                        type: 'text',
+                    },
+                ],
+                type: 'annotatedReferenceInfoDoc',
             },
-          ],
-          "text": "am",
-          "type": "text",
-        },
-        {
-          "marks": [
-            {
-              "type": "italic",
+            selection: {
+                anchor: 0,
+                head: 0,
+                type: 'text',
             },
-          ],
-          "text": "some",
-          "type": "text",
-        },
-        {
-          "marks": [
-            {
-              "type": "subscript",
-            },
-          ],
-          "text": "styled",
-          "type": "text",
-        },
-        {
-          "marks": [
-            {
-              "type": "superscript",
-            },
-          ],
-          "text": "HTML",
-          "type": "text",
-        },
-      ],
-      "type": "annotatedReferenceInfoDoc",
-    },
-    "selection": {
-      "anchor": 0,
-      "head": 0,
-      "type": "text",
-    },
-  })).toMatchInlineSnapshot(`
+        }),
+    ).toMatchInlineSnapshot(`
     Object {
       "doc": Object {
         "content": Array [
@@ -251,27 +253,34 @@ describe('deserializeReferenceAnnotatedValue', () => {
 });
 
 describe('serializeReferenceContributorsList', () => {
-  const xmlSerializer = new XMLSerializer();
+    const xmlSerializer = new XMLSerializer();
 
-  it('should serialize an empty contributors list', () => {
-    const xml = serializeReferenceContributorsList('groupType', []);
-    expect(xmlSerializer.serializeToString(xml)).toBe('<person-group person-group-type="groupType"/>');
-  });
+    it('should serialize an empty contributors list', () => {
+        const xml = serializeReferenceContributorsList('groupType', []);
+        expect(xmlSerializer.serializeToString(xml)).toBe('<person-group person-group-type="groupType"/>');
+    });
 
+    it('should serialize individual author', () => {
+        const xml = serializeReferenceContributorsList('author', [{ firstName: 'John', lastName: 'Doe' }]);
+        expect(xmlSerializer.serializeToString(xml)).toBe(
+            '<person-group person-group-type="author"><name><given-names>John</given-names><surname>Doe</surname></name></person-group>',
+        );
+    });
 
-  it('should serialize individual author', () => {
-    const xml = serializeReferenceContributorsList('author', [{firstName: 'John', lastName: 'Doe'}]);
-    expect(xmlSerializer.serializeToString(xml)).toBe('<person-group person-group-type="author"><name><given-names>John</given-names><surname>Doe</surname></name></person-group>');
-  });
+    it('should serialize group contributor', () => {
+        const xml = serializeReferenceContributorsList('author', [{ groupName: 'Teenage mutant ninja turtles' }]);
+        expect(xmlSerializer.serializeToString(xml)).toBe(
+            '<person-group person-group-type="author"><collab>Teenage mutant ninja turtles</collab></person-group>',
+        );
+    });
 
-  it('should serialize group contributor', () => {
-    const xml = serializeReferenceContributorsList('author', [{groupName: 'Teenage mutant ninja turtles'}]);
-    expect(xmlSerializer.serializeToString(xml)).toBe('<person-group person-group-type="author"><collab>Teenage mutant ninja turtles</collab></person-group>');
-  });
-
-  it('should serialize mixed contributors list', () => {
-    const xml = serializeReferenceContributorsList('author', [{groupName: 'Teenage mutant ninja turtles'}, {firstName: 'John', lastName: 'Doe'}]);
-    expect(xmlSerializer.serializeToString(xml)).toBe('<person-group person-group-type="author"><collab>Teenage mutant ninja turtles</collab><name><given-names>John</given-names><surname>Doe</surname></name></person-group>');
-  });
-
+    it('should serialize mixed contributors list', () => {
+        const xml = serializeReferenceContributorsList('author', [
+            { groupName: 'Teenage mutant ninja turtles' },
+            { firstName: 'John', lastName: 'Doe' },
+        ]);
+        expect(xmlSerializer.serializeToString(xml)).toBe(
+            '<person-group person-group-type="author"><collab>Teenage mutant ninja turtles</collab><name><given-names>John</given-names><surname>Doe</surname></name></person-group>',
+        );
+    });
 });
