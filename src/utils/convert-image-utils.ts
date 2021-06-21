@@ -17,7 +17,7 @@ export default async function convert(buffer: Buffer): Promise<ConvertedImage> {
             contentType: null,
         };
     }
-    const jpgBuffer = await sharp(buffer).toFormat('jpeg').toBuffer();
+    const jpgBuffer = await sharp(buffer, { limitInputPixels: false }).toFormat('jpeg').toBuffer();
     const contentType = await FileType.fromBuffer(jpgBuffer);
     return {
         buffer: jpgBuffer,
