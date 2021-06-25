@@ -66,21 +66,5 @@ export default (articleService: ArticleService, transformerService: TransformSer
         }
     });
 
-    // returns current article manifest with assets
-    router.get('/:articleId/manifest', async (req, res) => {
-        const articleId = req.params.articleId;
-
-        const articleManifest = await articleService.getManifest(articleId);
-        if (articleManifest === null) {
-            return res.sendStatus(404);
-        }
-
-        const hostname = `${req.protocol}://${req.headers.host}`;
-        articleManifest.assets.forEach((entry) => {
-            entry.path = hostname + entry.path;
-        });
-        return res.type('application/json').status(200).json(articleManifest);
-    });
-
     return router;
 };
