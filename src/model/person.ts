@@ -67,7 +67,7 @@ export class Person extends BackmatterEntity {
             const orcidEl = xmlDoc.createElement('contrib-id');
             orcidEl.setAttribute('contrib-id-type', 'orcid');
             orcidEl.setAttribute('authenticated', String(this.isAuthenticated));
-            orcidEl.appendChild(xmlDoc.createTextNode(this.orcid));
+            orcidEl.appendChild(xmlDoc.createTextNode('https://orcid.org/' + this.orcid));
             contrib.appendChild(orcidEl);
         }
 
