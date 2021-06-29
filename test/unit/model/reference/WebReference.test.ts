@@ -194,7 +194,7 @@ describe('WebReference', () => {
 
             const xmlString = xmlSerializer.serializeToString(reference.toXml());
             expect(xmlString).toBe(
-                '<element-citation publication-type="web"><year iso-8601-date="year">year</year><ext-link ext-link-type="uri" xlink:href="extLink">extLink</ext-link><article-title/><source/></element-citation>',
+                '<element-citation publication-type="web"><year iso-8601-date="year">year</year><ext-link ext-link-type="uri" xlink:href="extLink">extLink</ext-link></element-citation>',
             );
         });
     });

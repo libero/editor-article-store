@@ -34,10 +34,10 @@ export function getAllFigureAssets(manuscript: Manuscript): Record<string, strin
 
 export function removeEmptyNodes(xml: HTMLElement): HTMLElement {
     const removeEmptyNodeLoop = (node: HTMLElement) => {
+        if (node.nextSibling) {
+            removeEmptyNodeLoop(node.nextSibling as HTMLElement);
+        }
         if (!node.textContent) {
-            if (node.nextSibling) {
-                removeEmptyNodeLoop(node.nextSibling as HTMLElement);
-            }
             xml.removeChild(node);
         }
     };
