@@ -109,7 +109,7 @@ export function createReferencesState(referencesXml: Element[]): Reference[] {
 }
 
 export function serializeReferenceState(xmlDoc: Document, manuscript: Manuscript) {
-    let refList = xmlDoc.querySelector('article-meta ref-list');
+    let refList = xmlDoc.querySelector('ref-list');
     if (!refList) {
         refList = xmlDoc.createElement('ref-list');
         xmlDoc.querySelector('article back')?.appendChild(refList);
