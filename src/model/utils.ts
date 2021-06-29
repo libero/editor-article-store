@@ -31,3 +31,15 @@ export function getAllFigureAssets(manuscript: Manuscript): Record<string, strin
 
     return result;
 }
+
+export function removeEmptyNodes(xml: HTMLElement): HTMLElement {
+    if (xml.children) {
+        for (const node of xml.children) {
+            if (!node.textContent) {
+                xml.removeChild(node);
+            }
+        }
+    }
+
+    return xml;
+}

@@ -135,9 +135,7 @@ describe('SoftwareReference', () => {
         it('should serialize an empty software reference', () => {
             const reference = new SoftwareReference(emptySoftwareRefJSON);
             const xmlString = xmlSerializer.serializeToString(reference.toXml());
-            expect(xmlString).toBe(
-                '<element-citation publication-type="software"><year iso-8601-date=""></year><ext-link ext-link-type="uri" xlink:href=""></ext-link><article-title/><source/><pub-id pub-id-type="doi"></pub-id><version></version><publisher-name></publisher-name><publisher-loc></publisher-loc><pub-id pub-id-type="pmid"></pub-id></element-citation>',
-            );
+            expect(xmlString).toBe('<element-citation publication-type="software"/>');
         });
 
         it('should serialize a populated software reference', () => {

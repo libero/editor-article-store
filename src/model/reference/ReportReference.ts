@@ -1,7 +1,7 @@
 import { EditorState } from 'prosemirror-state';
 import { BackmatterEntity } from '../backmatter-entity';
 import { JSONObject } from '../types';
-import { getTextContentFromPath } from '../utils';
+import { getTextContentFromPath, removeEmptyNodes } from '../utils';
 import { createReferenceAnnotatedValue, deserializeReferenceAnnotatedValue } from './reference.utils';
 import { DOMImplementation } from 'xmldom';
 import { serializeManuscriptSection } from '../..//xml-exporter/manuscript-serializer';
@@ -69,10 +69,10 @@ export class ReportReference extends BackmatterEntity {
         isbn.appendChild(xmlDoc.createTextNode(this.isbn));
         xml.appendChild(isbn);
 
-        return xml;
+        return removeEmptyNodes(xml);
     }
 
-    protected fromJSON(json: JSONObject) {
+    protected fromJSON(json: JSONObject): void {
         this._id = (json._id as string) || this.id;
         this.isbn = (json.isbn as string) || '';
         this.publisherLocation = (json.publisherLocation as string) || '';
@@ -87,7 +87,7 @@ export class ReportReference extends BackmatterEntity {
             : createReferenceAnnotatedValue();
     }
 
-    protected fromXML(referenceXml: Element) {
+    protected fromXML(referenceXml: Element): void {
         this.year = getTextContentFromPath(referenceXml, 'year') || '';
         this.source = createReferenceAnnotatedValue(referenceXml.querySelector('source'));
         this.publisherLocation = getTextContentFromPath(referenceXml, 'publisher-loc') || '';
@@ -99,7 +99,7 @@ export class ReportReference extends BackmatterEntity {
         this.volume = getTextContentFromPath(referenceXml, 'volume') || '';
     }
 
-    protected createBlank() {
+    protected createBlank(): void {
         this.isbn = '';
         this.publisherLocation = '';
         this.publisherName = '';

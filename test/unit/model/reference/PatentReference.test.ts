@@ -118,9 +118,7 @@ describe('PatentReference', () => {
         it('should serialize an empty Patent reference', () => {
             const reference = new PatentReference();
             const xmlString = xmlSerializer.serializeToString(reference.toXml());
-            expect(xmlString).toBe(
-                '<element-citation publication-type="patent"><year iso-8601-date=""></year><article-title/><source/><patent></patent><ext-link ext-link-type="uri" xlink:href=""></ext-link></element-citation>',
-            );
+            expect(xmlString).toBe('<element-citation publication-type="patent"/>');
         });
 
         it('should serialize a populated Patent reference', () => {

@@ -1,7 +1,7 @@
 import { EditorState } from 'prosemirror-state';
 import { BackmatterEntity } from '../backmatter-entity';
 import { JSONObject } from '../types';
-import { getTextContentFromPath } from '../utils';
+import { removeEmptyNodes, getTextContentFromPath } from '../utils';
 import {
     createReferenceAnnotatedValue,
     createReferencePersonList,
@@ -103,10 +103,10 @@ export class BookReference extends BackmatterEntity {
         pmcid.appendChild(xmlDoc.createTextNode(this.pmcid));
         xml.appendChild(pmcid);
 
-        return xml;
+        return removeEmptyNodes(xml);
     }
 
-    protected fromJSON(json: JSONObject) {
+    protected fromJSON(json: JSONObject): void {
         this._id = (json._id as string) || this.id;
         this.chapterTitle = json.chapterTitle
             ? deserializeReferenceAnnotatedValue(json.chapterTitle as JSONObject)
@@ -130,7 +130,7 @@ export class BookReference extends BackmatterEntity {
             : createReferenceAnnotatedValue();
     }
 
-    protected fromXML(referenceXml: Element) {
+    protected fromXML(referenceXml: Element): void {
         const editors: ReferenceContributor[] = createReferencePersonList(referenceXml, 'editor');
         this.year = getTextContentFromPath(referenceXml, 'year') || '';
         this.chapterTitle = createReferenceAnnotatedValue(referenceXml.querySelector('chapter-title'));
@@ -150,7 +150,7 @@ export class BookReference extends BackmatterEntity {
         this.volume = getTextContentFromPath(referenceXml, 'volume') || '';
     }
 
-    protected createBlank() {
+    protected createBlank(): void {
         this.chapterTitle = createReferenceAnnotatedValue();
         this.edition = '';
         this.editors = [];

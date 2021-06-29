@@ -143,9 +143,7 @@ describe('WebReference', () => {
         it('should serialize a empty web reference', () => {
             const reference = new WebReference(emptyWebRefJSON);
             const xmlString = xmlSerializer.serializeToString(reference.toXml());
-            expect(xmlString).toBe(
-                '<element-citation publication-type="web"><year iso-8601-date=""></year><ext-link ext-link-type="uri" xlink:href=""></ext-link><article-title/><source/></element-citation>',
-            );
+            expect(xmlString).toBe('<element-citation publication-type="web"/>');
         });
 
         it('should serialize a populated web reference', () => {
@@ -196,7 +194,7 @@ describe('WebReference', () => {
 
             const xmlString = xmlSerializer.serializeToString(reference.toXml());
             expect(xmlString).toBe(
-                '<element-citation publication-type="web"><year iso-8601-date="year">year</year><ext-link ext-link-type="uri" xlink:href="extLink">extLink</ext-link><article-title/><source/></element-citation>',
+                '<element-citation publication-type="web"><year iso-8601-date="year">year</year><ext-link ext-link-type="uri" xlink:href="extLink">extLink</ext-link></element-citation>',
             );
         });
     });

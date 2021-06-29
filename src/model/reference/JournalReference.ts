@@ -1,7 +1,7 @@
 import { EditorState } from 'prosemirror-state';
 import { BackmatterEntity } from '../backmatter-entity';
 import { JSONObject } from '../types';
-import { getTextContentFromPath } from '../utils';
+import { getTextContentFromPath, removeEmptyNodes } from '../utils';
 import { createReferenceAnnotatedValue, deserializeReferenceAnnotatedValue } from './reference.utils';
 import { serializeManuscriptSection } from '../../xml-exporter/manuscript-serializer';
 import { DOMImplementation } from 'xmldom';
@@ -79,10 +79,10 @@ export class JournalReference extends BackmatterEntity {
             xml.appendChild(comment);
         }
 
-        return xml;
+        return removeEmptyNodes(xml);
     }
 
-    fromJSON(json: JSONObject) {
+    fromJSON(json: JSONObject): void {
         this._id = (json._id as string) || this.id;
         this.articleTitle = json.articleTitle
             ? deserializeReferenceAnnotatedValue(json.articleTitle as JSONObject)
@@ -101,7 +101,7 @@ export class JournalReference extends BackmatterEntity {
             : createReferenceAnnotatedValue();
     }
 
-    fromXML(referenceXml: Element) {
+    fromXML(referenceXml: Element): void {
         this.year = getTextContentFromPath(referenceXml, 'year') || '';
         this.articleTitle = createReferenceAnnotatedValue(referenceXml.querySelector('article-title'));
         this.source = createReferenceAnnotatedValue(referenceXml.querySelector('source'));
@@ -115,7 +115,7 @@ export class JournalReference extends BackmatterEntity {
         this.volume = getTextContentFromPath(referenceXml, 'volume') || '';
     }
 
-    createBlank() {
+    createBlank(): void {
         this.articleTitle = createReferenceAnnotatedValue();
         this.elocationId = '';
         this.firstPage = '';

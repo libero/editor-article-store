@@ -122,9 +122,7 @@ describe('PreprintReference', () => {
         it('should serialize an empty preprint reference', () => {
             const reference = new PreprintReference(emptyPrepringRefJSON);
             const xmlString = xmlSerializer.serializeToString(reference.toXml());
-            expect(xmlString).toBe(
-                '<element-citation publication-type="preprint"><year iso-8601-date=""></year><ext-link ext-link-type="uri" xlink:href=""></ext-link><article-title/><source/><pub-id pub-id-type="doi"></pub-id><pub-id pub-id-type="pmid"></pub-id><pub-id pub-id-type="pmcid"></pub-id></element-citation>',
-            );
+            expect(xmlString).toBe('<element-citation publication-type="preprint"/>');
         });
 
         it('should serialize a populated preprint reference', () => {

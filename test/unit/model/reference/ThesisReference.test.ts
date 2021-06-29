@@ -112,9 +112,7 @@ describe('ThesisReference', () => {
         it('should serialize an empty thesis reference', () => {
             const reference = new ThesisReference();
             const xmlString = xmlSerializer.serializeToString(reference.toXml());
-            expect(xmlString).toBe(
-                '<element-citation publication-type="thesis"><year iso-8601-date=""></year><article-title/><publisher-name></publisher-name><ext-link ext-link-type="uri" xlink:href=""></ext-link></element-citation>',
-            );
+            expect(xmlString).toBe('<element-citation publication-type="thesis"/>');
         });
 
         it('should serialize a populated thesis reference', () => {

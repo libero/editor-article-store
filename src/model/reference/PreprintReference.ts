@@ -1,7 +1,7 @@
 import { EditorState } from 'prosemirror-state';
 import { BackmatterEntity } from '../backmatter-entity';
 import { JSONObject } from '../types';
-import { getTextContentFromPath } from '../utils';
+import { getTextContentFromPath, removeEmptyNodes } from '../utils';
 import { createReferenceAnnotatedValue, deserializeReferenceAnnotatedValue } from './reference.utils';
 import { DOMImplementation } from 'xmldom';
 import { serializeManuscriptSection } from '../../xml-exporter/manuscript-serializer';
@@ -59,10 +59,10 @@ export class PreprintReference extends BackmatterEntity {
         pmcid.appendChild(xmlDoc.createTextNode(this.pmcid));
         xml.appendChild(pmcid);
 
-        return xml;
+        return removeEmptyNodes(xml);
     }
 
-    protected fromJSON(json: JSONObject) {
+    protected fromJSON(json: JSONObject): void {
         this._id = (json._id as string) || this._id;
         this.articleTitle = json.articleTitle
             ? deserializeReferenceAnnotatedValue(json.articleTitle as JSONObject)
@@ -77,7 +77,7 @@ export class PreprintReference extends BackmatterEntity {
             : createReferenceAnnotatedValue();
     }
 
-    protected fromXML(referenceXml: Element) {
+    protected fromXML(referenceXml: Element): void {
         this.year = getTextContentFromPath(referenceXml, 'year') || '';
         this.source = createReferenceAnnotatedValue(referenceXml.querySelector('source'));
         this.articleTitle = createReferenceAnnotatedValue(referenceXml.querySelector('article-title'));
@@ -87,7 +87,7 @@ export class PreprintReference extends BackmatterEntity {
         this.extLink = getTextContentFromPath(referenceXml, 'ext-link') || '';
     }
 
-    protected createBlank() {
+    protected createBlank(): void {
         this.articleTitle = createReferenceAnnotatedValue();
         this.year = '';
         this.doi = '';
