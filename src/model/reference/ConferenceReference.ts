@@ -1,7 +1,7 @@
 import { EditorState } from 'prosemirror-state';
 import { BackmatterEntity } from '../backmatter-entity';
 import { JSONObject } from '../types';
-import { getTextContentFromPath } from '../utils';
+import { getTextContentFromPath, removeEmptyNodes } from '../utils';
 import { createReferenceAnnotatedValue, deserializeReferenceAnnotatedValue } from './reference.utils';
 import { DOMImplementation } from 'xmldom';
 import { serializeManuscriptSection } from '../../xml-exporter/manuscript-serializer';
@@ -83,10 +83,10 @@ export class ConferenceReference extends BackmatterEntity {
         volume.appendChild(xmlDoc.createTextNode(this.volume));
         xml.appendChild(volume);
 
-        return xml;
+        return removeEmptyNodes(xml);
     }
 
-    protected fromJSON(json: JSONObject) {
+    protected fromJSON(json: JSONObject): void {
         this._id = (json._id as string) || this.id;
         this.articleTitle = json.articleTitle
             ? deserializeReferenceAnnotatedValue(json.articleTitle as JSONObject)
@@ -106,7 +106,7 @@ export class ConferenceReference extends BackmatterEntity {
         this.conferenceLocation = (json.conferenceLocation as string) || '';
     }
 
-    protected fromXML(referenceXml: Element) {
+    protected fromXML(referenceXml: Element): void {
         this.year = getTextContentFromPath(referenceXml, 'year') || '';
         this.articleTitle = createReferenceAnnotatedValue(referenceXml.querySelector('article-title'));
         this.conferenceName = createReferenceAnnotatedValue(referenceXml.querySelector('conf-name'));
@@ -121,7 +121,7 @@ export class ConferenceReference extends BackmatterEntity {
         this.volume = getTextContentFromPath(referenceXml, 'volume') || '';
     }
 
-    protected createBlank() {
+    protected createBlank(): void {
         this.articleTitle = createReferenceAnnotatedValue();
         this.elocationId = '';
         this.extLink = '';

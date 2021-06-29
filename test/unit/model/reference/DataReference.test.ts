@@ -157,9 +157,7 @@ describe('DataReference', () => {
         it('should serialize an empty data reference', () => {
             const reference = new DataReference(emptyDataRefJSON);
             const xmlString = xmlSerializer.serializeToString(reference.toXml());
-            expect(xmlString).toBe(
-                '<element-citation publication-type="data"><year iso-8601-date=""></year><ext-link ext-link-type="uri" xlink:href=""></ext-link><data-title/><source/><pub-id pub-id-type="doi" xlink:href=""></pub-id><version></version></element-citation>',
-            );
+            expect(xmlString).toBe('<element-citation publication-type="data"/>');
         });
 
         it('should serialize a populated data reference', () => {

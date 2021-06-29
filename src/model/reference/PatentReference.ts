@@ -3,7 +3,7 @@ import { DOMImplementation } from 'xmldom';
 import { serializeManuscriptSection } from '../../xml-exporter/manuscript-serializer';
 import { BackmatterEntity } from '../backmatter-entity';
 import { JSONObject } from '../types';
-import { getTextContentFromPath } from '../utils';
+import { getTextContentFromPath, removeEmptyNodes } from '../utils';
 import { createReferenceAnnotatedValue, deserializeReferenceAnnotatedValue } from './reference.utils';
 
 export class PatentReference extends BackmatterEntity {
@@ -46,10 +46,10 @@ export class PatentReference extends BackmatterEntity {
         extLink.appendChild(xmlDoc.createTextNode(this.extLink));
         xml.appendChild(extLink);
 
-        return xml;
+        return removeEmptyNodes(xml);
     }
 
-    fromJSON(json: JSONObject) {
+    fromJSON(json: JSONObject): void {
         this._id = (json._id as string) || this._id;
         this.year = (json.year as string) || '';
         this.articleTitle = json.articleTitle
@@ -62,7 +62,7 @@ export class PatentReference extends BackmatterEntity {
         this.patent = (json.patent as string) || '';
     }
 
-    fromXML(referenceXml: Element) {
+    fromXML(referenceXml: Element): void {
         this.year = getTextContentFromPath(referenceXml, 'year') || '';
         this.source = createReferenceAnnotatedValue(referenceXml.querySelector('source'));
         this.articleTitle = createReferenceAnnotatedValue(referenceXml.querySelector('article-title'));
@@ -70,7 +70,7 @@ export class PatentReference extends BackmatterEntity {
         this.extLink = getTextContentFromPath(referenceXml, 'ext-link') || '';
     }
 
-    createBlank() {
+    createBlank(): void {
         this.year = '';
         this.articleTitle = createReferenceAnnotatedValue();
         this.source = createReferenceAnnotatedValue();

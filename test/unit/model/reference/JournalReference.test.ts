@@ -145,9 +145,7 @@ describe('JournalReference', () => {
         it('should serialize an empty journal reference', () => {
             const reference = new JournalReference(emptyJournalRefJSON);
             const xmlString = xmlSerializer.serializeToString(reference.toXml());
-            expect(xmlString).toBe(
-                '<element-citation publication-type="journal"><elocation-id></elocation-id><fpage></fpage><lpage></lpage><year iso-8601-date=""></year><article-title/><source/><pub-id pub-id-type="doi"></pub-id><pub-id pub-id-type="pmid"></pub-id><pub-id pub-id-type="pmcid"></pub-id><volume></volume></element-citation>',
-            );
+            expect(xmlString).toBe('<element-citation publication-type="journal"/>');
         });
 
         it('should serialize a populated journal reference', () => {

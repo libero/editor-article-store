@@ -3,7 +3,7 @@ import { DOMImplementation } from 'xmldom';
 import { serializeManuscriptSection } from '../../xml-exporter/manuscript-serializer';
 import { BackmatterEntity } from '../backmatter-entity';
 import { JSONObject } from '../types';
-import { getTextContentFromPath } from '../utils';
+import { getTextContentFromPath, removeEmptyNodes } from '../utils';
 import { createReferenceAnnotatedValue, deserializeReferenceAnnotatedValue } from './reference.utils';
 
 export class ThesisReference extends BackmatterEntity {
@@ -44,10 +44,10 @@ export class ThesisReference extends BackmatterEntity {
         extLink.appendChild(xmlDoc.createTextNode(this.extLink));
         xml.appendChild(extLink);
 
-        return xml;
+        return removeEmptyNodes(xml);
     }
 
-    protected fromJSON(json: JSONObject) {
+    protected fromJSON(json: JSONObject): void {
         this._id = (json._id as string) || this.id;
         this.articleTitle = json.articleTitle
             ? deserializeReferenceAnnotatedValue(json.articleTitle as JSONObject)
@@ -60,7 +60,7 @@ export class ThesisReference extends BackmatterEntity {
         this.doi = (json.doi as string) || '';
     }
 
-    protected fromXML(referenceXml: Element) {
+    protected fromXML(referenceXml: Element): void {
         this.year = getTextContentFromPath(referenceXml, 'year') || '';
         this.articleTitle = createReferenceAnnotatedValue(referenceXml.querySelector('article-title'));
         this.publisherLocation = getTextContentFromPath(referenceXml, 'publisher-loc') || '';
@@ -70,7 +70,7 @@ export class ThesisReference extends BackmatterEntity {
         this.extLink = getTextContentFromPath(referenceXml, 'ext-link') || '';
     }
 
-    protected createBlank() {
+    protected createBlank(): void {
         this.articleTitle = createReferenceAnnotatedValue();
         this.extLink = '';
         this.pmid = '';

@@ -134,9 +134,7 @@ describe('ReportReference', () => {
         it('should serialize an empty report reference', () => {
             const reference = new ReportReference(emptyReportRefJSON);
             const xmlString = xmlSerializer.serializeToString(reference.toXml());
-            expect(xmlString).toBe(
-                '<element-citation publication-type="report"><year iso-8601-date=""></year><ext-link ext-link-type="uri" xlink:href=""></ext-link><source/><publisher-name></publisher-name><publisher-loc></publisher-loc><volume></volume><pub-id pub-id-type="doi"></pub-id><pub-id pub-id-type="pmid"></pub-id><pub-id pub-id-type="isbn"></pub-id></element-citation>',
-            );
+            expect(xmlString).toBe('<element-citation publication-type="report"/>');
         });
 
         it('should serialize a populated report reference', () => {

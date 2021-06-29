@@ -129,9 +129,7 @@ describe('PeriodicalReference', () => {
         it('should serialize an empty periodical reference', () => {
             const reference = new PeriodicalReference();
             const xmlString = xmlSerializer.serializeToString(reference.toXml());
-            expect(xmlString).toBe(
-                '<element-citation publication-type="periodical"><string-date iso-8601-date=""/><article-title/><source/><volume></volume><fpage></fpage><lpage></lpage><ext-link ext-link-type="uri" xlink:href=""></ext-link></element-citation>',
-            );
+            expect(xmlString).toBe('<element-citation publication-type="periodical"/>');
         });
 
         it('should serialize a populated periodical reference', () => {

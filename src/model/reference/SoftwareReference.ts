@@ -1,7 +1,7 @@
 import { EditorState } from 'prosemirror-state';
 import { BackmatterEntity } from '../backmatter-entity';
 import { JSONObject } from '../types';
-import { getTextContentFromPath } from '../utils';
+import { getTextContentFromPath, removeEmptyNodes } from '../utils';
 import { createReferenceAnnotatedValue, deserializeReferenceAnnotatedValue } from './reference.utils';
 import { DOMImplementation } from 'xmldom';
 import { serializeManuscriptSection } from '../../xml-exporter/manuscript-serializer';
@@ -68,10 +68,10 @@ export class SoftwareReference extends BackmatterEntity {
         pmid.appendChild(xmlDoc.createTextNode(this.pmid));
         xml.appendChild(pmid);
 
-        return xml;
+        return removeEmptyNodes(xml);
     }
 
-    protected fromJSON(json: JSONObject) {
+    protected fromJSON(json: JSONObject): void {
         this._id = (json._id as string) || this._id;
         this.year = (json.year as string) || '';
         this.doi = (json.doi as string) || '';
@@ -88,7 +88,7 @@ export class SoftwareReference extends BackmatterEntity {
             : createReferenceAnnotatedValue();
     }
 
-    protected fromXML(referenceXml: Element) {
+    protected fromXML(referenceXml: Element): void {
         this.year = getTextContentFromPath(referenceXml, 'year');
         this.articleTitle = createReferenceAnnotatedValue(referenceXml.querySelector('article-title'));
         this.source = createReferenceAnnotatedValue(referenceXml.querySelector('source'));
@@ -100,7 +100,7 @@ export class SoftwareReference extends BackmatterEntity {
         this.extLink = getTextContentFromPath(referenceXml, 'ext-link') || '';
     }
 
-    protected createBlank() {
+    protected createBlank(): void {
         this.year = '';
         this.doi = '';
         this.pmid = '';

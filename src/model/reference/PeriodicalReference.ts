@@ -4,7 +4,7 @@ import { EditorState } from 'prosemirror-state';
 import { serializeManuscriptSection } from '../../xml-exporter/manuscript-serializer';
 import { BackmatterEntity } from '../backmatter-entity';
 import { JSONObject } from '../types';
-import { getTextContentFromPath } from '../utils';
+import { getTextContentFromPath, removeEmptyNodes } from '../utils';
 import { createReferenceAnnotatedValue, deserializeReferenceAnnotatedValue } from './reference.utils';
 
 export class PeriodicalReference extends BackmatterEntity {
@@ -71,10 +71,10 @@ export class PeriodicalReference extends BackmatterEntity {
         extLink.appendChild(xmlDoc.createTextNode(this.extLink));
         xml.appendChild(extLink);
 
-        return xml;
+        return removeEmptyNodes(xml);
     }
 
-    protected fromJSON(json: JSONObject) {
+    protected fromJSON(json: JSONObject): void {
         this._id = (json._id as string) || this._id;
         this.articleTitle = json.articleTitle
             ? deserializeReferenceAnnotatedValue(json.articleTitle as JSONObject)
@@ -88,7 +88,7 @@ export class PeriodicalReference extends BackmatterEntity {
             ? deserializeReferenceAnnotatedValue(json.source as JSONObject)
             : createReferenceAnnotatedValue();
     }
-    protected fromXML(referenceXml: Element) {
+    protected fromXML(referenceXml: Element): void {
         this.date = referenceXml.querySelector('string-date')?.getAttribute('iso-8601-date') || '';
         this.source = createReferenceAnnotatedValue(referenceXml.querySelector('source'));
         this.articleTitle = createReferenceAnnotatedValue(referenceXml.querySelector('article-title'));
@@ -97,7 +97,7 @@ export class PeriodicalReference extends BackmatterEntity {
         this.extLink = getTextContentFromPath(referenceXml, 'ext-link') || '';
         this.volume = getTextContentFromPath(referenceXml, 'volume') || '';
     }
-    protected createBlank() {
+    protected createBlank(): void {
         this.articleTitle = createReferenceAnnotatedValue();
         this.date = '';
         this.firstPage = '';

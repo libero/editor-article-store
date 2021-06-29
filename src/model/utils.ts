@@ -31,3 +31,17 @@ export function getAllFigureAssets(manuscript: Manuscript): Record<string, strin
 
     return result;
 }
+
+export function removeEmptyNodes(xml: HTMLElement): HTMLElement {
+    const removeEmptyNodeLoop = (node: HTMLElement) => {
+        if (!node.textContent) {
+            if (node.nextSibling) {
+                removeEmptyNodeLoop(node.nextSibling as HTMLElement);
+            }
+            xml.removeChild(node);
+        }
+    };
+
+    if (xml.firstChild) removeEmptyNodeLoop(xml.firstChild as HTMLElement);
+    return xml;
+}

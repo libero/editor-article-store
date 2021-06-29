@@ -177,9 +177,7 @@ describe('BookReference', () => {
         it('should serialize an empty book reference', () => {
             const reference = new BookReference(emptyBookRefJSON);
             const xmlString = xmlSerializer.serializeToString(reference.toXml());
-            expect(xmlString).toBe(
-                '<element-citation publication-type="book"><edition></edition><person-group person-group-type="editor"/><elocation-id></elocation-id><fpage></fpage><lpage></lpage><year iso-8601-date=""></year><chapter-title/><source/><pub-id pub-id-type="doi"></pub-id><pub-id pub-id-type="pmid"></pub-id><publisher-name></publisher-name><publisher-loc></publisher-loc><volume></volume><pub-id pub-id-type="isbn"></pub-id><pub-id pub-id-type="pmcid"></pub-id></element-citation>',
-            );
+            expect(xmlString).toBe('<element-citation publication-type="book"/>');
         });
 
         it('should serialize a populated book reference', () => {

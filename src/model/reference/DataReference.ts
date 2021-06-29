@@ -1,7 +1,7 @@
 import { EditorState } from 'prosemirror-state';
 import { BackmatterEntity } from '../backmatter-entity';
 import { JSONObject } from '../types';
-import { getTextContentFromPath } from '../utils';
+import { getTextContentFromPath, removeEmptyNodes } from '../utils';
 import { createReferenceAnnotatedValue, deserializeReferenceAnnotatedValue } from './reference.utils';
 import { DOMImplementation } from 'xmldom';
 import { serializeManuscriptSection } from '../../xml-exporter/manuscript-serializer';
@@ -66,10 +66,10 @@ export class DataReference extends BackmatterEntity {
             xml.setAttribute('specific-use', this.specificUse);
         }
 
-        return xml;
+        return removeEmptyNodes(xml);
     }
 
-    protected fromJSON(json: JSONObject) {
+    protected fromJSON(json: JSONObject): void {
         this._id = (json._id as string) || this._id;
         this.dataTitle = json.dataTitle
             ? deserializeReferenceAnnotatedValue(json.dataTitle as JSONObject)
@@ -85,7 +85,7 @@ export class DataReference extends BackmatterEntity {
             : createReferenceAnnotatedValue();
     }
 
-    protected fromXML(referenceXml: Element) {
+    protected fromXML(referenceXml: Element): void {
         const accessionEl = referenceXml.querySelector('pub-id[pub-id-type="accession"]');
         const specificUse = referenceXml.getAttribute('specific-use');
         this.year = getTextContentFromPath(referenceXml, 'year') || '';
@@ -102,7 +102,7 @@ export class DataReference extends BackmatterEntity {
             : undefined;
     }
 
-    protected createBlank() {
+    protected createBlank(): void {
         this.dataTitle = createReferenceAnnotatedValue();
         this.year = '';
         this.doi = '';
