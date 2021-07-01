@@ -1,6 +1,6 @@
 import { BackmatterEntity } from './backmatter-entity';
 import { JSONObject } from './types';
-import { getTextContentFromPath } from './utils';
+import { getTextContentFromPath, removeEmptyNodes } from './utils';
 import { Manuscript } from './manuscript';
 import { get } from 'lodash';
 import { DOMImplementation } from 'xmldom';
@@ -70,7 +70,7 @@ export class Affiliation extends BackmatterEntity {
         country.appendChild(xmlDoc.createTextNode(this.country || ''));
         affEl.appendChild(country);
 
-        return affEl;
+        return removeEmptyNodes(affEl);
     }
 }
 

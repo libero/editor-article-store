@@ -109,14 +109,7 @@ describe('Affiliation', () => {
         const xmlSerializer = new xmldom.XMLSerializer();
         it('serializes an empty Affiliation to XML', () => {
             const affiliation = new Affiliation();
-            expect(xmlSerializer.serializeToString(affiliation.toXml())).toBe(
-                '<aff id="unique_id">' +
-                    '<label></label>' +
-                    '<institution></institution>' +
-                    '<city></city>' +
-                    '<country></country>' +
-                    '</aff>',
-            );
+            expect(xmlSerializer.serializeToString(affiliation.toXml())).toBe('<aff id="unique_id"/>');
         });
 
         it('serializes a populated Affiliation to XML', () => {

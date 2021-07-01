@@ -93,8 +93,8 @@ export class Person extends BackmatterEntity {
             );
             if (affLabel) {
                 affEl.appendChild(xmlDoc.createTextNode(affLabel));
-                contrib.appendChild(affEl);
             }
+            contrib.appendChild(affEl);
         });
         this.serializeCompetingInterest(contrib, authorNotes);
         return contrib;
