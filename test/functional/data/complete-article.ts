@@ -239,7 +239,7 @@ const data = {
           </article-meta>
       </front>
       <body>
-        <p>Hello World</p>
+        <p>Hello World</p><xref ref-type="bibr" rid="bib19">Bartley, 2017</xref>
       </body>
       <back>
           <ack id="ack">
@@ -714,6 +714,19 @@ const data = {
                       <pub-id pub-id-type="doi">10.1101/400515</pub-id>
                   </element-citation>
               </ref>
+              <ref id="bib19">
+                    <element-citation publication-type="book">
+                    <person-group person-group-type="author">
+                    <name>
+                    <given-names>M</given-names>
+                    <surname>Bartley</surname>
+                    </name>
+                    </person-group>
+                    <year iso-8601-date="2017">2017</year>
+                    <source>Health Inequality: An Introduction to Concepts, Theories and Methods</source>
+                    <publisher-name>Cambridge Polity Press</publisher-name>
+                    </element-citation>
+                </ref>
           </ref-list>
           <app-group>
               <app id="appendix-1">
