@@ -185,13 +185,12 @@ exports[`figure parsing spec checks figure serialization 1`] = `
     </title>
     <p>
       Pellentesque porta interdum sodales (
-      <a
-        class="citation"
-        data-cit-type="reference"
-        data-ref-id="bib6"
-        data-ref-text="Heissler and Sellers, 2016a"
-        href="#"
-      />
+      <xref
+        ref-type="bibr"
+        rid="bib6"
+      >
+        Heissler and Sellers, 2016a
+      </xref>
       ). Vestibulum
       <sub>
         id
@@ -220,13 +219,12 @@ exports[`figure parsing spec checks figure serialization 1`] = `
         https://www.biobam.com/
       </ext-link>
       . Pellentesque accumsan sed ipsum eget hendrerit (
-      <a
-        class="citation"
-        data-cit-type="reference"
-        data-ref-id="bib3"
-        data-ref-text="Foley et al., 2018"
-        href="#"
-      />
+      <xref
+        ref-type="bibr"
+        rid="bib3"
+      >
+        Foley et al., 2018
+      </xref>
       ). Pellentesque cursus, nibh eu mattis condimentum, massa libero faucibus enim, et tempor orci neque eget
       <sup>
         mi
