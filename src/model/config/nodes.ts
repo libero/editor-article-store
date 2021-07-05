@@ -135,14 +135,12 @@ export const nodes = {
         ],
         toDOM(node: ProsemirrorNode): DOMOutputSpec {
             return [
-                'a',
+                'xref',
                 {
-                    href: '#',
-                    class: 'citation',
-                    'data-cit-type': 'reference',
-                    'data-ref-id': node.attrs.refId,
-                    'data-ref-text': node.attrs.refText,
+                    'ref-type': 'bibr',
+                    rid: node.attrs.refId,
                 },
+                node.attrs.refText,
             ];
         },
     },

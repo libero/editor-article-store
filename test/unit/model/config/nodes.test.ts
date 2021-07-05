@@ -126,14 +126,12 @@ describe('nodes spec', () => {
 
         node.attrs = { refId: 'SOME_ID', refText: 'SOME_TEXT' };
         expect(nodes['refCitation'].toDOM(node)).toEqual([
-            'a',
+            'xref',
             {
-                href: '#',
-                class: 'citation',
-                'data-cit-type': 'reference',
-                'data-ref-id': 'SOME_ID',
-                'data-ref-text': 'SOME_TEXT',
+                'ref-type': 'bibr',
+                rid: 'SOME_ID',
             },
+            'SOME_TEXT',
         ]);
     });
 
