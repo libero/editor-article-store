@@ -1,4 +1,5 @@
 jest.mock('uuid', () => ({
+    v5: () => 'unique_id',
     v4: () => 'unique_id',
 }));
 import { DOMSerializer } from 'prosemirror-model';

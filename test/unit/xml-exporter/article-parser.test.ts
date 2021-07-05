@@ -5,6 +5,7 @@ import { EditorState } from 'prosemirror-state';
 import { get } from 'lodash';
 
 jest.mock('uuid', () => ({
+    v5: () => 'unique_id',
     v4: () => 'unique_id',
 }));
 
@@ -95,7 +96,7 @@ describe('ArticleParser', function () {
         expect(manuscript.authors.length).toBe(5);
         expect(manuscript.authors[0]).toStrictEqual(
             expect.objectContaining({
-                _id: 'unique_id',
+                _id: '0000-0002-6048-1470',
                 firstName: 'Fred',
                 lastName: 'Atherden',
                 suffix: '',

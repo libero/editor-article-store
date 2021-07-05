@@ -12,6 +12,7 @@ import { ArticleInformation } from '../../../src/model/article-information';
 import { Affiliation } from '../../../src/model/affiliation';
 
 jest.mock('uuid', () => ({
+    v5: () => 'unique_id',
     v4: () => 'unique_id',
 }));
 
@@ -173,7 +174,7 @@ describe('Person class', () => {
                 const author = new Person(authorXml.querySelector('contrib')!);
                 expect(author).toStrictEqual(
                     expect.objectContaining({
-                        _id: 'unique_id',
+                        _id: '0000-0002-6048-1470',
                         firstName: 'Fred',
                         lastName: 'Atherden',
                         isAuthenticated: true,
@@ -389,7 +390,7 @@ describe('Person class', () => {
             expect(state.length).toBe(2);
             expect(state[0]).toStrictEqual(
                 expect.objectContaining({
-                    _id: 'unique_id',
+                    _id: '0000-0002-6048-1470',
                     firstName: 'Fred',
                     lastName: 'Atherden',
                     isAuthenticated: true,
@@ -402,7 +403,7 @@ describe('Person class', () => {
 
             expect(state[1]).toStrictEqual(
                 expect.objectContaining({
-                    _id: 'unique_id',
+                    _id: '0000-0001-5225-4203',
                     firstName: 'Joseph',
                     lastName: 'Bloggs',
                     isAuthenticated: true,
@@ -436,7 +437,7 @@ describe('Person class', () => {
             expect(state.length).toBe(2);
             expect(state[0]).toStrictEqual(
                 expect.objectContaining({
-                    _id: 'unique_id',
+                    _id: '0000-0002-6048-1470',
                     firstName: 'Fred',
                     lastName: 'Atherden',
                     suffix: 'Capt.',
@@ -452,7 +453,7 @@ describe('Person class', () => {
 
             expect(state[1]).toStrictEqual(
                 expect.objectContaining({
-                    _id: 'unique_id',
+                    _id: '0000-0001-5225-4203',
                     firstName: 'Joseph',
                     lastName: 'Bloggs',
                     isAuthenticated: true,
