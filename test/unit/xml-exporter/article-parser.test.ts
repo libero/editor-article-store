@@ -96,7 +96,7 @@ describe('ArticleParser', function () {
         expect(manuscript.authors.length).toBe(5);
         expect(manuscript.authors[0]).toStrictEqual(
             expect.objectContaining({
-                _id: '0000-0002-6048-1470',
+                _id: 'unique_id',
                 firstName: 'Fred',
                 lastName: 'Atherden',
                 suffix: '',

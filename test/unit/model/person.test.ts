@@ -174,7 +174,7 @@ describe('Person class', () => {
                 const author = new Person(authorXml.querySelector('contrib')!);
                 expect(author).toStrictEqual(
                     expect.objectContaining({
-                        _id: '0000-0002-6048-1470',
+                        _id: 'unique_id',
                         firstName: 'Fred',
                         lastName: 'Atherden',
                         isAuthenticated: true,
@@ -390,7 +390,7 @@ describe('Person class', () => {
             expect(state.length).toBe(2);
             expect(state[0]).toStrictEqual(
                 expect.objectContaining({
-                    _id: '0000-0002-6048-1470',
+                    _id: 'unique_id',
                     firstName: 'Fred',
                     lastName: 'Atherden',
                     isAuthenticated: true,
@@ -403,7 +403,7 @@ describe('Person class', () => {
 
             expect(state[1]).toStrictEqual(
                 expect.objectContaining({
-                    _id: '0000-0001-5225-4203',
+                    _id: 'unique_id',
                     firstName: 'Joseph',
                     lastName: 'Bloggs',
                     isAuthenticated: true,
@@ -437,7 +437,7 @@ describe('Person class', () => {
             expect(state.length).toBe(2);
             expect(state[0]).toStrictEqual(
                 expect.objectContaining({
-                    _id: '0000-0002-6048-1470',
+                    _id: 'unique_id',
                     firstName: 'Fred',
                     lastName: 'Atherden',
                     suffix: 'Capt.',
@@ -453,7 +453,7 @@ describe('Person class', () => {
 
             expect(state[1]).toStrictEqual(
                 expect.objectContaining({
-                    _id: '0000-0001-5225-4203',
+                    _id: 'unique_id',
                     firstName: 'Joseph',
                     lastName: 'Bloggs',
                     isAuthenticated: true,

@@ -155,7 +155,7 @@ export class Person extends BackmatterEntity {
         this.affiliations = Array.from(xml.querySelectorAll('xref[ref-type="aff"]'))
             .map((xRef) => xRef.getAttribute('rid'))
             .filter(Boolean) as string[];
-        this._id = this.orcid ? this.orcid : v5(xml.textContent || '', UUID_NAMESPACE);
+        this._id = v5(xml.textContent || '', UUID_NAMESPACE);
     }
 
     protected fromJSON(json: JSONObject): void {
