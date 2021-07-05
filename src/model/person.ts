@@ -2,7 +2,6 @@ import { EditorState } from 'prosemirror-state';
 import { get } from 'lodash';
 import { DOMParser as ProseMirrorDOMParser } from 'prosemirror-model';
 import { DOMImplementation } from 'xmldom';
-
 import { BackmatterEntity } from './backmatter-entity';
 import * as bioConfig from './config/author-bio.config';
 import { JSONObject } from './types';
@@ -11,7 +10,10 @@ import { Manuscript } from './manuscript';
 import { serializeManuscriptSection } from '../xml-exporter/manuscript-serializer';
 import { Affiliation } from './affiliation';
 import { clearNode } from '../xml-exporter/xml-utils';
+import { v5 } from 'uuid';
 
+// required for creating consistant uuids from a string
+const UUID_NAMESPACE = '123e4567-e89b-12d3-a456-426614174000';
 const NO_COI_STATEMENT = 'No competing interests declared';
 
 export class Person extends BackmatterEntity {
@@ -153,6 +155,7 @@ export class Person extends BackmatterEntity {
         this.affiliations = Array.from(xml.querySelectorAll('xref[ref-type="aff"]'))
             .map((xRef) => xRef.getAttribute('rid'))
             .filter(Boolean) as string[];
+        this._id = v5(xml.textContent || '', UUID_NAMESPACE);
     }
 
     protected fromJSON(json: JSONObject): void {

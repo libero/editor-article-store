@@ -12,6 +12,7 @@ import { ArticleInformation } from '../../../src/model/article-information';
 import { Affiliation } from '../../../src/model/affiliation';
 
 jest.mock('uuid', () => ({
+    v5: () => 'unique_id',
     v4: () => 'unique_id',
 }));
 

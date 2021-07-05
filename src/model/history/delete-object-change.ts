@@ -29,7 +29,6 @@ export class DeleteObjectChange extends Change {
     }
     public applyChange(manuscript: Manuscript) {
         const originalSection = get(manuscript, this.path);
-
         if (!Array.isArray(originalSection)) {
             throw new TypeError('Trying to make DeleteObject change on a non-array section');
         }
