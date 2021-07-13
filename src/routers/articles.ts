@@ -4,7 +4,11 @@ import { logRequest } from '../middlewares/log-request';
 import { ArticleService } from '../services/article';
 import { TransformService } from '../services/transform';
 
-export default (articleService: ArticleService, transformerService: TransformService): express.Router => {
+export default (
+    articleService: ArticleService,
+    transformerService: TransformService,
+    config: { exportTransformEnabled: boolean },
+): express.Router => {
     const router = express.Router();
 
     // Log all requests on this route.
@@ -51,15 +55,18 @@ export default (articleService: ArticleService, transformerService: TransformSer
         const accept = req.headers.accept || '';
         const articleId = req.params.articleId;
 
-        const unprocessedArticleXml = await articleService.exportXml(articleId);
-        const articleXml = await transformerService.articleMetaOrderTransform(unprocessedArticleXml as string);
+        let xml = await articleService.exportXml(articleId);
+        xml = await transformerService.articleMetaOrderTransform(xml as string);
 
-        if (articleXml === null) {
+        if (xml && config.exportTransformEnabled) {
+            xml = await transformerService.exportTransform(xml as string);
+        }
+        if (xml === null) {
             return res.sendStatus(404);
         }
 
         if (accept.includes('application/xml')) {
-            return res.type('text/xml').status(200).send(articleXml);
+            return res.type('text/xml').status(200).send(xml);
         } else {
             // anything but XML is unacceptable
             return res.sendStatus(406);

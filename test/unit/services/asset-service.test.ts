@@ -1,7 +1,6 @@
 import { S3 } from 'aws-sdk';
 import { AssetRepository } from '../../../src/repositories/assets';
 import assetService from '../../../src/services/asset';
-import { ConfigManagerInstance } from '../../../src/services/config-manager';
 import { Asset } from '../../../src/types/asset';
 import imageConverter from '../../../src/utils/convert-image-utils';
 
@@ -19,11 +18,9 @@ const mockS3 = {
     getObject: getObjectMock,
 } as unknown as S3;
 
-const mockConfigGet = jest.fn();
-
-const mockConfigManager = {
-    get: mockConfigGet,
-} as unknown as ConfigManagerInstance;
+const mockConfig = {
+    targetBucket: 'editorS3Bucket',
+};
 
 const mockGetByArticleId = jest.fn(async () => ({
     assets: [{ _id: 'someAssetId', articleId: 'articleId', assetId: 'assetId', fileName: 'someFile.tiff' }],
@@ -49,7 +46,6 @@ describe('assetService', () => {
         headObjectMock.mockImplementation(() => ({ promise: () => {} }));
         putObjectMock.mockImplementation(() => ({ promise: () => {} }));
         getObjectMock.mockImplementation(() => ({ promise: () => ({ Body: 'object' }) }));
-        mockConfigGet.mockImplementation(() => 'editorS3Bucket');
         (imageConverter as jest.Mock).mockImplementation((content) => ({
             buffer: content,
             contentType: { mime: 'image/jpeg' },
@@ -58,7 +54,7 @@ describe('assetService', () => {
 
     describe('getAsset', () => {
         it('should return the content of an S3 object', async () => {
-            const asset = await assetService(mockS3, mockAssetRepo, mockConfigManager).getAsset(
+            const asset = await assetService(mockS3, mockAssetRepo, mockConfig).getAsset(
                 '12304/11111111-1111-1111-1111-111111111111/name.jpg',
                 'someBucket',
             );
@@ -74,7 +70,7 @@ describe('assetService', () => {
                 throw new Error('Some Error');
             });
             await expect(
-                assetService(mockS3, mockAssetRepo, mockConfigManager).getAsset(
+                assetService(mockS3, mockAssetRepo, mockConfig).getAsset(
                     '12304/11111111-1111-1111-1111-111111111111/name.jpg',
                     'someBucket',
                 ),
@@ -84,7 +80,7 @@ describe('assetService', () => {
 
     describe('getAssetUrl', () => {
         it('returns url for correct s3 object', async () => {
-            const url = await assetService(mockS3, mockAssetRepo, mockConfigManager).getAssetUrl(
+            const url = await assetService(mockS3, mockAssetRepo, mockConfig).getAssetUrl(
                 '12304/11111111-1111-1111-1111-111111111111/name.jpg',
             );
             expect(url).toBe('http://mock');
@@ -104,7 +100,7 @@ describe('assetService', () => {
             }));
 
             await expect(
-                assetService(mockS3, mockAssetRepo, mockConfigManager).getAssetUrl('12304/asset/name.jpg'),
+                assetService(mockS3, mockAssetRepo, mockConfig).getAssetUrl('12304/asset/name.jpg'),
             ).resolves.toBe(null);
         });
 
@@ -116,7 +112,7 @@ describe('assetService', () => {
             }));
 
             await expect(
-                assetService(mockS3, mockAssetRepo, mockConfigManager).getAssetUrl(
+                assetService(mockS3, mockAssetRepo, mockConfig).getAssetUrl(
                     '12304/11111111-1111-1111-1111-111111111111/name.jpg',
                 ),
             ).rejects.toThrow('SomeError');
@@ -124,7 +120,7 @@ describe('assetService', () => {
     });
     describe('saveAsset', () => {
         it('saves a non tiff asset to the S3 bucket', async () => {
-            const assetkey = await assetService(mockS3, mockAssetRepo, mockConfigManager).saveAsset(
+            const assetkey = await assetService(mockS3, mockAssetRepo, mockConfig).saveAsset(
                 '11111',
                 Buffer.from('some content'),
                 'image/jpeg',
@@ -145,7 +141,7 @@ describe('assetService', () => {
                 throw new Error('Some Error');
             });
             await expect(
-                assetService(mockS3, mockAssetRepo, mockConfigManager).saveAsset(
+                assetService(mockS3, mockAssetRepo, mockConfig).saveAsset(
                     '11111',
                     Buffer.from('some content'),
                     'image/jpeg',
@@ -157,7 +153,7 @@ describe('assetService', () => {
         });
 
         it('converts a tiff to a jpeg and stores both and returns jpeg key', async () => {
-            const assetKey = await assetService(mockS3, mockAssetRepo, mockConfigManager).saveAsset(
+            const assetKey = await assetService(mockS3, mockAssetRepo, mockConfig).saveAsset(
                 '11111',
                 Buffer.from('some content'),
                 'image/tiff',
@@ -188,7 +184,7 @@ describe('assetService', () => {
                 throw new Error('Error converting');
             });
             await expect(
-                assetService(mockS3, mockAssetRepo, mockConfigManager).saveAsset(
+                assetService(mockS3, mockAssetRepo, mockConfig).saveAsset(
                     '11111',
                     Buffer.from('some content'),
                     'image/tiff',
@@ -200,14 +196,14 @@ describe('assetService', () => {
         });
 
         it('converts both .tif and .tiff files', async () => {
-            const assetKey1 = await assetService(mockS3, mockAssetRepo, mockConfigManager).saveAsset(
+            const assetKey1 = await assetService(mockS3, mockAssetRepo, mockConfig).saveAsset(
                 '11111',
                 Buffer.from('some content'),
                 'image/tiff',
                 'someFileName.tiff',
             );
             expect(imageConverter).toBeCalledTimes(1);
-            const assetKey2 = await assetService(mockS3, mockAssetRepo, mockConfigManager).saveAsset(
+            const assetKey2 = await assetService(mockS3, mockAssetRepo, mockConfig).saveAsset(
                 '11111',
                 Buffer.from('some content'),
                 'image/tiff',
@@ -227,7 +223,7 @@ describe('assetService', () => {
             });
             putObjectMock.mockImplementation(mockPutObject as unknown as () => { promise: () => void });
             await expect(
-                assetService(mockS3, mockAssetRepo, mockConfigManager).saveAsset(
+                assetService(mockS3, mockAssetRepo, mockConfig).saveAsset(
                     '11111',
                     Buffer.from('some content'),
                     'image/tiff',
@@ -240,11 +236,10 @@ describe('assetService', () => {
     });
     describe('getArticleAssetKeysByFilename', () => {
         it('returns expected list of keys', async () => {
-            const assetKeys = await assetService(
-                mockS3,
-                mockAssetRepo,
-                mockConfigManager,
-            ).getArticleAssetKeysByFilename('someAssetId123', 'someFile123.tiff');
+            const assetKeys = await assetService(mockS3, mockAssetRepo, mockConfig).getArticleAssetKeysByFilename(
+                'someAssetId123',
+                'someFile123.tiff',
+            );
             expect(mockGetByQuery).toBeCalledWith({ articleId: 'someAssetId123', fileName: 'someFile123.tiff' });
             expect(assetKeys).toEqual(['articleId123/assetId123/someFile123.tiff']);
         });

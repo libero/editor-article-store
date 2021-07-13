@@ -1,10 +1,8 @@
 import { S3 } from 'aws-sdk';
 import path from 'path';
 import { v4 as uuid } from 'uuid';
-import { configManager } from './config-manager';
 import convert from '../utils/convert-image-utils';
 import { AssetRepository } from '../repositories/assets';
-import { Asset } from '../types/asset';
 
 export type AssetService = {
     getArticleAssetKeysByFilename: (articleId: string, fileName: string) => Promise<string[]>;
@@ -16,10 +14,8 @@ export type AssetService = {
 export default function assetService(
     s3: S3,
     assetRepository: AssetRepository,
-    config: typeof configManager,
+    config: { targetBucket: string },
 ): AssetService {
-    const targetBucket = config.get('editorS3Bucket');
-
     const storeFileToTargetS3 = async (
         Body: Buffer | string = '',
         articleId: string,
@@ -30,13 +26,13 @@ export default function assetService(
         const Key = `${articleId}/${assetId}/${fileName}`;
         const params = {
             Body,
-            Bucket: targetBucket,
+            Bucket: config.targetBucket,
             Key,
             ACL: 'private',
             ContentType,
         };
         await s3.putObject(params).promise();
-        console.log(`S3 object stored: { Key: ${Key}, Bucket: ${targetBucket} }`);
+        console.log(`S3 object stored: { Key: ${Key}, Bucket: ${config.targetBucket} }`);
         const _id = await assetRepository.insert({ fileName, assetId, articleId });
         console.log(`Asset stored in Db: { _id: ${_id}, Key: ${Key} }`);
     };
@@ -45,7 +41,7 @@ export default function assetService(
         try {
             await s3
                 .headObject({
-                    Bucket: targetBucket,
+                    Bucket: config.targetBucket,
                     Key: key,
                 })
                 .promise();
@@ -65,7 +61,7 @@ export default function assetService(
                 return null;
             }
             return s3.getSignedUrl('getObject', {
-                Bucket: targetBucket,
+                Bucket: config.targetBucket,
                 Key: key,
                 Expires: 3600,
             });
@@ -96,7 +92,7 @@ export default function assetService(
                 await storeFileToTargetS3(fileContent, articleId, assetId, fileName, mimeType);
             } catch (error) {
                 throw new Error(
-                    `Error when storing S3 object: { Key: ${articleId}/${assetId}/${fileName}, Bucket: ${targetBucket} } - ${error.message}`,
+                    `Error when storing S3 object: { Key: ${articleId}/${assetId}/${fileName}, Bucket: ${config.targetBucket} } - ${error.message}`,
                 );
             }
 
@@ -107,7 +103,7 @@ export default function assetService(
                     convertedTif = await convert(fileContent);
                 } catch (error) {
                     throw new Error(
-                        `Error when converting .tif file: { Key: ${articleId}/${assetId}/${fileName}, Bucket: ${targetBucket} } - ${error.message}`,
+                        `Error when converting .tif file: { Key: ${articleId}/${assetId}/${fileName}, Bucket: ${config.targetBucket} } - ${error.message}`,
                     );
                 }
 
@@ -125,9 +121,11 @@ export default function assetService(
                     throw new Error(
                         `Error when storing S3 object: { Key: ${
                             path.join(articleId, assetId, keyName) + '.jpeg'
-                        }, Bucket: ${targetBucket} } converted from .tif file: { Key: ${articleId}/${assetId}/${fileName}, Bucket: ${targetBucket} } - ${
-                            error.message
-                        }`,
+                        }, Bucket: ${
+                            config.targetBucket
+                        } } converted from .tif file: { Key: ${articleId}/${assetId}/${fileName}, Bucket: ${
+                            config.targetBucket
+                        } } - ${error.message}`,
                     );
                 }
             }
