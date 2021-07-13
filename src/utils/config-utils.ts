@@ -65,5 +65,11 @@ export function createConfigFromEnv(env: ProcessEnv): Config {
     if (env['IMPORT_TRANSFORM_URL']) {
         retVal.importTransformUrl = env['IMPORT_TRANSFORM_URL'];
     }
+    if (env['EXPORT_TRANSFORM_ENABLED']) {
+        retVal.exportTransformEnabled = env['EXPORT_TRANSFORM_ENABLED'] === 'true';
+    }
+    if (env['EXPORT_TRANSFORM_URL']) {
+        retVal.exportTransformUrl = env['EXPORT_TRANSFORM_URL'];
+    }
     return retVal;
 }

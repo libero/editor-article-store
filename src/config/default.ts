@@ -18,4 +18,6 @@ export const defaultConfig: Config = {
     srcS3Bucket: 'kryia',
     importTransformUrl: 'http://transformer:8984/v1tov2',
     importTransformEnabled: false,
+    exportTransformUrl: 'http://transformer:8984/v2tov1',
+    exportTransformEnabled: false,
 };
