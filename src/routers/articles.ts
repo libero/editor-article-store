@@ -58,11 +58,12 @@ export default (
         let xml = await articleService.exportXml(articleId);
         xml = await transformerService.articleMetaOrderTransform(xml as string);
 
-        if (xml && config.exportTransformEnabled) {
-            xml = await transformerService.exportTransform(xml as string);
-        }
         if (xml === null) {
             return res.sendStatus(404);
+        }
+
+        if (config.exportTransformEnabled) {
+            xml = await transformerService.exportTransform(xml as string);
         }
 
         if (accept.includes('application/xml')) {
