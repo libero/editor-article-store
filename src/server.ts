@@ -74,7 +74,7 @@ export default async function start(): Promise<express.Application> {
     // Initialize services
     const articleService = ArticleService(articleRepository, changeRepository);
     const changesService = ChangesService(changeRepository);
-    const assetService = AssetService(s3, assetRepository, configManager);
+    const assetService = AssetService(s3, assetRepository, { targetBucket: configManager.get('editorS3Bucket') });
     const transformerService = TransformService(configManager);
 
     // Register middlewares
@@ -82,7 +82,12 @@ export default async function start(): Promise<express.Application> {
     app.use(bodyParser.json());
 
     // Register routers
-    app.use('/articles', articlesRouter(articleService, transformerService));
+    app.use(
+        '/articles',
+        articlesRouter(articleService, transformerService, {
+            exportTransformEnabled: configManager.get('exportTransformEnabled'),
+        }),
+    );
     app.use('/articles/:articleId/assets', assetRouter(assetService));
     app.use('/articles/:articleId/changes', changesRouter(changesService, articleService));
     app.get('/health', (_, res) => res.sendStatus(200));

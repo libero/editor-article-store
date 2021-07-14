@@ -5,6 +5,7 @@ import { ConfigManager } from '../types/config-manager';
 
 export interface TransformService {
     importTransform: (xml: string) => Promise<string>;
+    exportTransform: (xml: string) => Promise<string>;
     articleMetaOrderTransform: (xml: string) => Promise<string>;
 }
 
@@ -17,6 +18,16 @@ export default (config: ConfigManager): TransformService => {
                 response = await fetch(config.get('importTransformUrl'), { method: 'POST', body: xml });
             } catch (e) {
                 throw new Error('Failed to transform the imported xml: ' + e.message);
+            }
+            return response.text();
+        },
+        exportTransform: async (xml: string) => {
+            let response;
+            try {
+                console.log('Transforming exported XML');
+                response = await fetch(config.get('exportTransformUrl'), { method: 'POST', body: xml });
+            } catch (e) {
+                throw new Error('Failed to transform the exported xml: ' + e.message);
             }
             return response.text();
         },

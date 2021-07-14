@@ -52,7 +52,7 @@ async function buildHandler() {
     }
     const db = await initialiseDb(dbUri, dbName, dbSSLCert);
     const assetRepository = await AssetRepository(db);
-    const assetService = AssetService(s3, assetRepository, configManager);
+    const assetService = AssetService(s3, assetRepository, { targetBucket: configManager.get('editorS3Bucket') });
     const transformService = TransformService(configManager);
 
     return importHandler(assetService, transformService, db, configManager.get<boolean>('importTransformEnabled'));

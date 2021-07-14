@@ -15,4 +15,6 @@ export type Config = {
     srcS3Bucket?: string;
     importTransformUrl?: string;
     importTransformEnabled?: boolean;
+    exportTransformUrl?: string;
+    exportTransformEnabled?: boolean;
 };
