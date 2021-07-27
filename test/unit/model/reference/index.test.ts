@@ -1,5 +1,5 @@
 import { XMLSerializer } from 'xmldom';
-import { createReferencesState, Reference } from '../../../../src/model/reference';
+import { createReferencesState, serializeReferenceState, Reference } from '../../../../src/model/reference';
 import { JournalReference } from '../../../../src/model/reference/JournalReference';
 import { BookReference } from '../../../../src/model/reference/BookReference';
 import { PeriodicalReference } from '../../../../src/model/reference/PeriodicalReference';
@@ -12,6 +12,8 @@ import { ConferenceReference } from '../../../../src/model/reference/ConferenceR
 import { ThesisReference } from '../../../../src/model/reference/ThesisReference';
 import { PatentReference } from '../../../../src/model/reference/PatentReference';
 import { parseXML } from '../../../../src/xml-exporter/xml-utils';
+import { Manuscript } from '../../../../src/model/manuscript';
+const serializer = new XMLSerializer();
 
 jest.mock('uuid', () => ({
     v4: () => 'unique_id',
@@ -480,7 +482,6 @@ describe('Reference class', () => {
     });
 
     describe('toXml', () => {
-        const serializer = new XMLSerializer();
         beforeEach(() => {
             (JournalReference as jest.Mock).mockImplementationOnce((data) => {
                 return new (jest.requireActual('../../../../src/model/reference/JournalReference').JournalReference)(
@@ -672,5 +673,47 @@ describe('Reference class', () => {
             expect(BookReference).toBeCalledWith(xml.querySelectorAll('element-citation')[0]);
             expect(PeriodicalReference).toBeCalledWith(xml.querySelectorAll('element-citation')[1]);
         });
+    });
+});
+
+describe('serializeReferenceState', () => {
+    beforeAll(() => {
+        (JournalReference as jest.Mock).mockImplementation((data) => {
+            return new (jest.requireActual('../../../../src/model/reference/JournalReference').JournalReference)(data);
+        });
+    });
+    afterAll(() => {
+        (JournalReference as jest.Mock).mockReset();
+    });
+    it('returns references in order', () => {
+        const xml = parseXML(`<article><back/></article>`);
+        const mockManuscript = {
+            references: [
+                new Reference({
+                    _type: 'journal',
+                    authors: [{ firstName: 'Bob', lastName: 'Bobson' }],
+                    referenceInfo: { year: '1999' },
+                }),
+                new Reference({
+                    _type: 'journal',
+                    authors: [{ firstName: 'Bob', lastName: 'Bobson' }],
+                    referenceInfo: { year: '1991' },
+                }),
+                new Reference({
+                    _type: 'journal',
+                    authors: [{ firstName: 'Alice', lastName: 'Alison' }],
+                    referenceInfo: { year: '2002' },
+                }),
+            ],
+        } as unknown as Manuscript;
+
+        serializeReferenceState(xml, mockManuscript);
+        expect(serializer.serializeToString(xml)).toBe(
+            '<article><back><ref-list><title>References</title>' +
+                '<ref id="bib1"><element-citation publication-type="journal"><person-group person-group-type="author"><name><given-names>Alice</given-names><surname>Alison</surname></name></person-group><year iso-8601-date="2002">2002</year></element-citation></ref>' +
+                '<ref id="bib2"><element-citation publication-type="journal"><person-group person-group-type="author"><name><given-names>Bob</given-names><surname>Bobson</surname></name></person-group><year iso-8601-date="1991">1991</year></element-citation></ref>' +
+                '<ref id="bib3"><element-citation publication-type="journal"><person-group person-group-type="author"><name><given-names>Bob</given-names><surname>Bobson</surname></name></person-group><year iso-8601-date="1999">1999</year></element-citation></ref>' +
+                '</ref-list></back></article>',
+        );
     });
 });

@@ -1,4 +1,4 @@
-import { cloneDeep } from 'lodash';
+import { cloneDeep, get } from 'lodash';
 import { BackmatterEntity } from '../backmatter-entity';
 import { JSONObject } from '../types';
 import { ReferenceContributor, ReferenceType } from './types';
@@ -16,6 +16,7 @@ import { ThesisReference } from './ThesisReference';
 import { createReferencePersonList, serializeReferenceContributorsList } from './reference.utils';
 import { Manuscript } from '../manuscript';
 import { clearNode } from '../../xml-exporter/xml-utils';
+import xmldom from 'xmldom';
 
 export type ReferenceInfoType =
     | JournalReference
@@ -107,6 +108,35 @@ export function createReferencesState(referencesXml: Element[]): Reference[] {
         return new Reference(referenceXml);
     });
 }
+function getAuthorLastNamesForSorting(ref: Reference): string {
+    return ref.authors.length > 0
+        ? ref.authors
+              .map((refAuthor) => {
+                  return get(refAuthor, 'groupName', get(refAuthor, 'lastName'));
+              })
+              .join('')
+              .toLowerCase()
+        : '';
+}
+
+function sortReferencesList(refs: Reference[]): Reference[] {
+    return [...refs].sort((ref1, ref2) => {
+        const ref1LastNames = getAuthorLastNamesForSorting(ref1);
+        const ref2LastNames = getAuthorLastNamesForSorting(ref2);
+        if (ref1LastNames < ref2LastNames) {
+            return -1;
+        } else if (ref1LastNames > ref2LastNames) {
+            return 1;
+        } else {
+            if (get(ref1, 'referenceInfo.year', '') < get(ref2, 'referenceInfo.year', '')) {
+                return -1;
+            } else if (get(ref1, 'referenceInfo.year', '') > get(ref2, 'referenceInfo.year', '')) {
+                return 1;
+            }
+        }
+        return 0;
+    });
+}
 
 export function serializeReferenceState(xmlDoc: Document, manuscript: Manuscript) {
     let refList = xmlDoc.querySelector('ref-list');
@@ -120,8 +150,9 @@ export function serializeReferenceState(xmlDoc: Document, manuscript: Manuscript
     const title = xmlDoc.createElement('title');
     title.appendChild(xmlDoc.createTextNode('References'));
     refList.appendChild(title);
+    const sortedReferences = sortReferencesList(manuscript.references);
 
-    manuscript.references.forEach((ref: Reference, index: number) => {
+    sortedReferences.forEach((ref: Reference, index: number) => {
         const refId = index + 1;
         refList?.appendChild(ref.toXml(refId));
         const xmlBody = xmlDoc.querySelector('body');
