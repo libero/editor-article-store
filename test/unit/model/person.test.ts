@@ -34,7 +34,7 @@ const mockManuscript: Manuscript = {
     acknowledgements: EditorState.create({ schema: textSchema }),
     keywordGroups: {},
     relatedArticles: [],
-    affiliations: [],
+    affiliations: [new Affiliation({ _id: 'aff2' }), new Affiliation({ _id: 'aff3' })],
     references: [],
 };
 
@@ -309,7 +309,6 @@ describe('Person class', () => {
                         '<contrib-id contrib-id-type="orcid" authenticated="true">https://orcid.org/0000-0001-5225-4203</contrib-id>' +
                         '<email>example@example.com</email>' +
                         '<bio><p><bold>Joseph Bloggs</bold> is in the Department of Molecular Biology and Genetics, Cornell University, Ithaca, United States</p></bio>' +
-                        '<xref ref-type=\"aff\" rid=\"aff2\"/>' +
                         '<xref ref-type="author-notes" rid="con1"/>' +
                         '</contrib>',
                 );
@@ -333,7 +332,6 @@ describe('Person class', () => {
                         '<contrib-id contrib-id-type="orcid" authenticated="true">https://orcid.org/0000-0001-5225-4203</contrib-id>' +
                         '<email>example@example.com</email>' +
                         '<bio><p><bold>Joseph Bloggs</bold> is in the Department of Molecular Biology and Genetics, Cornell University, Ithaca, United States</p></bio>' +
-                        '<xref ref-type=\"aff\" rid=\"aff2\"/>' +
                         '<xref ref-type="author-notes" rid="con1"/>' +
                         '</contrib>',
                 );
@@ -357,7 +355,7 @@ describe('Person class', () => {
                         '<contrib-id contrib-id-type="orcid" authenticated="true">https://orcid.org/0000-0001-5225-4203</contrib-id>' +
                         '<email>example@example.com</email>' +
                         '<bio><p><bold>Joseph Bloggs</bold> is in the Department of Molecular Biology and Genetics, Cornell University, Ithaca, United States</p></bio>' +
-                        '<xref ref-type="aff" rid="aff2">Some Affiliation Label</xref>' +
+                        '<xref rid="aff1" ref-type="aff">Some Affiliation Label</xref>' +
                         '<xref ref-type="author-notes" rid="con1"/>' +
                         '</contrib>',
                 );
@@ -510,7 +508,7 @@ describe('Person class', () => {
                     '<contrib-id contrib-id-type="orcid" authenticated="true">https://orcid.org/0000-0001-5225-4203</contrib-id>' +
                     '<email>example@example.com</email>' +
                     '<bio><p><bold>Joseph Bloggs</bold> is in the Department of Molecular Biology and Genetics, Cornell University, Ithaca, United States</p></bio>' +
-                    '<xref ref-type="aff" rid="aff2"/>' +
+                    '<xref rid="aff1" ref-type="aff"/>' +
                     '<xref ref-type="author-notes" rid="con1"/>' +
                     '</contrib>' +
                     '</contrib-group></article-meta></article>',

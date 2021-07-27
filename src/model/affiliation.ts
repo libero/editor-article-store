@@ -49,10 +49,10 @@ export class Affiliation extends BackmatterEntity {
         this.address = (json.address as { city: string }) || { city: '' };
     }
 
-    public toXml(): Element {
+    public toXml(listIndex: number): Element {
         const xmlDoc = new DOMImplementation().createDocument(null, null);
         const affEl = xmlDoc.createElement('aff');
-        affEl.setAttribute('id', this.id);
+        affEl.setAttribute('id', `aff${listIndex}`);
 
         const label = xmlDoc.createElement('label');
         label.appendChild(xmlDoc.createTextNode(this.label || ''));
@@ -85,7 +85,7 @@ export function serializeAffiliations(xmlDoc: Document, manuscript: Manuscript) 
         xmlDoc.querySelector('article-meta')!.appendChild(authorsGroup);
     }
 
-    manuscript.affiliations.forEach((affiliation) => {
-        authorsGroup!.appendChild(affiliation.toXml());
+    manuscript.affiliations.forEach((affiliation, index) => {
+        authorsGroup!.appendChild(affiliation.toXml(index + 1));
     });
 }
