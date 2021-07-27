@@ -126,7 +126,7 @@ export function serializeReferenceState(xmlDoc: Document, manuscript: Manuscript
         refList?.appendChild(ref.toXml(refId));
         const xmlBody = xmlDoc.querySelector('body');
         if (xmlBody) {
-            xmlBody.querySelectorAll(`xref[rid="${refId}"]`).forEach((el) => {
+            xmlBody.querySelectorAll(`xref[rid="${ref.id}"]`).forEach((el) => {
                 el.setAttribute('rid', `bib${refId}`);
             });
         }
