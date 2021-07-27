@@ -540,8 +540,8 @@ describe('Reference class', () => {
             };
 
             const ref = new Reference(json);
-            expect(serializer.serializeToString(ref.toXml())).toBe(
-                '<ref id="some_id">' +
+            expect(serializer.serializeToString(ref.toXml(4))).toBe(
+                '<ref id="bib4">' +
                     '<element-citation publication-type="journal">' +
                     '<person-group person-group-type="author">' +
                     '<name><given-names>John</given-names><surname>Doe</surname></name></person-group>' +

@@ -20,11 +20,11 @@ export class RelatedArticle extends BackmatterEntity {
         return newArticle;
     }
 
-    public toXml(): Element {
+    public toXml(listIndex: number): Element {
         const xmlDoc = new DOMImplementation().createDocument(null, null);
         const articleXml = xmlDoc.createElement('related-article');
         articleXml.setAttribute('ext-link-type', 'doi');
-        articleXml.setAttribute('id', this.id);
+        articleXml.setAttribute('id', `ra${listIndex}`);
         articleXml.setAttribute('related-article-type', this.articleType);
         articleXml.setAttribute('xlink:href', this.href);
         return articleXml;
@@ -56,7 +56,7 @@ export function serializeRelatedArticles(xmlDoc: Document, manuscript: Manuscrip
     xmlDoc.querySelectorAll('article-meta > related-article').forEach((el: Element) => el.parentNode!.removeChild(el));
 
     const articleMeta = xmlDoc.querySelector('article-meta');
-    manuscript.relatedArticles.forEach((article: RelatedArticle) => {
-        articleMeta!.appendChild(article.toXml());
+    manuscript.relatedArticles.forEach((article: RelatedArticle, index: number) => {
+        articleMeta!.appendChild(article.toXml(index + 1));
     });
 }

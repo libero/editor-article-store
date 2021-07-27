@@ -109,13 +109,13 @@ describe('Affiliation', () => {
         const xmlSerializer = new xmldom.XMLSerializer();
         it('serializes an empty Affiliation to XML', () => {
             const affiliation = new Affiliation();
-            expect(xmlSerializer.serializeToString(affiliation.toXml())).toBe('<aff id="unique_id"/>');
+            expect(xmlSerializer.serializeToString(affiliation.toXml(1))).toBe('<aff id="aff1"/>');
         });
 
         it('serializes a populated Affiliation to XML', () => {
             const affiliation = new Affiliation(mockJSONData);
-            expect(xmlSerializer.serializeToString(affiliation.toXml())).toBe(
-                '<aff id="unique_id">' +
+            expect(xmlSerializer.serializeToString(affiliation.toXml(2))).toBe(
+                '<aff id="aff2">' +
                     '<label>label</label>' +
                     '<institution>Tech Department, eLife Sciences</institution>' +
                     '<city>Cambridge</city>' +
@@ -204,7 +204,7 @@ describe('serializeAffiliations', () => {
             '<article>' +
                 '<article-meta>' +
                 '<contrib-group>' +
-                '<aff id="unique_id">' +
+                '<aff id="aff1">' +
                 '<label>label</label>' +
                 '<institution>Tech Department, eLife Sciences</institution>' +
                 '<city>Cambridge</city>' +

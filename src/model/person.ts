@@ -87,12 +87,16 @@ export class Person extends BackmatterEntity {
 
         (this.affiliations || []).forEach((affId) => {
             const affEl = xmlDoc.createElement('xref');
+            const affiliation = affiliations.find((aff, index) => {
+                affEl.setAttribute('rid', `aff${index + 1}`);
+                return aff.id === affId;
+            });
+
+            if (!affiliation) return;
+
             affEl.setAttribute('ref-type', 'aff');
-            affEl.setAttribute('rid', affId);
-            const affLabel = get(
-                affiliations.find((aff) => aff.id === affId),
-                'label',
-            );
+
+            const affLabel = get(affiliation, 'label');
             if (affLabel) {
                 affEl.appendChild(xmlDoc.createTextNode(affLabel));
             }

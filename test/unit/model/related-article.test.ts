@@ -48,8 +48,8 @@ describe('Related Article model', () => {
             const xmlSerializer = new xmldom.XMLSerializer();
             it('serializes an empty relatedArticle to xml', () => {
                 const relatedArticle = new RelatedArticle();
-                expect(xmlSerializer.serializeToString(relatedArticle.toXml())).toBe(
-                    '<related-article ext-link-type="doi" id="unique_id" related-article-type="" xlink:href=""/>',
+                expect(xmlSerializer.serializeToString(relatedArticle.toXml(4))).toBe(
+                    '<related-article ext-link-type="doi" id="ra4" related-article-type="" xlink:href=""/>',
                 );
             });
         });
@@ -101,8 +101,8 @@ describe('Related Article model', () => {
             expect(xmlSerializer.serializeToString(xmlDoc)).toBe(
                 '<article>' +
                     '<article-meta>' +
-                    '<related-article ext-link-type="doi" id="unique_id" related-article-type="SOME_ARTICLE_TYPE" xlink:href="URL1"/>' +
-                    '<related-article ext-link-type="doi" id="unique_id" related-article-type="SOME_OTHER_ARTICLE_TYPE" xlink:href="URL2"/>' +
+                    '<related-article ext-link-type="doi" id="ra1" related-article-type="SOME_ARTICLE_TYPE" xlink:href="URL1"/>' +
+                    '<related-article ext-link-type="doi" id="ra2" related-article-type="SOME_OTHER_ARTICLE_TYPE" xlink:href="URL2"/>' +
                     '</article-meta>' +
                     '</article>',
             );
@@ -135,8 +135,8 @@ describe('Related Article model', () => {
             expect(xmlSerializer.serializeToString(xmlDoc)).toBe(
                 '<article>' +
                     '<article-meta>' +
-                    '<related-article ext-link-type="doi" id="unique_id" related-article-type="SOME_ARTICLE_TYPE" xlink:href="URL1"/>' +
-                    '<related-article ext-link-type="doi" id="unique_id" related-article-type="SOME_OTHER_ARTICLE_TYPE" xlink:href="URL2"/>' +
+                    '<related-article ext-link-type="doi" id="ra1" related-article-type="SOME_ARTICLE_TYPE" xlink:href="URL1"/>' +
+                    '<related-article ext-link-type="doi" id="ra2" related-article-type="SOME_OTHER_ARTICLE_TYPE" xlink:href="URL2"/>' +
                     '</article-meta>' +
                     '</article>',
             );

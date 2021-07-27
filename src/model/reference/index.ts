@@ -48,12 +48,12 @@ export class Reference extends BackmatterEntity {
         this.referenceInfo = this.createReferenceInfo();
     }
 
-    toXml(): Element {
+    toXml(listIndex: number): Element {
         const elementCitation = this.referenceInfo.toXml();
         const authorsXml = serializeReferenceContributorsList('author', this.authors);
         elementCitation.insertBefore(authorsXml, elementCitation.firstChild);
         const refElement = elementCitation.ownerDocument.createElement('ref');
-        refElement.setAttribute('id', this._id);
+        refElement.setAttribute('id', `bib${listIndex}`);
         refElement.appendChild(elementCitation);
         return refElement;
     }
@@ -121,7 +121,14 @@ export function serializeReferenceState(xmlDoc: Document, manuscript: Manuscript
     title.appendChild(xmlDoc.createTextNode('References'));
     refList.appendChild(title);
 
-    manuscript.references.forEach((ref: Reference) => {
-        refList?.appendChild(ref.toXml());
+    manuscript.references.forEach((ref: Reference, index: number) => {
+        const refId = index + 1;
+        refList?.appendChild(ref.toXml(refId));
+        const xmlBody = xmlDoc.querySelector('body');
+        if (xmlBody) {
+            xmlBody.querySelectorAll(`xref[rid="${ref.id}"]`).forEach((el) => {
+                el.setAttribute('rid', `bib${refId}`);
+            });
+        }
     });
 }
