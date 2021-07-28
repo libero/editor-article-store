@@ -51,7 +51,10 @@ export class Reference extends BackmatterEntity {
 
     toXml(listIndex: number): Element {
         const elementCitation = this.referenceInfo.toXml();
-        const authorsXml = serializeReferenceContributorsList('author', this.authors);
+        const authorsXml = serializeReferenceContributorsList(
+            this.type === 'patent' ? 'inventor' : 'author',
+            this.authors,
+        );
         elementCitation.insertBefore(authorsXml, elementCitation.firstChild);
         const refElement = elementCitation.ownerDocument.createElement('ref');
         refElement.setAttribute('id', `bib${listIndex}`);
