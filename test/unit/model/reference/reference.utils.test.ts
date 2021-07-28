@@ -275,12 +275,12 @@ describe('serializeReferenceContributorsList', () => {
     });
 
     it('should serialize mixed contributors list', () => {
-        const xml = serializeReferenceContributorsList('author', [
+        const xml = serializeReferenceContributorsList('foobar', [
             { groupName: 'Teenage mutant ninja turtles' },
             { firstName: 'John', lastName: 'Doe' },
         ]);
         expect(xmlSerializer.serializeToString(xml)).toBe(
-            '<person-group person-group-type="author"><collab>Teenage mutant ninja turtles</collab><name><given-names>John</given-names><surname>Doe</surname></name></person-group>',
+            '<person-group person-group-type="foobar"><collab>Teenage mutant ninja turtles</collab><name><given-names>John</given-names><surname>Doe</surname></name></person-group>',
         );
     });
 });

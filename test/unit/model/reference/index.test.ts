@@ -482,14 +482,22 @@ describe('Reference class', () => {
     });
 
     describe('toXml', () => {
-        beforeEach(() => {
+        beforeAll(() => {
             (JournalReference as jest.Mock).mockImplementationOnce((data) => {
                 return new (jest.requireActual('../../../../src/model/reference/JournalReference').JournalReference)(
                     data,
                 );
             });
+            (PatentReference as jest.Mock).mockImplementationOnce((data) => {
+                return new (jest.requireActual('../../../../src/model/reference/PatentReference').PatentReference)(
+                    data,
+                );
+            });
         });
-
+        afterAll(() => {
+            (JournalReference as jest.Mock).mockReset();
+            (PatentReference as jest.Mock).mockReset();
+        });
         it('serializes a reference to xml', () => {
             const json = {
                 _id: 'some_id',
@@ -557,6 +565,22 @@ describe('Reference class', () => {
                     '<pub-id pub-id-type="pmcid">pmcid</pub-id>' +
                     '<volume>volume</volume>' +
                     '<comment>In press</comment>' +
+                    '</element-citation>' +
+                    '</ref>',
+            );
+        });
+        it('sets person-group-type to inventor when PatentReference', () => {
+            const ref = new Reference({
+                _id: 'some_id',
+                _type: 'patent',
+                authors: [{ firstName: 'John', lastName: 'Doe' }],
+                referenceInfo: {},
+            });
+            expect(serializer.serializeToString(ref.toXml(0))).toBe(
+                '<ref id="bib0">' +
+                    '<element-citation publication-type="patent">' +
+                    '<person-group person-group-type="inventor">' +
+                    '<name><given-names>John</given-names><surname>Doe</surname></name></person-group>' +
                     '</element-citation>' +
                     '</ref>',
             );
