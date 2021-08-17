@@ -7,6 +7,7 @@ import { JSONObject } from './types';
 import { Person } from './person';
 import { get } from 'lodash';
 import xmldom from 'xmldom';
+import { Manuscript } from './manuscript';
 
 export const LICENSE_CC_BY_4 = 'CC-BY-4';
 export const LICENSE_CC0 = 'CC0';
@@ -65,6 +66,37 @@ export class ArticleInformation extends BackmatterEntity {
         } else {
             this.copyrightStatement = '';
         }
+    }
+
+    private createSubjectXml(): Element {
+        const xmlDoc = new xmldom.DOMImplementation().createDocument(null, null);
+        const subjectGroupXml = xmlDoc.createElement('subj-group');
+        subjectGroupXml.setAttribute('subj-group-type', 'major-subject');
+
+        if (this.subjects.length) {
+            this.subjects.forEach((subject) => {
+                const subjectXml = xmlDoc.createElement('subject');
+                subjectXml.appendChild(xmlDoc.createTextNode(subject));
+                subjectGroupXml.appendChild(subjectXml);
+            });
+        }
+
+        return subjectGroupXml;
+    }
+
+    private creatDoiXml() {
+        const xmlDoc = new xmldom.DOMImplementation().createDocument(null, null);
+        const doiXml = xmlDoc.createElement('article-id');
+        doiXml.setAttribute('pub-id-type', 'doi');
+        doiXml.appendChild(xmlDoc.createTextNode(this.articleDOI));
+        return doiXml;
+    }
+
+    public toXml() {
+        return {
+            subjects: this.createSubjectXml(),
+            articleDOI: this.creatDoiXml(),
+        };
     }
 
     protected fromJSON(json: JSONObject): void {
@@ -160,4 +192,12 @@ export class ArticleInformation extends BackmatterEntity {
             this.updateCopyrightStatement(authors);
         }
     }
+}
+
+export function serializeArticleInformaion(xmlDoc: Document, manuscript: Manuscript) {
+    const xmlFragments = manuscript.articleInfo.toXml();
+    const documentElement = xmlDoc.documentElement;
+
+    documentElement?.querySelector('subj-group[subj-group-type="major-subject"]')?.replaceWith(xmlFragments.subjects);
+    documentElement.querySelector('article-meta article-id[pub-id-type="doi"]')?.replaceWith(xmlFragments.articleDOI);
 }

@@ -14,6 +14,7 @@ import { serializeAuthors } from '../model/person';
 import { serializeAffiliations } from '../model/affiliation';
 import { serializeKeywordGroups } from '../model/keyword';
 import { serializeReferenceState } from '../model/reference';
+import { serializeArticleInformaion } from '../model/article-information';
 
 export function createXmlDomSerializer(editorState: EditorState): DOMSerializer {
     return DOMSerializer.fromSchema(editorState.schema);
@@ -37,6 +38,6 @@ export function serializeManuscript(article: Article, manuscript: Manuscript): s
     serializeAffiliations(xmlDoc, manuscript);
     serializeKeywordGroups(xmlDoc, manuscript);
     serializeReferenceState(xmlDoc, manuscript);
-
+    serializeArticleInformaion(xmlDoc, manuscript);
     return new xmldom.XMLSerializer().serializeToString(xmlDoc);
 }

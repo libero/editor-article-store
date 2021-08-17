@@ -34,6 +34,11 @@ export function parseXML(xml: string) {
         return nwmatcher({ document: xmlDoc }).select(selectors, this);
     };
 
+    Element.prototype.replaceWith = function (element: Element) {
+        this.parentNode.replaceChild(element, this);
+        return this;
+    };
+
     function childrenGetter(this: Node) {
         return Array.from(this.childNodes).filter((node: ChildNode) => node.nodeType === 1);
     }

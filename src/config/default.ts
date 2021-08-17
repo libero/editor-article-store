@@ -17,7 +17,7 @@ export const defaultConfig: Config = {
     editorS3Bucket: 'editor',
     srcS3Bucket: 'kryia',
     importTransformUrl: 'http://transformer:8984/v1tov2',
-    importTransformEnabled: false,
+    importTransformEnabled: true,
     exportTransformUrl: 'http://transformer:8984/v2tov1',
     exportTransformEnabled: false,
 };
