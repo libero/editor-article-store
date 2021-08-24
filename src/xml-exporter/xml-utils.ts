@@ -34,9 +34,25 @@ export function parseXML(xml: string) {
         return nwmatcher({ document: xmlDoc }).select(selectors, this);
     };
 
-    Element.prototype.replaceWith = function (element: Element) {
-        this.parentNode.replaceChild(element, this);
-        return this;
+    Element.prototype.replaceWith = function () {
+        // based on https://github.com/a7ul/child-replace-with-polyfill
+        const parent = this.parentNode;
+        let i = arguments.length;
+        let currentNode;
+
+        if (!parent) return;
+        if (!i) parent.removeChild(this);
+        while (i--) {
+            // eslint-disable-next-line prefer-rest-params
+            currentNode = arguments[i];
+            if (typeof currentNode !== 'object') {
+                currentNode = this.ownerDocument.createTextNode(currentNode);
+            } else if (currentNode.parentNode) {
+                currentNode.parentNode.removeChild(currentNode);
+            }
+            if (!i) parent.replaceChild(currentNode, this);
+            else parent.insertBefore(this.previousSibling, currentNode);
+        }
     };
 
     function childrenGetter(this: Node) {

@@ -8,9 +8,28 @@ import { Person } from './person';
 import { get } from 'lodash';
 import xmldom from 'xmldom';
 import { Manuscript } from './manuscript';
+import { parseXML } from '../xml-exporter/xml-utils';
+
+type LicenseType = 'CC-BY-4' | 'CC0' | '';
 
 export const LICENSE_CC_BY_4 = 'CC-BY-4';
 export const LICENSE_CC0 = 'CC0';
+
+const LICENSE_URL_MAP = {
+    'CC-BY-4': 'http://creativecommons.org/licenses/by/4.0/',
+    CC0: 'http://creativecommons.org/publicdomain/zero/1.0/',
+};
+
+const LICENSE_TEXT_MAP = {
+    'CC-BY-4': `This article is distributed under the terms of the 
+    <ext-link ext-link-type="uri" xlink:href="http://creativecommons.org/licenses/by/4.0/">
+        Creative Commons Attribution License</ext-link>, which permits unrestricted use and redistribution provided that the original author 
+    and source are credited.`,
+    CC0: `This is an open-access article, free of all copyright, and may be freely reproduced, 
+    distributed, transmitted, modified, built upon, or otherwise used by anyone for any lawful purpose.
+    The work is made available under the
+    <ext-link ext-link-type="uri" xlink:href="http://creativecommons.org/publicdomain/zero/1.0/">Creative Commons CC0 public domain dedication</ext-link>.`,
+};
 
 export class ArticleInformation extends BackmatterEntity {
     articleType: string = '';
@@ -21,7 +40,7 @@ export class ArticleInformation extends BackmatterEntity {
     elocationId: string = '';
     subjects: Array<string> = [];
     publicationDate: string = '';
-    licenseType: string = '';
+    licenseType: LicenseType = '';
     copyrightStatement: string = '';
     licenseText?: EditorState;
 
@@ -68,8 +87,7 @@ export class ArticleInformation extends BackmatterEntity {
         }
     }
 
-    private createSubjectXml(): Element {
-        const xmlDoc = new xmldom.DOMImplementation().createDocument(null, null);
+    private createSubjectXml(xmlDoc: Document): Element {
         const subjectGroupXml = xmlDoc.createElement('subj-group');
         subjectGroupXml.setAttribute('subj-group-type', 'major-subject');
 
@@ -84,18 +102,126 @@ export class ArticleInformation extends BackmatterEntity {
         return subjectGroupXml;
     }
 
-    private creatDoiXml() {
-        const xmlDoc = new xmldom.DOMImplementation().createDocument(null, null);
+    private createDoiXml(xmlDoc: Document) {
         const doiXml = xmlDoc.createElement('article-id');
         doiXml.setAttribute('pub-id-type', 'doi');
         doiXml.appendChild(xmlDoc.createTextNode(this.articleDOI));
         return doiXml;
     }
 
+    private createPublisherXml(xmlDoc: Document) {
+        const publisherIdXml = xmlDoc.createElement('article-id');
+        publisherIdXml.setAttribute('pub-id-type', 'publisher-id');
+        publisherIdXml.appendChild(xmlDoc.createTextNode(this.publisherId));
+        return publisherIdXml;
+    }
+
+    private createElocationIdXml(xmlDoc: Document) {
+        const elocationIdXml = xmlDoc.createElement('elocation-id');
+        elocationIdXml.appendChild(xmlDoc.createTextNode(this.elocationId));
+        return elocationIdXml;
+    }
+
+    private createVolumeXml(xmlDoc: Document) {
+        const volumeXml = xmlDoc.createElement('volume');
+        volumeXml.appendChild(xmlDoc.createTextNode(this.volume));
+        return volumeXml;
+    }
+
+    private createPublicationDateXml(xmlDoc: Document) {
+        const [year, month, day] = this.publicationDate.split('-');
+        const pubdateXml = xmlDoc.createElement('pub-date');
+        pubdateXml.setAttribute('date-type', 'publication');
+        pubdateXml.setAttribute('publication-format', 'electronic');
+        pubdateXml.setAttribute('iso-8601-date', this.publicationDate.replace(/-+$/, ''));
+
+        if (!year) {
+            return;
+        }
+
+        const yearXml = xmlDoc.createElement('year');
+        yearXml.appendChild(xmlDoc.createTextNode(year));
+        pubdateXml.appendChild(yearXml);
+
+        if (month) {
+            const monthXml = xmlDoc.createElement('month');
+            monthXml.appendChild(xmlDoc.createTextNode(month));
+            pubdateXml.appendChild(monthXml);
+        }
+
+        if (day) {
+            const dayXml = xmlDoc.createElement('day');
+            dayXml.appendChild(xmlDoc.createTextNode(day));
+            pubdateXml.appendChild(dayXml);
+        }
+
+        return pubdateXml;
+    }
+
+    private createLicenseXml(xmlDoc: Document) {
+        if (!this.licenseType) return;
+        const licenceXml = xmlDoc.createElement('licence');
+        licenceXml.setAttribute('xlink:href', LICENSE_URL_MAP[this.licenseType]);
+        const licenseRef = xmlDoc.createElement('ali:license_ref');
+        licenseRef.appendChild(xmlDoc.createTextNode(LICENSE_URL_MAP[this.licenseType]));
+        licenceXml.appendChild(licenseRef);
+
+        if (this.licenseType) {
+            const licenseText = parseXML(
+                '<wrapperNode xmlns:xlink="http://www.w3.org/1999/xlink"><license-p>' +
+                    LICENSE_TEXT_MAP[this.licenseType] +
+                    '</license-p></wrapperNode>',
+            );
+
+            licenceXml.appendChild(licenseText?.documentElement?.querySelector('license-p') as Element);
+        }
+
+        return licenceXml;
+    }
+
+    private createPermissionsXml(xmlDoc: Document) {
+        const permissionsXml = xmlDoc.createElement('permissions');
+
+        if (this.copyrightStatement) {
+            const copyrightStatementXml = xmlDoc.createElement('copyright-statement');
+            copyrightStatementXml.appendChild(xmlDoc.createTextNode(this.copyrightStatement));
+            permissionsXml.appendChild(copyrightStatementXml);
+
+            const copyrightHolder = this.copyrightStatement.split(',')[1]?.trim();
+
+            if (copyrightHolder) {
+                const copyrightHolderXml = xmlDoc.createElement('copyright-holder');
+                copyrightHolderXml.appendChild(xmlDoc.createTextNode(copyrightHolder));
+                permissionsXml.appendChild(copyrightHolderXml);
+            }
+
+
+            const [year] = this.publicationDate.split('-');
+            const copyrightYearXml = xmlDoc.createElement('copyright-year');
+            copyrightYearXml.appendChild(xmlDoc.createTextNode(year));
+            permissionsXml.appendChild(copyrightYearXml);
+        }
+        permissionsXml.appendChild(xmlDoc.createElement('ali:free_to_read'));
+
+        const licenseXml = this.createLicenseXml(xmlDoc);
+
+        if (licenseXml) {
+            permissionsXml.appendChild(licenseXml);
+        }
+
+        return permissionsXml;
+    }
+
     public toXml() {
+        const xmlDoc = new xmldom.DOMImplementation().createDocument(null, null);
         return {
-            subjects: this.createSubjectXml(),
-            articleDOI: this.creatDoiXml(),
+            subjects: this.createSubjectXml(xmlDoc),
+            articleDOI: this.createDoiXml(xmlDoc),
+            publisherId: this.createPublisherXml(xmlDoc),
+            elocationId: this.createElocationIdXml(xmlDoc),
+            volume: this.createVolumeXml(xmlDoc),
+            publicationDate: this.createPublicationDateXml(xmlDoc),
+            permissions: this.createPermissionsXml(xmlDoc),
         };
     }
 
@@ -108,7 +234,7 @@ export class ArticleInformation extends BackmatterEntity {
         this.publisherId = json.publisherId as string;
         this.subjects = (json.subjects as string[]) || [];
 
-        this.licenseType = json.licenseType as string;
+        this.licenseType = json.licenseType as LicenseType;
         this.publicationDate = json.publicationDate as string;
         const schema = makeSchemaFromConfig(
             licenseTextConfig.topNode,
@@ -151,16 +277,16 @@ export class ArticleInformation extends BackmatterEntity {
         this.licenseText = ArticleInformation.createLicenseEditorState();
     }
 
-    private getLicenseTypeFromXml(doc: Element): string {
+    private getLicenseTypeFromXml(doc: Element): LicenseType {
         const licenseEl = doc.querySelector('article-meta permissions license');
         if (!licenseEl) {
             return '';
         }
         const href = licenseEl.getAttribute('xlink:href');
-        if (href === 'http://creativecommons.org/licenses/by/4.0/') {
+        if (href === LICENSE_URL_MAP[LICENSE_CC_BY_4]) {
             return LICENSE_CC_BY_4;
         }
-        if (href === 'http://creativecommons.org/publicdomain/zero/1.0/') {
+        if (href === LICENSE_URL_MAP[LICENSE_CC0]) {
             return LICENSE_CC0;
         }
 
@@ -198,6 +324,19 @@ export function serializeArticleInformaion(xmlDoc: Document, manuscript: Manuscr
     const xmlFragments = manuscript.articleInfo.toXml();
     const documentElement = xmlDoc.documentElement;
 
-    documentElement?.querySelector('subj-group[subj-group-type="major-subject"]')?.replaceWith(xmlFragments.subjects);
-    documentElement.querySelector('article-meta article-id[pub-id-type="doi"]')?.replaceWith(xmlFragments.articleDOI);
+    documentElement
+        .querySelector('subj-group[subj-group-type="major-subject"]')
+        ?.replaceWith(xmlFragments.subjects || '');
+    documentElement
+        .querySelector('article-meta article-id[pub-id-type="doi"]')
+        ?.replaceWith(xmlFragments.articleDOI || '');
+    documentElement
+        .querySelector('article-meta article-id[pub-id-type="publisher-id"]')
+        ?.replaceWith(xmlFragments.publisherId);
+    documentElement.querySelector('article-meta elocation-id')?.replaceWith(xmlFragments.elocationId || '');
+    documentElement.querySelector('article-meta volume')?.replaceWith(xmlFragments.volume || '');
+    documentElement
+        .querySelector('pub-date[date-type="pub"][publication-format="electronic"]')
+        ?.replaceWith(xmlFragments.publicationDate || '');
+    documentElement.querySelector('article-meta permissions')?.replaceWith(xmlFragments.permissions || '');
 }
