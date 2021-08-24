@@ -616,7 +616,7 @@ exports[`Get /article/id/export exports a complete article with many changes app
                                   <copyright-year>2004</copyright-year>
                                   <copyright-holder>American Society for Cell Biology</copyright-holder>
                                   <license>
-                                      <license-p>Panel B is reproduced from  with permission. It is not covered by the CC-BY 4.0 licence and further reproduction of this panel would need permission from the copyright holder.</license-p>
+                                      <license-p>Panel B is reproduced from  with permission. It is not covered by the CC-BY 4.0 license and further reproduction of this panel would need permission from the copyright holder.</license-p>
                                   </license>
                               </permissions>
                               <permissions>
@@ -670,7 +670,7 @@ exports[`Get /article/id/export exports a complete article with many changes app
                                   <copyright-year>2004</copyright-year>
                                   <copyright-holder>American Society for Cell Biology</copyright-holder>
                                   <license>
-                                      <license-p>Panel B is reproduced from  with permission. It is not covered by the CC-BY 4.0 licence and further reproduction of this panel would need permission from the copyright holder.</license-p>
+                                      <license-p>Panel B is reproduced from  with permission. It is not covered by the CC-BY 4.0 license and further reproduction of this panel would need permission from the copyright holder.</license-p>
                                   </license>
                               </permissions>
                               <permissions>

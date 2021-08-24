@@ -160,11 +160,11 @@ export class ArticleInformation extends BackmatterEntity {
 
     private createLicenseXml(xmlDoc: Document) {
         if (!this.licenseType) return;
-        const licenceXml = xmlDoc.createElement('licence');
-        licenceXml.setAttribute('xlink:href', LICENSE_URL_MAP[this.licenseType]);
+        const licenseXml = xmlDoc.createElement('license');
+        licenseXml.setAttribute('xlink:href', LICENSE_URL_MAP[this.licenseType]);
         const licenseRef = xmlDoc.createElement('ali:license_ref');
         licenseRef.appendChild(xmlDoc.createTextNode(LICENSE_URL_MAP[this.licenseType]));
-        licenceXml.appendChild(licenseRef);
+        licenseXml.appendChild(licenseRef);
 
         if (this.licenseType) {
             const licenseText = parseXML(
@@ -173,10 +173,10 @@ export class ArticleInformation extends BackmatterEntity {
                     '</license-p></wrapperNode>',
             );
 
-            licenceXml.appendChild(licenseText?.documentElement?.querySelector('license-p') as Element);
+            licenseXml.appendChild(licenseText?.documentElement?.querySelector('license-p') as Element);
         }
 
-        return licenceXml;
+        return licenseXml;
     }
 
     private createPermissionsXml(xmlDoc: Document) {
