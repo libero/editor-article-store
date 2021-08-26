@@ -29,10 +29,7 @@ exports[`Get /article/id/export exports a complete article with many changes app
                   </subj-group>
                   <!-- Change heading to major-subject (better semantics)
                        More than one subject allowed in the same subj-group -->
-                  <subj-group subj-group-type=\\"major-subject\\">
-                      <subject>Medicine</subject>
-                      <subject>Neuroscience</subject>
-                  </subj-group>
+                  <subj-group subj-group-type=\\"major-subject\\"><subject>Medicine</subject><subject>Neuroscience</subject></subj-group>
               </article-categories><title-group>
                   <article-title>1obscureword</article-title>
               </title-group><contrib-group content-type=\\"authors\\"><contrib contrib-type=\\"author\\" corresp=\\"yes\\"><name><given-names>2obscureword</given-names><surname>2obscureword</surname><suffix>2obscureword</suffix></name><contrib-id contrib-id-type=\\"orcid\\" authenticated=\\"false\\">https://orcid.org/2obscureword</contrib-id><email>2obscureword</email><bio><p>2obscureword</p></bio><xref rid=\\"aff1\\" ref-type=\\"aff\\">1</xref><xref ref-type=\\"author-notes\\" rid=\\"con1\\"/></contrib><aff id=\\"aff1\\"><label>1</label><institution>3obscureword</institution><city>3obscureword</city><country>3obscureword</country></aff></contrib-group><contrib-group content-type=\\"peer-review\\">
@@ -73,11 +70,7 @@ exports[`Get /article/id/export exports a complete article with many changes app
                   <!-- coi statements moved from sec[@sec-type=\\"additional-information\\"] in <back> to here -->
                   
                   
-              <fn fn-type=\\"COI-statement\\" id=\\"con1\\"><p>No competing interests declared</p></fn></author-notes><pub-date publication-format=\\"electronic\\" date-type=\\"pub\\" iso-8601-date=\\"2020-09-22\\">
-                  <day>22</day>
-                  <month>09</month>
-                  <year>2020</year>
-              </pub-date><pub-date publication-format=\\"electronic\\" date-type=\\"update\\" iso-8601-date=\\"2020-10-22\\">
+              <fn fn-type=\\"COI-statement\\" id=\\"con1\\"><p>No competing interests declared</p></fn></author-notes><pub-date date-type=\\"pub\\" publication-format=\\"electronic\\" iso-8601-date=\\"2020-09-22\\"><year>2020</year><month>09</month><day>22</day></pub-date><pub-date publication-format=\\"electronic\\" date-type=\\"update\\" iso-8601-date=\\"2020-10-22\\">
                   <day>22</day>
                   <month>10</month>
                   <year>2020</year>
@@ -114,16 +107,10 @@ exports[`Get /article/id/export exports a complete article with many changes app
                       </date>
                       <self-uri content-type=\\"accepted-manuscript\\" xlink:href=\\"https://elifesciences.org/articles/00666v1\\"/>
                   </event>
-              </pub-history><permissions>
-                  <copyright-statement>© 2020, Atherden et al</copyright-statement>
-                  <copyright-year>2020</copyright-year>
-                  <copyright-holder>Atherden et al</copyright-holder>
-                  <ali:free_to_read/>
-                  <license xlink:href=\\"http://creativecommons.org/licenses/by/4.0/\\">
-                      <ali:license_ref>http://creativecommons.org/licenses/by/4.0/</ali:license_ref>
-                      <license-p>This article is distributed under the terms of the <ext-link ext-link-type=\\"uri\\" xlink:href=\\"http://creativecommons.org/licenses/by/4.0/\\">Creative Commons Attribution License</ext-link>, which permits unrestricted use and redistribution provided that the original author and source are credited.</license-p>
-                  </license>
-              </permissions><self-uri content-type=\\"pdf\\" xlink:href=\\"elife-00666.pdf\\"/><self-uri content-type=\\"pdf\\" xlink:href=\\"elife-00666-figures.pdf\\"/><related-article ext-link-type=\\"doi\\" id=\\"ra1\\" related-article-type=\\"article-reference\\" xlink:href=\\"10.7554/eLife.16381\\"/><related-article ext-link-type=\\"doi\\" id=\\"ra2\\" related-article-type=\\"article-reference\\" xlink:href=\\"10.7554/eLife.43788\\"/><related-article ext-link-type=\\"doi\\" id=\\"ra3\\" related-article-type=\\"commentary-article\\" xlink:href=\\"9obscureword\\"/><abstract abstract-type=\\"toc\\"><p>5obscureword</p></abstract><abstract><p>4obscureword</p></abstract><abstract abstract-type=\\"executive-summary\\">
+              </pub-history><permissions><copyright-statement>© 2020, Atherden et al</copyright-statement><copyright-holder>Atherden et al</copyright-holder><copyright-year>2020</copyright-year><ali:free_to_read/><license xlink:href=\\"http://creativecommons.org/licenses/by/4.0/\\"><ali:license_ref>http://creativecommons.org/licenses/by/4.0/</ali:license_ref><license-p>This article is distributed under the terms of the 
+    <ext-link ext-link-type=\\"uri\\" xlink:href=\\"http://creativecommons.org/licenses/by/4.0/\\">
+        Creative Commons Attribution License</ext-link>, which permits unrestricted use and redistribution provided that the original author 
+    and source are credited.</license-p></license></permissions><self-uri content-type=\\"pdf\\" xlink:href=\\"elife-00666.pdf\\"/><self-uri content-type=\\"pdf\\" xlink:href=\\"elife-00666-figures.pdf\\"/><related-article ext-link-type=\\"doi\\" id=\\"ra1\\" related-article-type=\\"article-reference\\" xlink:href=\\"10.7554/eLife.16381\\"/><related-article ext-link-type=\\"doi\\" id=\\"ra2\\" related-article-type=\\"article-reference\\" xlink:href=\\"10.7554/eLife.43788\\"/><related-article ext-link-type=\\"doi\\" id=\\"ra3\\" related-article-type=\\"commentary-article\\" xlink:href=\\"9obscureword\\"/><abstract abstract-type=\\"toc\\"><p>5obscureword</p></abstract><abstract><p>4obscureword</p></abstract><abstract abstract-type=\\"executive-summary\\">
                   <title>eLife digest</title>
                   <p>This is a digest.</p>
               </abstract><kwd-group kwd-group-type=\\"author-generated\\"><kwd>flight</kwd><kwd>swimming</kwd><kwd>locomotion</kwd><kwd>muscle efficiency</kwd><kwd>strouhal number</kwd><kwd>wing</kwd><kwd>somekeyword</kwd></kwd-group><kwd-group kwd-group-type=\\"research-organism\\"><kwd>Human</kwd><kwd>Mouse</kwd><kwd>anotherkeyword</kwd></kwd-group><funding-group>
@@ -616,7 +603,7 @@ exports[`Get /article/id/export exports a complete article with many changes app
                                   <copyright-year>2004</copyright-year>
                                   <copyright-holder>American Society for Cell Biology</copyright-holder>
                                   <license>
-                                      <license-p>Panel B is reproduced from  with permission. It is not covered by the CC-BY 4.0 license and further reproduction of this panel would need permission from the copyright holder.</license-p>
+                                      <license-p>Panel B is reproduced from  with permission. It is not covered by the CC-BY 4.0 licence and further reproduction of this panel would need permission from the copyright holder.</license-p>
                                   </license>
                               </permissions>
                               <permissions>
@@ -670,7 +657,7 @@ exports[`Get /article/id/export exports a complete article with many changes app
                                   <copyright-year>2004</copyright-year>
                                   <copyright-holder>American Society for Cell Biology</copyright-holder>
                                   <license>
-                                      <license-p>Panel B is reproduced from  with permission. It is not covered by the CC-BY 4.0 license and further reproduction of this panel would need permission from the copyright holder.</license-p>
+                                      <license-p>Panel B is reproduced from  with permission. It is not covered by the CC-BY 4.0 licence and further reproduction of this panel would need permission from the copyright holder.</license-p>
                                   </license>
                               </permissions>
                               <permissions>
