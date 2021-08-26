@@ -58,6 +58,9 @@ describe('serializeManuscript', () => {
         deleteAllNodes(xmlDoc, 'kwd-group');
         deleteAllNodes(xmlDoc, 'ref-list');
         deleteAllNodes(xmlDoc, 'article-meta > author-notes');
+        deleteAllNodes(xmlDoc, 'permissions');
+        deleteAllNodes(xmlDoc, 'subj-group[subj-group-type="major-subject"]');
+        deleteAllNodes(xmlDoc, 'pub-date[date-type="pub"]');
 
         deleteAllNodes(outputXmlDoc, 'abstract');
         deleteAllNodes(outputXmlDoc, 'ack');
@@ -67,6 +70,11 @@ describe('serializeManuscript', () => {
         deleteAllNodes(outputXmlDoc, 'kwd-group');
         deleteAllNodes(outputXmlDoc, 'ref-list');
         deleteAllNodes(outputXmlDoc, 'article-meta > author-notes');
+        deleteAllNodes(outputXmlDoc, 'permissions');
+        deleteAllNodes(outputXmlDoc, 'subj-group[subj-group-type="major-subject"]');
+        deleteAllNodes(outputXmlDoc, 'pub-date[date-type="pub"]');
+
+
 
         expect(serializer.serializeToString(xmlDoc)).toEqual(serializer.serializeToString(outputXmlDoc));
     });
@@ -118,7 +126,7 @@ describe('EditorState serializer', () => {
 });
 
 function deleteAllNodes(doc: Document, nodeName: string) {
-    doc.querySelectorAll(nodeName).forEach((node) => {
+    doc.documentElement.querySelectorAll(nodeName).forEach((node) => {
         node.parentNode!.removeChild(node);
     });
 }

@@ -131,7 +131,7 @@ export class ArticleInformation extends BackmatterEntity {
     private createPublicationDateXml(xmlDoc: Document) {
         const [year, month, day] = this.publicationDate.split('-');
         const pubdateXml = xmlDoc.createElement('pub-date');
-        pubdateXml.setAttribute('date-type', 'publication');
+        pubdateXml.setAttribute('date-type', 'pub');
         pubdateXml.setAttribute('publication-format', 'electronic');
         pubdateXml.setAttribute('iso-8601-date', this.publicationDate.replace(/-+$/, ''));
 
@@ -197,9 +197,11 @@ export class ArticleInformation extends BackmatterEntity {
 
 
             const [year] = this.publicationDate.split('-');
-            const copyrightYearXml = xmlDoc.createElement('copyright-year');
-            copyrightYearXml.appendChild(xmlDoc.createTextNode(year));
-            permissionsXml.appendChild(copyrightYearXml);
+            if (year) {
+                const copyrightYearXml = xmlDoc.createElement('copyright-year');
+                copyrightYearXml.appendChild(xmlDoc.createTextNode(year));
+                permissionsXml.appendChild(copyrightYearXml);
+            }
         }
         permissionsXml.appendChild(xmlDoc.createElement('ali:free_to_read'));
 
