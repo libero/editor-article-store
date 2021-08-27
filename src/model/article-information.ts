@@ -87,45 +87,52 @@ export class ArticleInformation extends BackmatterEntity {
         }
     }
 
-    private createSubjectXml(xmlDoc: Document): Element {
-        const subjectGroupXml = xmlDoc.createElement('subj-group');
-        subjectGroupXml.setAttribute('subj-group-type', 'major-subject');
-
-        if (this.subjects.length) {
+    private createSubjectXml(xmlDoc: Document) {
+        if (this.subjects?.length) {
+            const subjectGroupXml = xmlDoc.createElement('subj-group');
+            subjectGroupXml.setAttribute('subj-group-type', 'major-subject');
             this.subjects.forEach((subject) => {
                 const subjectXml = xmlDoc.createElement('subject');
                 subjectXml.appendChild(xmlDoc.createTextNode(subject));
                 subjectGroupXml.appendChild(subjectXml);
             });
-        }
 
-        return subjectGroupXml;
+            return subjectGroupXml;
+        }
     }
 
     private createDoiXml(xmlDoc: Document) {
-        const doiXml = xmlDoc.createElement('article-id');
-        doiXml.setAttribute('pub-id-type', 'doi');
-        doiXml.appendChild(xmlDoc.createTextNode(this.articleDOI));
-        return doiXml;
+        if (this.articleDOI) {
+            const doiXml = xmlDoc.createElement('article-id');
+            doiXml.setAttribute('pub-id-type', 'doi');
+            doiXml.appendChild(xmlDoc.createTextNode(this.articleDOI));
+            return doiXml;
+        }
     }
 
     private createPublisherXml(xmlDoc: Document) {
-        const publisherIdXml = xmlDoc.createElement('article-id');
-        publisherIdXml.setAttribute('pub-id-type', 'publisher-id');
-        publisherIdXml.appendChild(xmlDoc.createTextNode(this.publisherId));
-        return publisherIdXml;
+        if (this.publisherId) {
+            const publisherIdXml = xmlDoc.createElement('article-id');
+            publisherIdXml.setAttribute('pub-id-type', 'publisher-id');
+            publisherIdXml.appendChild(xmlDoc.createTextNode(this.publisherId));
+            return publisherIdXml;
+        }
     }
 
     private createElocationIdXml(xmlDoc: Document) {
-        const elocationIdXml = xmlDoc.createElement('elocation-id');
-        elocationIdXml.appendChild(xmlDoc.createTextNode(this.elocationId));
-        return elocationIdXml;
+        if (this.elocationId) {
+            const elocationIdXml = xmlDoc.createElement('elocation-id');
+            elocationIdXml.appendChild(xmlDoc.createTextNode(this.elocationId));
+            return elocationIdXml;
+        }
     }
 
     private createVolumeXml(xmlDoc: Document) {
-        const volumeXml = xmlDoc.createElement('volume');
-        volumeXml.appendChild(xmlDoc.createTextNode(this.volume));
-        return volumeXml;
+        if (this.volume) { 
+            const volumeXml = xmlDoc.createElement('volume');
+            volumeXml.appendChild(xmlDoc.createTextNode(this.volume));
+            return volumeXml;
+        }
     }
 
     private createPublicationDateXml(xmlDoc: Document) {
@@ -186,7 +193,6 @@ export class ArticleInformation extends BackmatterEntity {
             const copyrightStatementXml = xmlDoc.createElement('copyright-statement');
             copyrightStatementXml.appendChild(xmlDoc.createTextNode(this.copyrightStatement));
             permissionsXml.appendChild(copyrightStatementXml);
-
             const copyrightHolder = this.copyrightStatement.split(',')[1]?.trim();
 
             if (copyrightHolder) {
@@ -235,7 +241,7 @@ export class ArticleInformation extends BackmatterEntity {
         this.volume = json.volume as string;
         this.publisherId = json.publisherId as string;
         this.subjects = (json.subjects as string[]) || [];
-
+        this.copyrightStatement = json.copyrightStatement as string;
         this.licenseType = json.licenseType as LicenseType;
         this.publicationDate = json.publicationDate as string;
         const schema = makeSchemaFromConfig(
@@ -243,7 +249,9 @@ export class ArticleInformation extends BackmatterEntity {
             licenseTextConfig.nodes,
             licenseTextConfig.marks,
         );
-        this.licenseText = EditorState.fromJSON({ schema }, json.licenseText as JSONObject);
+        this.licenseText = json.licenseText
+            ? EditorState.fromJSON({ schema }, json.licenseText as JSONObject)
+            : undefined;
     }
 
     protected fromXML(xmlNode: Element): void {
@@ -334,7 +342,7 @@ export function serializeArticleInformaion(xmlDoc: Document, manuscript: Manuscr
         ?.replaceWith(xmlFragments.articleDOI || '');
     documentElement
         .querySelector('article-meta article-id[pub-id-type="publisher-id"]')
-        ?.replaceWith(xmlFragments.publisherId);
+        ?.replaceWith(xmlFragments.publisherId || '');
     documentElement.querySelector('article-meta elocation-id')?.replaceWith(xmlFragments.elocationId || '');
     documentElement.querySelector('article-meta volume')?.replaceWith(xmlFragments.volume || '');
     documentElement
