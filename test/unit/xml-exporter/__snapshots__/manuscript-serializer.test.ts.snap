@@ -22,12 +22,7 @@ exports[`serializeManuscript serializes manuscript 1`] = `
                 <subj-group subj-group-type=\\"heading\\">
                     <subject>Insight</subject>
                 </subj-group>
-                <subj-group subj-group-type=\\"major-subject\\">
-                    <subject>Cell Biology</subject>
-                </subj-group>
-                <subj-group subj-group-type=\\"major-subject\\">
-                    <subject>Genetics and Genomics</subject>
-                </subj-group>
+                <subj-group subj-group-type=\\"major-subject\\"><subject>Cell Biology</subject><subject>Genetics and Genomics</subject></subj-group>
                 <subj-group subj-group-type=\\"sub-display-channel\\">
                     <subject>Libero Editor</subject>
                 </subj-group>
@@ -44,11 +39,7 @@ exports[`serializeManuscript serializes manuscript 1`] = `
               <p>These authors contributed equally to this work</p>
             </fn>
           <fn fn-type=\\"COI-statement\\" id=\\"con1\\"><p>Is an employee of eLife. No other competing interests exist</p></fn><fn fn-type=\\"COI-statement\\" id=\\"con2\\"><p>No competing interests declared</p></fn></author-notes>
-          <pub-date date-type=\\"pub\\" publication-format=\\"electronic\\">
-            <day>30</day>
-            <month>11</month>
-            <year>2019</year>
-          </pub-date>
+          <pub-date date-type=\\"pub\\" publication-format=\\"electronic\\" iso-8601-date=\\"2019-11-30\\"><year>2019</year><month>11</month><day>30</day></pub-date>
           <pub-date pub-type=\\"collection\\">
             <year>2019</year>
           </pub-date>
@@ -67,16 +58,10 @@ exports[`serializeManuscript serializes manuscript 1`] = `
               <year>2019</year>
             </date>
           </history>
-          <permissions>
-            <copyright-statement>© 2019, Atherden and Smith</copyright-statement>
-            <copyright-year>2019</copyright-year>
-            <copyright-holder>Atherden and Smith</copyright-holder>
-            <ali:free_to_read/>
-            <license xlink:href=\\"http://creativecommons.org/licenses/by/4.0/\\">
-              <ali:license_ref>http://creativecommons.org/licenses/by/4.0/</ali:license_ref>
-              <license-p>This article is distributed under the terms of the <ext-link ext-link-type=\\"uri\\" xlink:href=\\"http://creativecommons.org/licenses/by/4.0/\\">Creative Commons Attribution License</ext-link>, which permits unrestricted use and redistribution provided that the original author and source are credited.</license-p>
-            </license>
-          </permissions>
+          <permissions><copyright-statement>© 2019, Atherden and Smith</copyright-statement><copyright-holder>Atherden and Smith</copyright-holder><copyright-year>2019</copyright-year><ali:free_to_read/><license xlink:href=\\"http://creativecommons.org/licenses/by/4.0/\\"><ali:license_ref>http://creativecommons.org/licenses/by/4.0/</ali:license_ref><license-p>This article is distributed under the terms of the 
+    <ext-link ext-link-type=\\"uri\\" xlink:href=\\"http://creativecommons.org/licenses/by/4.0/\\">
+        Creative Commons Attribution License</ext-link>, which permits unrestricted use and redistribution provided that the original author 
+    and source are credited.</license-p></license></permissions>
           <self-uri content-type=\\"pdf\\" xlink:href=\\"elife-52631-v1.pdf\\"/>
           
           
