@@ -1,6 +1,6 @@
 import { Node as ProsemirrorNode } from 'prosemirror-model';
 import { nodes } from '../../../../src/model/config/nodes';
-import * as xmldom from 'xmldom';
+import * as xmldom from '@xmldom/xmldom';
 import { parseXML } from '../../../../src/xml-exporter/xml-utils';
 
 jest.mock('uuid', () => ({

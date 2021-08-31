@@ -3,7 +3,7 @@ import { JSONObject } from './types';
 import { getTextContentFromPath, removeEmptyNodes } from './utils';
 import { Manuscript } from './manuscript';
 import { get } from 'lodash';
-import { DOMImplementation } from 'xmldom';
+import { DOMImplementation } from '@xmldom/xmldom';
 
 export class Affiliation extends BackmatterEntity {
     label: string | undefined;

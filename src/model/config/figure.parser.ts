@@ -6,7 +6,7 @@ import {
     Node as ProsemirrorNode,
     Schema,
 } from 'prosemirror-model';
-import xmldom from 'xmldom';
+import xmldom from '@xmldom/xmldom';
 import { getLicenseUrl } from '../figure';
 
 const MISSING_NODES_SELECTORS_MAP = {

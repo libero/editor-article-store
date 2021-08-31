@@ -1,5 +1,5 @@
 import { EditorState } from 'prosemirror-state';
-import { DOMImplementation } from 'xmldom';
+import { DOMImplementation } from '@xmldom/xmldom';
 import { serializeManuscriptSection } from '../../xml-exporter/manuscript-serializer';
 import { BackmatterEntity } from '../backmatter-entity';
 import { JSONObject } from '../types';

@@ -1,7 +1,7 @@
 import { Node as ProsemirrorNode } from 'prosemirror-model';
 
 import { marks } from '../../../../src/model/config/marks';
-import * as xmldom from 'xmldom';
+import * as xmldom from '@xmldom/xmldom';
 
 describe('nodes spec', () => {
     it('checks nodes spec definition', () => {

@@ -1,6 +1,6 @@
 import { DataReference } from '../../../../src/model/reference/DataReference';
 import { parseXML } from '../../../../src/xml-exporter/xml-utils';
-import * as xmldom from 'xmldom';
+import * as xmldom from '@xmldom/xmldom';
 
 jest.mock('uuid', () => ({
     v4: () => 'unique_id',

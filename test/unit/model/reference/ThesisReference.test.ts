@@ -1,4 +1,4 @@
-import xmldom from 'xmldom';
+import xmldom from '@xmldom/xmldom';
 import { ThesisReference } from '../../../../src/model/reference/ThesisReference';
 import { parseXML } from '../../../../src/xml-exporter/xml-utils';
 

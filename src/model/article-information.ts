@@ -6,7 +6,7 @@ import { getTextContentFromPath, makeSchemaFromConfig } from './utils';
 import { JSONObject } from './types';
 import { Person } from './person';
 import { get } from 'lodash';
-import xmldom from 'xmldom';
+import xmldom from '@xmldom/xmldom';
 import { Manuscript } from './manuscript';
 import { parseXML } from '../xml-exporter/xml-utils';
 

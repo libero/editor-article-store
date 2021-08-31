@@ -1,6 +1,6 @@
 import { EditorState } from 'prosemirror-state';
 import { DOMParser as ProseMirrorDOMParser } from 'prosemirror-model';
-import xmldom from 'xmldom';
+import xmldom from '@xmldom/xmldom';
 
 import { makeSchemaFromConfig } from './utils';
 import * as abstractConfig from './config/abstract.config';

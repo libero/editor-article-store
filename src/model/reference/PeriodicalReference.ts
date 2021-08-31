@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { DOMImplementation } from 'xmldom';
+import { DOMImplementation } from '@xmldom/xmldom';
 import { EditorState } from 'prosemirror-state';
 import { serializeManuscriptSection } from '../../xml-exporter/manuscript-serializer';
 import { BackmatterEntity } from '../backmatter-entity';

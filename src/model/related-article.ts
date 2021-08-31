@@ -1,7 +1,7 @@
 import { BackmatterEntity } from './backmatter-entity';
 import { JSONObject } from './types';
 import { Manuscript } from '../model/manuscript';
-import { DOMImplementation } from 'xmldom';
+import { DOMImplementation } from '@xmldom/xmldom';
 
 export class RelatedArticle extends BackmatterEntity {
     public articleType: string = '';

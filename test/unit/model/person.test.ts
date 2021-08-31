@@ -7,7 +7,7 @@ import { clearNode, parseXML } from '../../../src/xml-exporter/xml-utils';
 import { Manuscript } from '../../../src/model/manuscript';
 import { Schema } from 'prosemirror-model';
 import { cloneManuscript } from '../../../src/model/changes.utils';
-import * as xmldom from 'xmldom';
+import * as xmldom from '@xmldom/xmldom';
 import { ArticleInformation } from '../../../src/model/article-information';
 import { Affiliation } from '../../../src/model/affiliation';
 

@@ -1,7 +1,7 @@
 import { EditorState } from 'prosemirror-state';
 import { get } from 'lodash';
 import { DOMParser as ProseMirrorDOMParser } from 'prosemirror-model';
-import { DOMImplementation } from 'xmldom';
+import { DOMImplementation } from '@xmldom/xmldom';
 import { BackmatterEntity } from './backmatter-entity';
 import * as bioConfig from './config/author-bio.config';
 import { JSONObject } from './types';

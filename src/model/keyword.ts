@@ -5,7 +5,7 @@ import { EditorState } from 'prosemirror-state';
 import { JSONObject } from './types';
 import { makeSchemaFromConfig } from './utils';
 import { set } from 'lodash';
-import { DOMImplementation } from 'xmldom';
+import { DOMImplementation } from '@xmldom/xmldom';
 import { serializeManuscriptSection } from '../xml-exporter/manuscript-serializer';
 import { Manuscript } from './manuscript';
 

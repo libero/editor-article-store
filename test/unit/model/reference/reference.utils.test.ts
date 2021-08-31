@@ -5,7 +5,7 @@ import {
     serializeReferenceContributorsList,
 } from '../../../../src/model/reference/reference.utils';
 import { parseXML } from '../../../../src/xml-exporter/xml-utils';
-import { XMLSerializer } from 'xmldom';
+import { XMLSerializer } from '@xmldom/xmldom';
 
 describe('createReferencePersonList', () => {
     it('returns empty xml if no persongroup xml is present', () => {

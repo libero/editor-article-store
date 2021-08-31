@@ -1,4 +1,4 @@
-import { DOMImplementation } from 'xmldom';
+import { DOMImplementation } from '@xmldom/xmldom';
 import { BackmatterEntity } from '../../../src/model/backmatter-entity';
 class ExtendedBackmatterClass extends BackmatterEntity {
     constructor() {

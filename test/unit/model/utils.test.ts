@@ -9,7 +9,7 @@ import { readFileSync } from 'fs';
 import { join, resolve } from 'path';
 import { getArticleManuscript } from '../../../src/xml-exporter/article-parser';
 import { parseXML } from '../../../src/xml-exporter/xml-utils';
-import * as xmldom from 'xmldom';
+import * as xmldom from '@xmldom/xmldom';
 
 describe('Model utils', () => {
     it('makes schema from config', () => {

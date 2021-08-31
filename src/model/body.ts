@@ -3,7 +3,7 @@ import { EditorState } from 'prosemirror-state';
 
 import * as bodyConfig from './config/body.config';
 import { makeSchemaFromConfig } from './utils';
-import xmldom from 'xmldom';
+import xmldom from '@xmldom/xmldom';
 import { Manuscript } from './manuscript';
 import { serializeManuscriptSection } from '../xml-exporter/manuscript-serializer';
 import { clearNode } from '../xml-exporter/xml-utils';

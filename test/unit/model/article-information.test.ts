@@ -2,7 +2,7 @@ import { ArticleInformation, serializeArticleInformaion } from '../../../src/mod
 import { EditorState } from 'prosemirror-state';
 import { parseXML } from '../../../src/xml-exporter/xml-utils';
 import { Person } from '../../../src/model/person';
-import xmldom from 'xmldom';
+import xmldom from '@xmldom/xmldom';
 import { Manuscript } from '../../../src/model/manuscript';
 
 jest.mock('uuid', () => ({

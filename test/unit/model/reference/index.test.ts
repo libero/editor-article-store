@@ -1,4 +1,4 @@
-import { XMLSerializer } from 'xmldom';
+import { XMLSerializer } from '@xmldom/xmldom';
 import { createReferencesState, serializeReferenceState, Reference } from '../../../../src/model/reference';
 import { JournalReference } from '../../../../src/model/reference/JournalReference';
 import { BookReference } from '../../../../src/model/reference/BookReference';

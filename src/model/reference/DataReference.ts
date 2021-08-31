@@ -3,7 +3,7 @@ import { BackmatterEntity } from '../backmatter-entity';
 import { JSONObject } from '../types';
 import { getTextContentFromPath, removeEmptyNodes } from '../utils';
 import { createReferenceAnnotatedValue, deserializeReferenceAnnotatedValue } from './reference.utils';
-import { DOMImplementation } from 'xmldom';
+import { DOMImplementation } from '@xmldom/xmldom';
 import { serializeManuscriptSection } from '../../xml-exporter/manuscript-serializer';
 
 export class DataReference extends BackmatterEntity {

@@ -3,7 +3,7 @@ import { DOMParser as ProseMirrorDOMParser } from 'prosemirror-model';
 import { getTextContentFromPath, makeSchemaFromConfig } from '../utils';
 import { ReferenceContributor } from './types';
 import * as referenceInfoConfig from '../config/reference-info.config';
-import xmldom, { DOMImplementation } from 'xmldom';
+import xmldom, { DOMImplementation } from '@xmldom/xmldom';
 import { JSONObject } from '../types';
 import { get, has } from 'lodash';
 
