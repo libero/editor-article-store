@@ -1,5 +1,5 @@
 import { Affiliation, createAffiliationsState, serializeAffiliations } from '../../../src/model/affiliation';
-import * as xmldom from 'xmldom';
+import * as xmldom from '@xmldom/xmldom';
 import { EditorState } from 'prosemirror-state';
 import { parseXML } from '../../../src/xml-exporter/xml-utils';
 import { cloneManuscript } from '../../../src/model/changes.utils';

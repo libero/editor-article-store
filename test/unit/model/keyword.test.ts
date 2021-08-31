@@ -1,5 +1,5 @@
 import { Keyword, createKeywordGroupsState, serializeKeywordGroups } from '../../../src/model/keyword';
-import * as xmldom from 'xmldom';
+import * as xmldom from '@xmldom/xmldom';
 import { parseXML } from '../../../src/xml-exporter/xml-utils';
 import { Manuscript } from '../../../src/model/manuscript';
 const xmlSerializer = new xmldom.XMLSerializer();

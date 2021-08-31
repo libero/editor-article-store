@@ -1,4 +1,4 @@
-import xmldom from 'xmldom';
+import xmldom from '@xmldom/xmldom';
 import nwmatcher from 'nwmatcher';
 
 export function parseXML(xml: string) {

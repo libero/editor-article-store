@@ -3,7 +3,7 @@ import { EditorState } from 'prosemirror-state';
 
 import * as acknowledgementsConfig from './config/acknowledgements.config';
 import { makeSchemaFromConfig } from './utils';
-import xmldom from 'xmldom';
+import xmldom from '@xmldom/xmldom';
 import { clearNode } from '../xml-exporter/xml-utils';
 import { serializeManuscriptSection } from '../xml-exporter/manuscript-serializer';
 import { Manuscript } from '../model/manuscript';

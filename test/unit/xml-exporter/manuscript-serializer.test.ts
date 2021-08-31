@@ -3,7 +3,7 @@ jest.mock('uuid', () => ({
     v4: () => 'unique_id',
 }));
 import { DOMSerializer } from 'prosemirror-model';
-import xmldom from 'xmldom';
+import xmldom from '@xmldom/xmldom';
 import { readFileSync } from 'fs';
 import { join, resolve } from 'path';
 

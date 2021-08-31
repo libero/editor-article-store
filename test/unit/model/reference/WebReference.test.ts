@@ -1,6 +1,6 @@
 import { WebReference } from '../../../../src/model/reference/WebReference';
 import { parseXML } from '../../../../src/xml-exporter/xml-utils';
-import * as xmldom from 'xmldom';
+import * as xmldom from '@xmldom/xmldom';
 
 jest.mock('uuid', () => ({
     v4: () => 'unique_id',

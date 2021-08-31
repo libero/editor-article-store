@@ -16,7 +16,6 @@ import { ThesisReference } from './ThesisReference';
 import { createReferencePersonList, serializeReferenceContributorsList } from './reference.utils';
 import { Manuscript } from '../manuscript';
 import { clearNode } from '../../xml-exporter/xml-utils';
-import xmldom from 'xmldom';
 
 export type ReferenceInfoType =
     | JournalReference

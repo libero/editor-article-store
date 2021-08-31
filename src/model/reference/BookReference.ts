@@ -9,7 +9,7 @@ import {
     serializeReferenceContributorsList,
 } from './reference.utils';
 import { ReferenceContributor } from './types';
-import { DOMImplementation } from 'xmldom';
+import { DOMImplementation } from '@xmldom/xmldom';
 import { serializeManuscriptSection } from '../../xml-exporter/manuscript-serializer';
 
 export class BookReference extends BackmatterEntity {

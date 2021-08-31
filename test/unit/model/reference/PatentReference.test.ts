@@ -1,4 +1,4 @@
-import xmldom from 'xmldom';
+import xmldom from '@xmldom/xmldom';
 import { PatentReference } from '../../../../src/model/reference/PatentReference';
 import { parseXML } from '../../../../src/xml-exporter/xml-utils';
 

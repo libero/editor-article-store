@@ -4,7 +4,7 @@ import { JSONObject } from '../types';
 import { getTextContentFromPath, removeEmptyNodes } from '../utils';
 import { createReferenceAnnotatedValue, deserializeReferenceAnnotatedValue } from './reference.utils';
 import { serializeManuscriptSection } from '../../xml-exporter/manuscript-serializer';
-import { DOMImplementation } from 'xmldom';
+import { DOMImplementation } from '@xmldom/xmldom';
 
 export class JournalReference extends BackmatterEntity {
     year!: string;

@@ -1,4 +1,4 @@
-import xmldom from 'xmldom';
+import xmldom from '@xmldom/xmldom';
 import { PeriodicalReference } from '../../../../src/model/reference/PeriodicalReference';
 import { parseXML } from '../../../../src/xml-exporter/xml-utils';
 jest.mock('uuid', () => ({

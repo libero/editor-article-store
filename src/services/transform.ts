@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { DOMParser, XMLSerializer } from 'xmldom';
+import { DOMParser, XMLSerializer } from '@xmldom/xmldom';
 import fontoxpath from 'fontoxpath';
 import { ConfigManager } from '../types/config-manager';
 

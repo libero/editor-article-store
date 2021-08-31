@@ -5,7 +5,7 @@ import {
 } from '../../../src/model/related-article';
 import { Manuscript } from '../../../src/model/manuscript';
 import { parseXML } from '../../../src/xml-exporter/xml-utils';
-import xmldom from 'xmldom';
+import xmldom from '@xmldom/xmldom';
 
 jest.mock('uuid', () => ({
     v4: () => 'unique_id',

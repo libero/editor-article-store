@@ -1,7 +1,7 @@
 import { parseFigure, serializeFigure } from '../../../../src/model/config/figure.parser';
 import { createBodyState } from '../../../../src/model/body';
 import { parseXML } from '../../../../src/xml-exporter/xml-utils';
-import { DOMImplementation } from 'xmldom';
+import { DOMImplementation } from '@xmldom/xmldom';
 
 const FIGURE_CONTENT_XML = `<fig id="fig2">
   <label>Figure 1.</label>

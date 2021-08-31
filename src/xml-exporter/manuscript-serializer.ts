@@ -1,6 +1,6 @@
 import { EditorState } from 'prosemirror-state';
 import { DOMSerializer } from 'prosemirror-model';
-import xmldom from 'xmldom';
+import xmldom from '@xmldom/xmldom';
 
 import { Article } from '../types/article';
 import { Manuscript } from '../model/manuscript';
