@@ -47,16 +47,17 @@ export class Person extends BackmatterEntity {
 
         const name = xmlDoc.createElement('name');
         contrib.appendChild(name);
-        if (this.firstName) {
-            const firstName = xmlDoc.createElement('given-names');
-            firstName.appendChild(xmlDoc.createTextNode(this.firstName));
-            name.appendChild(firstName);
-        }
 
         if (this.lastName) {
             const lastName = xmlDoc.createElement('surname');
             lastName.appendChild(xmlDoc.createTextNode(this.lastName));
             name.appendChild(lastName);
+        }
+
+        if (this.firstName) {
+            const firstName = xmlDoc.createElement('given-names');
+            firstName.appendChild(xmlDoc.createTextNode(this.firstName));
+            name.appendChild(firstName);
         }
 
         if (this.suffix) {

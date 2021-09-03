@@ -305,7 +305,7 @@ describe('Person class', () => {
 
                 expect(xmlSerializer.serializeToString(person.toXml(authorNotesXml))).toBe(
                     '<contrib contrib-type="author" corresp="yes">' +
-                        '<name><given-names>Joseph</given-names><surname>Bloggs</surname><suffix>Capt.</suffix></name>' +
+                        '<name><surname>Bloggs</surname><given-names>Joseph</given-names><suffix>Capt.</suffix></name>' +
                         '<contrib-id contrib-id-type="orcid" authenticated="true">https://orcid.org/0000-0001-5225-4203</contrib-id>' +
                         '<email>example@example.com</email>' +
                         '<bio><p><bold>Joseph Bloggs</bold> is in the Department of Molecular Biology and Genetics, Cornell University, Ithaca, United States</p></bio>' +
@@ -328,7 +328,7 @@ describe('Person class', () => {
 
                 expect(xmlSerializer.serializeToString(person.toXml(authorNotesXml))).toBe(
                     '<contrib contrib-type="author" corresp="yes">' +
-                        '<name><given-names>Joseph</given-names><surname>Bloggs</surname><suffix>Capt.</suffix></name>' +
+                        '<name><surname>Bloggs</surname><given-names>Joseph</given-names><suffix>Capt.</suffix></name>' +
                         '<contrib-id contrib-id-type="orcid" authenticated="true">https://orcid.org/0000-0001-5225-4203</contrib-id>' +
                         '<email>example@example.com</email>' +
                         '<bio><p><bold>Joseph Bloggs</bold> is in the Department of Molecular Biology and Genetics, Cornell University, Ithaca, United States</p></bio>' +
@@ -351,7 +351,7 @@ describe('Person class', () => {
 
                 expect(xmlSerializer.serializeToString(person.toXml(authorNotesXml, affiliations))).toBe(
                     '<contrib contrib-type="author" corresp="yes">' +
-                        '<name><given-names>Joseph</given-names><surname>Bloggs</surname><suffix>Capt.</suffix></name>' +
+                        '<name><surname>Bloggs</surname><given-names>Joseph</given-names><suffix>Capt.</suffix></name>' +
                         '<contrib-id contrib-id-type="orcid" authenticated="true">https://orcid.org/0000-0001-5225-4203</contrib-id>' +
                         '<email>example@example.com</email>' +
                         '<bio><p><bold>Joseph Bloggs</bold> is in the Department of Molecular Biology and Genetics, Cornell University, Ithaca, United States</p></bio>' +
@@ -504,7 +504,7 @@ describe('Person class', () => {
                     '<author-notes><fn fn-type="COI-statement" id="con1"><p>No competing interests declared</p></fn></author-notes>' +
                     '<contrib-group>' +
                     '<contrib contrib-type="author" corresp="yes">' +
-                    '<name><given-names>Joseph</given-names><surname>Bloggs</surname><suffix>Capt.</suffix></name>' +
+                    '<name><surname>Bloggs</surname><given-names>Joseph</given-names><suffix>Capt.</suffix></name>' +
                     '<contrib-id contrib-id-type="orcid" authenticated="true">https://orcid.org/0000-0001-5225-4203</contrib-id>' +
                     '<email>example@example.com</email>' +
                     '<bio><p><bold>Joseph Bloggs</bold> is in the Department of Molecular Biology and Genetics, Cornell University, Ithaca, United States</p></bio>' +
