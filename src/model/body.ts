@@ -28,4 +28,16 @@ export function serializeBodyState(xmlDoc: Document, manuscript: Manuscript) {
 
     clearNode(bodyEl);
     bodyEl.appendChild(bodyXml);
+
+    const figs = bodyEl.querySelectorAll('fig');
+
+    figs.forEach((fig: Element, index: number) => {
+        const newFigId = `fig${index + 1}`;
+        const currentFigId = fig.getAttribute('id');
+        const citations = bodyEl.querySelectorAll(`xref[rid="${currentFigId}"]`);
+        if (citations.length) {
+            citations.forEach((citation) => citation.setAttribute('rid', newFigId));
+        }
+        fig.setAttribute('id', newFigId);
+    });
 }
