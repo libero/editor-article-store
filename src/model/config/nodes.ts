@@ -288,12 +288,10 @@ export const nodes = {
         ],
         toDOM(node: ProsemirrorNode): DOMOutputSpec {
             return [
-                'a',
+                'xref',
                 {
-                    href: '#',
-                    class: 'citation',
-                    'data-cit-type': 'figure',
-                    'data-fig-ids': node.attrs.figIds.join(' '),
+                    'ref-type': 'fig',
+                    rid: node.attrs?.figIds?.join(),
                 },
                 0,
             ];
