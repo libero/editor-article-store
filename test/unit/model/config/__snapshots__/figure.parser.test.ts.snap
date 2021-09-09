@@ -170,7 +170,9 @@ Array [
 `;
 
 exports[`figure parsing spec checks figure serialization 1`] = `
-<fig>
+<fig
+  id="fig2"
+>
   <label>
     Figure 1.
   </label>
