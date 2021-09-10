@@ -15,7 +15,7 @@
     "lint": "eslint **/*.ts",
     "prettier": "prettier --write '**/*.ts'",
     "test": "jest ./test/unit",
-    "test:functional": "jest ./test/functional --coverage=false",
+    "test:functional": "jest ./test/functional --coverage=false --runInBand",
     "release": "standard-version",
     "migrate": "migrate up"
   },

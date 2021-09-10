@@ -161,6 +161,7 @@ export const nodes = {
         draggable: true,
         attrs: {
             id: { default: '' },
+            position: { default: ''},
             label: { default: '' },
             img: { default: '' },
         },
@@ -170,6 +171,7 @@ export const nodes = {
                 getAttrs(dom: Element) {
                     return {
                         id: dom.getAttribute('id'),
+                        position: dom.getAttribute('position'),
                         label: getTextContentFromPath(dom, 'label') || '',
                         img: getFigureImageUrlFromXml(dom),
                     };
@@ -288,12 +290,10 @@ export const nodes = {
         ],
         toDOM(node: ProsemirrorNode): DOMOutputSpec {
             return [
-                'a',
+                'xref',
                 {
-                    href: '#',
-                    class: 'citation',
-                    'data-cit-type': 'figure',
-                    'data-fig-ids': node.attrs.figIds.join(' '),
+                    'ref-type': 'fig',
+                    rid: node.attrs?.figIds?.join(' '),
                 },
                 0,
             ];

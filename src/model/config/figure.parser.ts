@@ -31,6 +31,9 @@ export function parseFigure(dom: Element, schema: Schema): Fragment {
 export function serializeFigure(node: ProsemirrorNode): Element {
     const xmlDoc = new xmldom.DOMImplementation().createDocument('', '', null);
     const figure = xmlDoc.createElement('fig');
+    figure.setAttribute('id', node.attrs.id);
+
+    if (node.attrs.position) figure.setAttribute('position', node.attrs.position);
 
     const label = xmlDoc.createElement('label');
     label.appendChild(xmlDoc.createTextNode(node.attrs.label));

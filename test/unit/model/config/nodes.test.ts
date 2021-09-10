@@ -182,12 +182,10 @@ describe('nodes spec', () => {
 
         node.attrs = { figIds: ['SOME_ID1', 'SOME_ID2'] };
         expect(nodes['figureCitation'].toDOM(node)).toEqual([
-            'a',
+            'xref',
             {
-                href: '#',
-                class: 'citation',
-                'data-cit-type': 'figure',
-                'data-fig-ids': 'SOME_ID1 SOME_ID2',
+                'ref-type': 'fig',
+                rid: 'SOME_ID1 SOME_ID2',
             },
             0,
         ]);
