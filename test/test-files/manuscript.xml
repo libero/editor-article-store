@@ -74,14 +74,14 @@
                 <institution content-type="dept">Production Department</institution>
                 <institution>eLife Sciences</institution>
                 <city>Cambridge</city>
-                <country>United Kingdom</country>
+                <country country="GB">United Kingdom</country>
               </aff>
               <aff id="aff2">u
                 <label>2</label>
                 <institution content-type="dept">Department</institution>
                 <institution>University</institution>
                 <city>City</city>
-                <country>Country</country>
+                <country country="XX">Country</country>
               </aff>
             </contrib-group>
           <author-notes>

@@ -19,6 +19,7 @@ const mockJSONData = {
         city: 'Cambridge',
     },
     country: 'United Kingdom',
+    countryISO: 'GB',
 };
 
 const mockJSONData2 = {
@@ -31,6 +32,7 @@ const mockJSONData2 = {
         city: 'City',
     },
     country: 'Country',
+    countryISO: 'GB',
 };
 
 const xmlDoc = parseXML(`<article>
@@ -39,7 +41,7 @@ const xmlDoc = parseXML(`<article>
           <institution content-type="dept">Tech Department</institution>
           <institution>eLife Sciences</institution>
           <city>Cambridge</city>
-          <country>United Kingdom</country>
+          <country country="GB">United Kingdom</country>
         </aff>
     </article>`);
 
@@ -55,6 +57,7 @@ describe('Affiliation', () => {
                 country: '',
                 institution: { name: '' },
                 address: { city: '' },
+                countryISO: '',
             }),
         );
     });
@@ -95,6 +98,7 @@ describe('Affiliation', () => {
                     country: '',
                     institution: { name: '' },
                     address: { city: '' },
+                    countryISO: '',
                 }),
             );
         });
@@ -137,14 +141,14 @@ describe('createAffiliationsState', () => {
         <institution content-type="dept">Tech Department</institution>
         <institution>eLife Sciences</institution>
         <city>Cambridge</city>
-        <country>United Kingdom</country>
+        <country country="GB">United Kingdom</country>
       </aff>
       <aff id="aff2">
         <label>2</label>
         <institution content-type="dept">Department</institution>
         <institution>University</institution>
         <city>City</city>
-        <country>Country</country>
+        <country country="GB">Country</country>
       </aff>
     </contrib-group>`);
 
@@ -163,6 +167,7 @@ describe('createAffiliationsState', () => {
                     city: 'Cambridge',
                 },
                 country: 'United Kingdom',
+                countryISO: 'GB',
             }),
         );
         expect(affiliations).toContainEqual(expect.objectContaining(mockJSONData2));

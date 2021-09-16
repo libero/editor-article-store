@@ -585,6 +585,7 @@ describe('deserializeBackmatter', () => {
                 city: 'Cambridge',
             },
             country: 'United Kingdom',
+            countryISO: 'XX',
         });
         expect(affiliation).toBeInstanceOf(Affiliation);
         expect(affiliation).toMatchInlineSnapshot(`
@@ -594,6 +595,7 @@ describe('deserializeBackmatter', () => {
         "city": "Cambridge",
       },
       "country": "United Kingdom",
+      "countryISO": "XX",
       "institution": Object {
         "name": "Tech Department, eLife Sciences",
       },
