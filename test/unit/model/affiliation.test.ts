@@ -123,7 +123,7 @@ describe('Affiliation', () => {
                     '<label>label</label>' +
                     '<institution>Tech Department, eLife Sciences</institution>' +
                     '<city>Cambridge</city>' +
-                    '<country>United Kingdom</country>' +
+                    '<country country="GB">United Kingdom</country>' +
                     '</aff>',
             );
         });
@@ -213,13 +213,13 @@ describe('serializeAffiliations', () => {
                 '<label>label</label>' +
                 '<institution>Tech Department, eLife Sciences</institution>' +
                 '<city>Cambridge</city>' +
-                '<country>United Kingdom</country>' +
+                '<country country="GB">United Kingdom</country>' +
                 '</aff>' +
                 '<aff id="aff2">' +
                 '<label>2</label>' +
                 '<institution>Department, University</institution>' +
                 '<city>City</city>' +
-                '<country>Country</country>' +
+                '<country country="GB">Country</country>' +
                 '</aff>' +
                 '</contrib-group>' +
                 '</article-meta>' +

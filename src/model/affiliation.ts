@@ -72,6 +72,11 @@ export class Affiliation extends BackmatterEntity {
 
         const country = xmlDoc.createElement('country');
         country.appendChild(xmlDoc.createTextNode(this.country || ''));
+
+        if (this.countryISO) {
+            country.setAttribute('country', this.countryISO);
+        }
+
         affEl.appendChild(country);
 
         return removeEmptyNodes(affEl);
