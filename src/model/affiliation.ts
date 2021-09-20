@@ -10,6 +10,7 @@ export class Affiliation extends BackmatterEntity {
     institution: { name: string } | undefined;
     address: { city: string } | undefined;
     country: string | undefined;
+    countryISO?: string;
 
     constructor(data?: JSONObject | Element) {
         super();
@@ -21,6 +22,7 @@ export class Affiliation extends BackmatterEntity {
         this.country = '';
         this.institution = { name: '' };
         this.address = { city: '' };
+        this.countryISO = '';
     }
 
     protected fromXML(xml: Element): void {
@@ -39,6 +41,7 @@ export class Affiliation extends BackmatterEntity {
             city: getTextContentFromPath(xml, 'city') || '',
         };
         this.country = getTextContentFromPath(xml, 'country') || '';
+        this.countryISO = xml.querySelector('country')?.getAttribute('country') || '';
     }
 
     protected fromJSON(json: JSONObject): void {
@@ -47,6 +50,7 @@ export class Affiliation extends BackmatterEntity {
         this.country = (json.country as string) || '';
         this.institution = (json.institution as { name: string }) || { name: '' };
         this.address = (json.address as { city: string }) || { city: '' };
+        this.countryISO = (json.countryISO as string) || '';
     }
 
     public toXml(listIndex: number): Element {
@@ -68,6 +72,11 @@ export class Affiliation extends BackmatterEntity {
 
         const country = xmlDoc.createElement('country');
         country.appendChild(xmlDoc.createTextNode(this.country || ''));
+
+        if (this.countryISO) {
+            country.setAttribute('country', this.countryISO);
+        }
+
         affEl.appendChild(country);
 
         return removeEmptyNodes(affEl);

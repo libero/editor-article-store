@@ -200,6 +200,7 @@ describe('ArticleParser', function () {
                     city: 'Cambridge',
                 },
                 country: 'United Kingdom',
+                countryISO: 'GB',
                 institution: {
                     name: 'Production Department, eLife Sciences',
                 },
@@ -211,6 +212,7 @@ describe('ArticleParser', function () {
                     city: 'City',
                 },
                 country: 'Country',
+                countryISO: 'XX',
                 institution: {
                     name: 'Department, University',
                 },
