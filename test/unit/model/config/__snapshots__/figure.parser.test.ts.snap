@@ -176,11 +176,6 @@ exports[`figure parsing spec checks figure serialization 1`] = `
   <label>
     Figure 1.
   </label>
-  <graphic
-     xlink:href="IMAGE_URL"
-    mime-subtype=""
-    mimetype=""
-  />
   <caption>
     <title>
       Bacterial cells on the surface of a plant leaf.
@@ -239,5 +234,10 @@ exports[`figure parsing spec checks figure serialization 1`] = `
     </p>
     <p />
   </caption>
+  <graphic
+     xlink:href="IMAGE_URL"
+    mime-subtype=""
+    mimetype=""
+  />
 </fig>
 `;

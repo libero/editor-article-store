@@ -39,13 +39,6 @@ export function serializeFigure(node: ProsemirrorNode): Element {
     label.appendChild(xmlDoc.createTextNode(node.attrs.label));
     figure.appendChild(label);
 
-    const graphic = xmlDoc.createElement('graphic');
-    const mimeType = mime.lookup(node.attrs.img) || '';
-    graphic.setAttribute('mime-subtype', mimeType.split('/')[1] || '');
-    graphic.setAttribute(' xlink:href', node.attrs.img);
-    graphic.setAttribute('mimetype', mimeType.split('/')[0]);
-    figure.appendChild(graphic);
-
     const caption = xmlDoc.createElement('caption');
     const title = findNodes(node, 'figureTitle')[0];
     caption.appendChild(serializeFigureNode(title, xmlDoc));
@@ -54,6 +47,13 @@ export function serializeFigure(node: ProsemirrorNode): Element {
     const attrib = findNodes(node, 'figureAttribution')[0];
     caption.appendChild(serializeFigureNode(attrib, xmlDoc));
     figure.appendChild(caption);
+
+    const graphic = xmlDoc.createElement('graphic');
+    const mimeType = mime.lookup(node.attrs.img) || '';
+    graphic.setAttribute('mime-subtype', mimeType.split('/')[1] || '');
+    graphic.setAttribute(' xlink:href', node.attrs.img);
+    graphic.setAttribute('mimetype', mimeType.split('/')[0]);
+    figure.appendChild(graphic);
 
     findNodes(node, 'figureLicense').map((licenseNode) =>
         figure.appendChild(serializeFigureLicense(licenseNode, xmlDoc)),
