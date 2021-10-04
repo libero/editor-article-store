@@ -70,7 +70,7 @@ describe('serializeBodyState', () => {
         serializeBodyState(xml, manuscript);
         expect(new xmldom.XMLSerializer().serializeToString(xml)).toBe(`
             <article>
-                <body><fig id="fig1" position="float"><label>Fig 1.</label><graphic mime-subtype="tiff"  xlink:href="elife-00666-scheme1-fig1.tif" mimetype="image"/><caption><title>A Fig</title><p/><p/></caption></fig><fig id="fig2" position="float"><label>Fig 2.</label><graphic mime-subtype="tiff"  xlink:href="elife-00666-scheme1-fig1.tif" mimetype="image"/><caption><title>Another Fig</title><p/><p/></caption></fig><p><xref ref-type="fig" rid="fig2">Fig 2.</xref>I am some different body <bold>text</bold><xref ref-type="fig" rid="fig1">Fig 1.</xref></p></body>
+                <body><fig id="fig1" position="float"><label>Fig 1.</label><caption><title>A Fig</title><p/><p/></caption><graphic mime-subtype="tiff"  xlink:href="elife-00666-scheme1-fig1.tif" mimetype="image"/></fig><fig id="fig2" position="float"><label>Fig 2.</label><caption><title>Another Fig</title><p/><p/></caption><graphic mime-subtype="tiff"  xlink:href="elife-00666-scheme1-fig1.tif" mimetype="image"/></fig><p><xref ref-type="fig" rid="fig2">Fig 2.</xref>I am some different body <bold>text</bold><xref ref-type="fig" rid="fig1">Fig 1.</xref></p></body>
             </article>`);
     });
 });
