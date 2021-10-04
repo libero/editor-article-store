@@ -263,7 +263,7 @@ describe('serializeReferenceContributorsList', () => {
     it('should serialize individual author', () => {
         const xml = serializeReferenceContributorsList('author', [{ firstName: 'John', lastName: 'Doe' }]);
         expect(xmlSerializer.serializeToString(xml)).toBe(
-            '<person-group person-group-type="author"><name><given-names>John</given-names><surname>Doe</surname></name></person-group>',
+            '<person-group person-group-type="author"><name><surname>Doe</surname><given-names>John</given-names></name></person-group>',
         );
     });
 
@@ -280,7 +280,7 @@ describe('serializeReferenceContributorsList', () => {
             { firstName: 'John', lastName: 'Doe' },
         ]);
         expect(xmlSerializer.serializeToString(xml)).toBe(
-            '<person-group person-group-type="foobar"><collab>Teenage mutant ninja turtles</collab><name><given-names>John</given-names><surname>Doe</surname></name></person-group>',
+            '<person-group person-group-type="foobar"><collab>Teenage mutant ninja turtles</collab><name><surname>Doe</surname><given-names>John</given-names></name></person-group>',
         );
     });
 });
