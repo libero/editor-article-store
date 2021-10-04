@@ -161,7 +161,7 @@ export const nodes = {
         draggable: true,
         attrs: {
             id: { default: '' },
-            position: { default: ''},
+            position: { default: '' },
             label: { default: '' },
             img: { default: '' },
         },
