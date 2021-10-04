@@ -74,8 +74,6 @@ describe('serializeManuscript', () => {
         deleteAllNodes(outputXmlDoc, 'subj-group[subj-group-type="major-subject"]');
         deleteAllNodes(outputXmlDoc, 'pub-date[date-type="pub"]');
 
-
-
         expect(serializer.serializeToString(xmlDoc)).toEqual(serializer.serializeToString(outputXmlDoc));
     });
 });

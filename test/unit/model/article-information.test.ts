@@ -284,10 +284,7 @@ describe('ArticleInformation', () => {
                 '<elocation-id>e00104</elocation-id>',
             );
             expect(new xmldom.XMLSerializer().serializeToString(articleInfoXml.permissions as Element)).toBe(
-                `<permissions><ali:free_to_read/><license xlink:href="http://creativecommons.org/licenses/by/4.0/"><ali:license_ref>http://creativecommons.org/licenses/by/4.0/</ali:license_ref><license-p>This article is distributed under the terms of the 
-    <ext-link ext-link-type="uri" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://creativecommons.org/licenses/by/4.0/">
-        Creative Commons Attribution License</ext-link>, which permits unrestricted use and redistribution provided that the original author 
-    and source are credited.</license-p></license></permissions>`,
+                '<permissions><ali:free_to_read/><license xlink:href="http://creativecommons.org/licenses/by/4.0/"><ali:license_ref>http://creativecommons.org/licenses/by/4.0/</ali:license_ref><license-p>This article is distributed under the terms of the <ext-link ext-link-type="uri" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution License</ext-link>, which permits unrestricted use and redistribution provided that the original author and source are credited.</license-p></license></permissions>',
             );
             expect(new xmldom.XMLSerializer().serializeToString(articleInfoXml.publicationDate as Element)).toBe(
                 '<pub-date date-type="pub" publication-format="electronic" iso-8601-date="2019-11-30"><year>2019</year><month>11</month><day>30</day></pub-date>',
@@ -298,7 +295,9 @@ describe('ArticleInformation', () => {
             expect(new xmldom.XMLSerializer().serializeToString(articleInfoXml.subjects as Element)).toBe(
                 '<subj-group subj-group-type="major-subject"><subject>Cell Biology</subject><subject>Genetics and Genomics</subject></subj-group>',
             );
-            expect(new xmldom.XMLSerializer().serializeToString(articleInfoXml.volume as Element)).toBe('<volume>8</volume>');
+            expect(new xmldom.XMLSerializer().serializeToString(articleInfoXml.volume as Element)).toBe(
+                '<volume>8</volume>',
+            );
         });
     });
 
@@ -358,24 +357,21 @@ describe('ArticleInformation', () => {
             `);
             serializeArticleInformaion(mockXml, mockManuscript);
             expect(new xmldom.XMLSerializer().serializeToString(mockXml)).toMatchInlineSnapshot(`
-"
-            <article>
-                <article-meta>
-                    <article-categories>
-                        <subj-group subj-group-type=\\"major-subject\\"><subject>Cell Biology</subject><subject>Genetics and Genomics</subject></subj-group>
-                    </article-categories>
-                    <article-id pub-id-type=\\"doi\\">10.7554/eLife.00104</article-id>
-                    <article-id pub-id-type=\\"publisher-id\\">00104</article-id>
-                    <elocation-id>e00104</elocation-id>
-                    <volume>8</volume>
-                    <pub-date date-type=\\"pub\\" publication-format=\\"electronic\\" iso-8601-date=\\"2019-11-30\\"><year>2019</year><month>11</month><day>30</day></pub-date>
-                    <permissions><copyright-statement>© 2019, Bar et al.</copyright-statement><copyright-holder>Bar et al.</copyright-holder><copyright-year>2019</copyright-year><ali:free_to_read/><license xlink:href=\\"http://creativecommons.org/licenses/by/4.0/\\"><ali:license_ref>http://creativecommons.org/licenses/by/4.0/</ali:license_ref><license-p>This article is distributed under the terms of the 
-    <ext-link ext-link-type=\\"uri\\" xmlns:xlink=\\"http://www.w3.org/1999/xlink\\" xlink:href=\\"http://creativecommons.org/licenses/by/4.0/\\">
-        Creative Commons Attribution License</ext-link>, which permits unrestricted use and redistribution provided that the original author 
-    and source are credited.</license-p></license></permissions>
-                </article-meta>
-            </article>"
-`);
+                "
+                            <article>
+                                <article-meta>
+                                    <article-categories>
+                                        <subj-group subj-group-type=\\"major-subject\\"><subject>Cell Biology</subject><subject>Genetics and Genomics</subject></subj-group>
+                                    </article-categories>
+                                    <article-id pub-id-type=\\"doi\\">10.7554/eLife.00104</article-id>
+                                    <article-id pub-id-type=\\"publisher-id\\">00104</article-id>
+                                    <elocation-id>e00104</elocation-id>
+                                    <volume>8</volume>
+                                    <pub-date date-type=\\"pub\\" publication-format=\\"electronic\\" iso-8601-date=\\"2019-11-30\\"><year>2019</year><month>11</month><day>30</day></pub-date>
+                                    <permissions><copyright-statement>© 2019, Bar et al.</copyright-statement><copyright-holder>Bar et al.</copyright-holder><copyright-year>2019</copyright-year><ali:free_to_read/><license xlink:href=\\"http://creativecommons.org/licenses/by/4.0/\\"><ali:license_ref>http://creativecommons.org/licenses/by/4.0/</ali:license_ref><license-p>This article is distributed under the terms of the <ext-link ext-link-type=\\"uri\\" xmlns:xlink=\\"http://www.w3.org/1999/xlink\\" xlink:href=\\"http://creativecommons.org/licenses/by/4.0/\\">Creative Commons Attribution License</ext-link>, which permits unrestricted use and redistribution provided that the original author and source are credited.</license-p></license></permissions>
+                                </article-meta>
+                            </article>"
+            `);
         });
     });
 });

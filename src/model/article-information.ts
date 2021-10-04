@@ -21,14 +21,8 @@ const LICENSE_URL_MAP = {
 };
 
 const LICENSE_TEXT_MAP = {
-    'CC-BY-4': `This article is distributed under the terms of the 
-    <ext-link ext-link-type="uri" xlink:href="http://creativecommons.org/licenses/by/4.0/">
-        Creative Commons Attribution License</ext-link>, which permits unrestricted use and redistribution provided that the original author 
-    and source are credited.`,
-    CC0: `This is an open-access article, free of all copyright, and may be freely reproduced, 
-    distributed, transmitted, modified, built upon, or otherwise used by anyone for any lawful purpose.
-    The work is made available under the
-    <ext-link ext-link-type="uri" xlink:href="http://creativecommons.org/publicdomain/zero/1.0/">Creative Commons CC0 public domain dedication</ext-link>.`,
+    'CC-BY-4': `This article is distributed under the terms of the <ext-link ext-link-type="uri" xlink:href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution License</ext-link>, which permits unrestricted use and redistribution provided that the original author and source are credited.`,
+    CC0: `This is an open-access article, free of all copyright, and may be freely reproduced, distributed, transmitted, modified, built upon, or otherwise used by anyone for any lawful purpose. The work is made available under the <ext-link ext-link-type="uri" xlink:href="http://creativecommons.org/publicdomain/zero/1.0/">Creative Commons CC0 public domain dedication</ext-link>.`,
 };
 
 export class ArticleInformation extends BackmatterEntity {
@@ -128,7 +122,7 @@ export class ArticleInformation extends BackmatterEntity {
     }
 
     private createVolumeXml(xmlDoc: Document) {
-        if (this.volume) { 
+        if (this.volume) {
             const volumeXml = xmlDoc.createElement('volume');
             volumeXml.appendChild(xmlDoc.createTextNode(this.volume));
             return volumeXml;
@@ -200,7 +194,6 @@ export class ArticleInformation extends BackmatterEntity {
                 copyrightHolderXml.appendChild(xmlDoc.createTextNode(copyrightHolder));
                 permissionsXml.appendChild(copyrightHolderXml);
             }
-
 
             const [year] = this.publicationDate.split('-');
             if (year) {

@@ -58,10 +58,7 @@ exports[`serializeManuscript serializes manuscript 1`] = `
               <year>2019</year>
             </date>
           </history>
-          <permissions><copyright-statement>© 2019, Atherden and Smith</copyright-statement><copyright-holder>Atherden and Smith</copyright-holder><copyright-year>2019</copyright-year><ali:free_to_read/><license xlink:href=\\"http://creativecommons.org/licenses/by/4.0/\\"><ali:license_ref>http://creativecommons.org/licenses/by/4.0/</ali:license_ref><license-p>This article is distributed under the terms of the 
-    <ext-link ext-link-type=\\"uri\\" xlink:href=\\"http://creativecommons.org/licenses/by/4.0/\\">
-        Creative Commons Attribution License</ext-link>, which permits unrestricted use and redistribution provided that the original author 
-    and source are credited.</license-p></license></permissions>
+          <permissions><copyright-statement>© 2019, Atherden and Smith</copyright-statement><copyright-holder>Atherden and Smith</copyright-holder><copyright-year>2019</copyright-year><ali:free_to_read/><license xlink:href=\\"http://creativecommons.org/licenses/by/4.0/\\"><ali:license_ref>http://creativecommons.org/licenses/by/4.0/</ali:license_ref><license-p>This article is distributed under the terms of the <ext-link ext-link-type=\\"uri\\" xlink:href=\\"http://creativecommons.org/licenses/by/4.0/\\">Creative Commons Attribution License</ext-link>, which permits unrestricted use and redistribution provided that the original author and source are credited.</license-p></license></permissions>
           <self-uri content-type=\\"pdf\\" xlink:href=\\"elife-52631-v1.pdf\\"/>
           
           
