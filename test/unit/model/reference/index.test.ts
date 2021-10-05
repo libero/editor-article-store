@@ -553,7 +553,7 @@ describe('Reference class', () => {
                 '<ref id="bib4">' +
                     '<element-citation publication-type="journal">' +
                     '<person-group person-group-type="author">' +
-                    '<name><given-names>John</given-names><surname>Doe</surname></name></person-group>' +
+                    '<name><surname>Doe</surname><given-names>John</given-names></name></person-group>' +
                     '<elocation-id>elocationId</elocation-id>' +
                     '<fpage>firstPage</fpage>' +
                     '<lpage>lastPage</lpage>' +
@@ -580,7 +580,7 @@ describe('Reference class', () => {
                 '<ref id="bib0">' +
                     '<element-citation publication-type="patent">' +
                     '<person-group person-group-type="inventor">' +
-                    '<name><given-names>John</given-names><surname>Doe</surname></name></person-group>' +
+                    '<name><surname>Doe</surname><given-names>John</given-names></name></person-group>' +
                     '</element-citation>' +
                     '</ref>',
             );
@@ -734,9 +734,9 @@ describe('serializeReferenceState', () => {
         serializeReferenceState(xml, mockManuscript);
         expect(serializer.serializeToString(xml)).toBe(
             '<article><back><ref-list><title>References</title>' +
-                '<ref id="bib1"><element-citation publication-type="journal"><person-group person-group-type="author"><name><given-names>Alice</given-names><surname>Alison</surname></name></person-group><year iso-8601-date="2002">2002</year></element-citation></ref>' +
-                '<ref id="bib2"><element-citation publication-type="journal"><person-group person-group-type="author"><name><given-names>Bob</given-names><surname>Bobson</surname></name></person-group><year iso-8601-date="1991">1991</year></element-citation></ref>' +
-                '<ref id="bib3"><element-citation publication-type="journal"><person-group person-group-type="author"><name><given-names>Bob</given-names><surname>Bobson</surname></name></person-group><year iso-8601-date="1999">1999</year></element-citation></ref>' +
+                '<ref id="bib1"><element-citation publication-type="journal"><person-group person-group-type="author"><name><surname>Alison</surname><given-names>Alice</given-names></name></person-group><year iso-8601-date="2002">2002</year></element-citation></ref>' +
+                '<ref id="bib2"><element-citation publication-type="journal"><person-group person-group-type="author"><name><surname>Bobson</surname><given-names>Bob</given-names></name></person-group><year iso-8601-date="1991">1991</year></element-citation></ref>' +
+                '<ref id="bib3"><element-citation publication-type="journal"><person-group person-group-type="author"><name><surname>Bobson</surname><given-names>Bob</given-names></name></person-group><year iso-8601-date="1999">1999</year></element-citation></ref>' +
                 '</ref-list></back></article>',
         );
     });

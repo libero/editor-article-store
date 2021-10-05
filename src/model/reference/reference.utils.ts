@@ -45,13 +45,13 @@ export function serializeReferenceContributorsList(groupType: string, contributo
             contributorsXml.appendChild(collab);
         } else {
             const name = xmlDoc.createElement('name');
-            const givenNames = xmlDoc.createElement('given-names');
-            givenNames.appendChild(xmlDoc.createTextNode(get(refContributor, 'firstName')));
-            name.appendChild(givenNames);
-
             const surname = xmlDoc.createElement('surname');
             surname.appendChild(xmlDoc.createTextNode(get(refContributor, 'lastName')));
             name.appendChild(surname);
+
+            const givenNames = xmlDoc.createElement('given-names');
+            givenNames.appendChild(xmlDoc.createTextNode(get(refContributor, 'firstName')));
+            name.appendChild(givenNames);
 
             contributorsXml.appendChild(name);
         }
