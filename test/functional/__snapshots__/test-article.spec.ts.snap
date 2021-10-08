@@ -152,7 +152,7 @@ exports[`Get /article/id/export exports a complete article with many changes app
                   </custom-meta>
               </custom-meta-group></article-meta>
       </front>
-      <body><p>6obscureword</p><p><xref ref-type=\\"bibr\\" rid=\\"bib20\\">Bartley, 2017</xref></p></body>
+      <body><p>6obscureword</p><p><xref ref-type=\\"bibr\\" rid=\\"bib2\\">Bartley, 2017</xref></p></body>
       <back>
           <ack id=\\"ack\\">
             <p>7obscureword</p></ack>

@@ -154,14 +154,21 @@ export function serializeReferenceState(xmlDoc: Document, manuscript: Manuscript
     refList.appendChild(title);
     const sortedReferences = sortReferencesList(manuscript.references);
 
+    const refElementMap: Array<Element[]> = [];
+    const xmlBody = xmlDoc.querySelector('body');
+
     sortedReferences.forEach((ref: Reference, index: number) => {
-        const refId = index + 1;
-        refList?.appendChild(ref.toXml(refId));
-        const xmlBody = xmlDoc.querySelector('body');
         if (xmlBody) {
             xmlBody.querySelectorAll(`xref[rid="${ref.id}"]`).forEach((el) => {
-                el.setAttribute('rid', `bib${refId}`);
+                refElementMap[index] ? refElementMap[index].push(el) : (refElementMap[index] = [el]);
             });
         }
+        refList?.appendChild(ref.toXml(index + 1));
+    });
+
+    refElementMap.forEach((value: Element[], index) => {
+        value?.forEach((element) => {
+            element.setAttribute('rid', `bib${index + 1}`);
+        });
     });
 }
