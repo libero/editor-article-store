@@ -30,14 +30,18 @@ export function serializeBodyState(xmlDoc: Document, manuscript: Manuscript) {
     bodyEl.appendChild(bodyXml);
 
     const figs = bodyEl.querySelectorAll('fig');
+    const figElementMap: Array<Element[]> = [];
 
     figs.forEach((fig: Element, index: number) => {
-        const newFigId = `fig${index + 1}`;
-        const currentFigId = fig.getAttribute('id');
-        const citations = bodyEl.querySelectorAll(`xref[rid="${currentFigId}"]`);
-        if (citations.length) {
-            citations.forEach((citation) => citation.setAttribute('rid', newFigId));
-        }
-        fig.setAttribute('id', newFigId);
+        bodyEl.querySelectorAll(`xref[rid="${fig.getAttribute('id')}"]`).forEach((el) => {
+            figElementMap[index] ? figElementMap[index].push(el) : (figElementMap[index] = [el]);
+        });
+        fig.setAttribute('id', `fig${index + 1}`);
+    });
+
+    figElementMap.forEach((value: Element[], index) => {
+        value?.forEach((element) => {
+            element.setAttribute('rid', `fig${index + 1}`);
+        });
     });
 }
